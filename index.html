@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CraftCV Builder</title>
+    <link rel="stylesheet" href="CraftCV.css">
+</head>
+<body>
+    <div class="page-shell">
+        <header class="intro">
+            <h1>CraftCV Builder</h1>
+            <p>Build a polished CV with live preview, smart enhancements, and export tools.</p>
+        </header>
+
+        <div class="settings-bar">
+            <label for="themeSelect">Theme</label>
+            <select id="themeSelect">
+                <option value="classic">Classic Blue</option>
+                <option value="dark">Modern Dark</option>
+                <option value="minimal">Minimal White</option>
+            </select>
+
+            <label for="anthropicKey">Your Anthropic API Key</label>
+            <input type="password" id="anthropicKey" name="anthropicKey" placeholder="sk-ant-..." autocomplete="off">
+            <button type="button" id="saveKeyBtn" class="primary-btn">Save Key</button>
+            <div id="keyFeedback" class="key-feedback" aria-live="polite"></div>
+            <small>Your key is saved locally on your device only. Get a free key with $5 credits at platform.claude.com</small>
+        </div>
+
+        <div id="restoreBanner" class="restore-banner" hidden>
+            <span>Restore your last session?</span>
+            <button type="button" id="restoreBtn" class="primary-btn">Restore</button>
+            <button type="button" id="discardBtn" class="secondary-btn">Discard</button>
+        </div>
+
+        <div class="app-grid">
+            <form id="cvForm" novalidate>
+                <section class="card">
+                    <h2>Personal Information</h2>
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" required autocomplete="name">
+                        <div class="field-error" data-error-for="fullName"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required autocomplete="email">
+                        <div class="field-error" data-error-for="email"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <div class="phone-inputs">
+                            <input type="text" id="countryCodeInput" list="countryCodes" autocomplete="off" aria-label="Country code" value="🇪🇬 EG (+20)">
+                            <datalist id="countryCodes"></datalist>
+                            <input type="tel" id="phone" name="phone" required autocomplete="tel">
+                        </div>
+                        <div class="field-error" data-error-for="phone"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="location">Location (City, Country)</label>
+                        <input type="text" id="location" name="location" required autocomplete="address-level2">
+                        <div class="field-error" data-error-for="location"></div>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <h2>Professional Summary</h2>
+                    <div class="form-group">
+                        <label for="summary">Professional Summary (2-3 sentences)</label>
+                        <textarea id="summary" name="summary" rows="3" required></textarea>
+                        <button type="button" class="ai-enhance-btn secondary-btn" data-target="summary">AI Enhance</button>
+                        <div class="ai-warning" data-warning-for="summary"></div>
+                        <div class="field-error" data-error-for="summary"></div>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <h2>Education</h2>
+                    <div id="educationEntries"></div>
+                    <div class="actions-row">
+                        <button type="button" class="add-entry-btn primary-btn" data-type="education">Add Another Education</button>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <h2>Experience</h2>
+                    <div class="form-group">
+                        <label for="jobDescription">Job Description Preferences</label>
+                        <div class="checkbox-list">
+                            <label><input type="checkbox" name="descPreference" value="achievements"> Focus on Achievements</label>
+                            <label><input type="checkbox" name="descPreference" value="responsibilities"> Focus on Responsibilities</label>
+                            <label><input type="checkbox" name="descPreference" value="impact"> Focus on Impact & Results</label>
+                            <label><input type="checkbox" name="descPreference" value="skills"> Focus on Skills Used</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="jobDesc">Job Description</label>
+                        <textarea id="jobDesc" name="jobDesc" rows="3" placeholder="Based on selected preferences, describe your role..." required></textarea>
+                        <button type="button" class="ai-enhance-btn secondary-btn" data-target="jobDesc">AI Enhance</button>
+                        <div class="ai-warning" data-warning-for="jobDesc"></div>
+                        <div class="field-error" data-error-for="jobDesc"></div>
+                    </div>
+
+                    <div id="experienceEntries"></div>
+                    <div class="actions-row">
+                        <button type="button" class="add-entry-btn primary-btn" data-type="experience">Add Another Experience</button>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <h2>Skills</h2>
+                    <div class="form-group">
+                        <label for="skills">Key Skills (comma-separated)</label>
+                        <textarea id="skills" name="skills" rows="2" placeholder="Project Management, Python, Leadership..." required></textarea>
+                        <div class="field-error" data-error-for="skills"></div>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <h2>Certifications & Languages</h2>
+                    <div class="form-group">
+                        <label for="certifications">Certifications (comma-separated)</label>
+                        <textarea id="certifications" name="certifications" rows="2" placeholder="PMP, AWS Certified, etc..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="languages">Languages (comma-separated)</label>
+                        <textarea id="languages" name="languages" rows="2" placeholder="English (Native), Spanish (Fluent), etc..."></textarea>
+                    </div>
+                </section>
+
+                <div class="actions-row">
+                    <button type="submit" class="primary-btn">Generate CV</button>
+                    <button type="reset" class="secondary-btn">Clear Form</button>
+                </div>
+            </form>
+
+            <aside class="preview-panel">
+                <div class="preview-actions">
+                    <button id="copyCvBtn" type="button" class="secondary-btn">Copy CV as Text</button>
+                    <button id="gmailBtn" type="button" class="secondary-btn">Share via Gmail</button>
+                    <button id="printBtn" type="button" class="secondary-btn">Export PDF</button>
+                </div>
+
+                <div class="cv-output">
+                    <div class="cv-header">
+                        <h2 id="cvName">Your Name</h2>
+                        <p id="cvContact"></p>
+                        <p id="cvLocation"></p>
+                    </div>
+
+                    <section class="cv-section">
+                        <h3>Professional Summary</h3>
+                        <div class="divider"></div>
+                        <p id="cvSummary"></p>
+                    </section>
+
+                    <section class="cv-section">
+                        <h3>Education</h3>
+                        <div class="divider"></div>
+                        <div id="cvEducation"></div>
+                    </section>
+
+                    <section class="cv-section">
+                        <h3>Professional Experience</h3>
+                        <div class="divider"></div>
+                        <div id="cvExperience"></div>
+                    </section>
+
+                    <section class="cv-section">
+                        <h3>Skills</h3>
+                        <div class="divider"></div>
+                        <div id="cvSkills"></div>
+                    </section>
+
+                    <section class="cv-section">
+                        <h3>Certifications</h3>
+                        <div class="divider"></div>
+                        <div id="cvCertifications"></div>
+                    </section>
+
+                    <section class="cv-section">
+                        <h3>Languages</h3>
+                        <div class="divider"></div>
+                        <div id="cvLanguages"></div>
+                    </section>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 CraftCV. All rights reserved.</p>
+        <p>Made By Assem Bakr</p>
+    </footer>
+
+    <script src="CraftCV.js"></script>
+</body>
+</html>
