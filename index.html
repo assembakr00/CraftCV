@@ -13,6 +13,14 @@
             <p>Build a polished CV with live preview, smart enhancements, and export tools.</p>
         </header>
 
+        <!-- Progress Bar -->
+        <div class="progress-bar-wrap" aria-label="CV completion progress">
+            <div class="progress-bar-track">
+                <div id="cvProgressBar" class="progress-bar-fill" style="width:0%"></div>
+            </div>
+            <span id="cvProgressLabel" class="progress-label">0% complete</span>
+        </div>
+
         <div class="settings-bar">
             <label for="themeSelect">Theme</label>
             <select id="themeSelect">
@@ -34,10 +42,25 @@
             <button type="button" id="discardBtn" class="secondary-btn">Discard</button>
         </div>
 
+        <!-- Clear Form Confirmation Modal -->
+        <div id="clearModal" class="modal-overlay" hidden>
+            <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="clearModalTitle">
+                <h3 id="clearModalTitle">Clear the form?</h3>
+                <p>This will permanently erase all your entered data. This action cannot be undone.</p>
+                <div class="modal-actions">
+                    <button type="button" id="clearConfirmBtn" class="danger-btn">Yes, clear everything</button>
+                    <button type="button" id="clearCancelBtn" class="secondary-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+
         <div class="app-grid">
             <form id="cvForm" novalidate>
-                <section class="card">
+
+                <!-- ── Personal Information ── -->
+                <section class="card" data-section="personal">
                     <h2>Personal Information</h2>
+
                     <div class="form-group">
                         <label for="fullName">Full Name</label>
                         <input type="text" id="fullName" name="fullName" required autocomplete="name">
@@ -65,80 +88,113 @@
                         <input type="text" id="location" name="location" required autocomplete="address-level2">
                         <div class="field-error" data-error-for="location"></div>
                     </div>
+
+                    <!-- Avatar Upload -->
+                    <div class="form-group avatar-group">
+                        <label for="avatarUpload">Profile Photo <span class="optional-tag">optional</span></label>
+                        <div class="avatar-upload-row">
+                            <div class="avatar-preview" id="avatarPreview">
+                                <span class="avatar-placeholder">No photo</span>
+                            </div>
+                            <div class="avatar-controls">
+                                <input type="file" id="avatarUpload" accept="image/*" class="avatar-file-input">
+                                <label for="avatarUpload" class="secondary-btn avatar-upload-label">Upload Photo</label>
+                                <button type="button" id="removeAvatarBtn" class="remove-avatar-btn secondary-btn" hidden>Remove</button>
+                            </div>
+                        </div>
+                    </div>
                 </section>
 
-                <section class="card">
+                <!-- ── Professional Summary ── -->
+                <section class="card" data-section="summary">
                     <h2>Professional Summary</h2>
                     <div class="form-group">
-                        <label for="summary">Professional Summary (2-3 sentences)</label>
-                        <textarea id="summary" name="summary" rows="3" required></textarea>
-                        <button type="button" class="ai-enhance-btn secondary-btn" data-target="summary">AI Enhance</button>
+                        <label for="summary">Professional Summary <span class="optional-tag">2–3 sentences</span></label>
+                        <textarea id="summary" name="summary" rows="3" required maxlength="600"></textarea>
+                        <div class="char-counter" data-counter-for="summary">0 / 600 characters</div>
+                        <button type="button" class="ai-enhance-btn secondary-btn" data-target="summary">✦ AI Enhance</button>
                         <div class="ai-warning" data-warning-for="summary"></div>
                         <div class="field-error" data-error-for="summary"></div>
                     </div>
                 </section>
 
-                <section class="card">
+                <!-- ── Education ── -->
+                <section class="card" data-section="education">
                     <h2>Education</h2>
                     <div id="educationEntries"></div>
                     <div class="actions-row">
-                        <button type="button" class="add-entry-btn primary-btn" data-type="education">Add Another Education</button>
+                        <button type="button" class="add-entry-btn primary-btn" data-type="education">+ Add Another Education</button>
                     </div>
                 </section>
 
-                <section class="card">
+                <!-- ── Experience ── -->
+                <section class="card" data-section="experience">
                     <h2>Experience</h2>
                     <div class="form-group">
-                        <label for="jobDescription">Job Description Preferences</label>
+                        <label>Job Description Preferences</label>
                         <div class="checkbox-list">
                             <label><input type="checkbox" name="descPreference" value="achievements"> Focus on Achievements</label>
                             <label><input type="checkbox" name="descPreference" value="responsibilities"> Focus on Responsibilities</label>
-                            <label><input type="checkbox" name="descPreference" value="impact"> Focus on Impact & Results</label>
+                            <label><input type="checkbox" name="descPreference" value="impact"> Focus on Impact &amp; Results</label>
                             <label><input type="checkbox" name="descPreference" value="skills"> Focus on Skills Used</label>
                         </div>
                     </div>
-
-                    <div class="form-group">
-                        <label for="jobDesc">Job Description</label>
-                        <textarea id="jobDesc" name="jobDesc" rows="3" placeholder="Based on selected preferences, describe your role..." required></textarea>
-                        <button type="button" class="ai-enhance-btn secondary-btn" data-target="jobDesc">AI Enhance</button>
-                        <div class="ai-warning" data-warning-for="jobDesc"></div>
-                        <div class="field-error" data-error-for="jobDesc"></div>
-                    </div>
-
                     <div id="experienceEntries"></div>
                     <div class="actions-row">
-                        <button type="button" class="add-entry-btn primary-btn" data-type="experience">Add Another Experience</button>
+                        <button type="button" class="add-entry-btn primary-btn" data-type="experience">+ Add Another Experience</button>
                     </div>
                 </section>
 
-                <section class="card">
+                <!-- ── Projects / Portfolio ── -->
+                <section class="card" data-section="projects">
+                    <h2>Projects &amp; Portfolio <span class="optional-tag">optional</span></h2>
+                    <div id="projectEntries"></div>
+                    <div class="actions-row">
+                        <button type="button" class="add-entry-btn primary-btn" data-type="project">+ Add Project</button>
+                    </div>
+                </section>
+
+                <!-- ── Skills ── -->
+                <section class="card" data-section="skills">
                     <h2>Skills</h2>
                     <div class="form-group">
-                        <label for="skills">Key Skills (comma-separated)</label>
-                        <textarea id="skills" name="skills" rows="2" placeholder="Project Management, Python, Leadership..." required></textarea>
+                        <label>Add Skills</label>
+                        <div class="skill-input-row">
+                            <input type="text" id="skillInput" placeholder="e.g., Python" autocomplete="off">
+                            <select id="skillLevel">
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate" selected>Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                                <option value="Expert">Expert</option>
+                            </select>
+                            <button type="button" id="addSkillBtn" class="primary-btn">Add</button>
+                        </div>
+                        <div id="skillTags" class="skill-tags" aria-label="Added skills"></div>
+                        <input type="hidden" id="skills" name="skills">
                         <div class="field-error" data-error-for="skills"></div>
                     </div>
                 </section>
 
-                <section class="card">
-                    <h2>Certifications & Languages</h2>
+                <!-- ── Certifications & Languages ── -->
+                <section class="card" data-section="certifications">
+                    <h2>Certifications &amp; Languages</h2>
                     <div class="form-group">
-                        <label for="certifications">Certifications (comma-separated)</label>
+                        <label for="certifications">Certifications <span class="optional-tag">comma-separated</span></label>
                         <textarea id="certifications" name="certifications" rows="2" placeholder="PMP, AWS Certified, etc..."></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="languages">Languages (comma-separated)</label>
+                        <label for="languages">Languages <span class="optional-tag">comma-separated</span></label>
                         <textarea id="languages" name="languages" rows="2" placeholder="English (Native), Spanish (Fluent), etc..."></textarea>
                     </div>
                 </section>
 
                 <div class="actions-row">
                     <button type="submit" class="primary-btn">Generate CV</button>
-                    <button type="reset" class="secondary-btn">Clear Form</button>
+                    <button type="button" id="clearFormBtn" class="danger-btn">Clear Form</button>
                 </div>
             </form>
 
+            <!-- ── Preview Panel ── -->
             <aside class="preview-panel">
                 <div class="preview-actions">
                     <button id="copyCvBtn" type="button" class="secondary-btn">Copy CV as Text</button>
@@ -146,11 +202,16 @@
                     <button id="printBtn" type="button" class="secondary-btn">Export PDF</button>
                 </div>
 
-                <div class="cv-output">
+                <div class="cv-output" id="cvOutput">
                     <div class="cv-header">
-                        <h2 id="cvName">Your Name</h2>
-                        <p id="cvContact"></p>
-                        <p id="cvLocation"></p>
+                        <div class="cv-header-inner">
+                            <img id="cvAvatar" class="cv-avatar" src="" alt="" hidden>
+                            <div class="cv-header-text">
+                                <h2 id="cvName">Your Name</h2>
+                                <p id="cvContact"></p>
+                                <p id="cvLocation"></p>
+                            </div>
+                        </div>
                     </div>
 
                     <section class="cv-section">
@@ -169,6 +230,12 @@
                         <h3>Professional Experience</h3>
                         <div class="divider"></div>
                         <div id="cvExperience"></div>
+                    </section>
+
+                    <section class="cv-section" id="cvProjectsSection">
+                        <h3>Projects &amp; Portfolio</h3>
+                        <div class="divider"></div>
+                        <div id="cvProjects"></div>
                     </section>
 
                     <section class="cv-section">

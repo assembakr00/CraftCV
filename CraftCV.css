@@ -1,47 +1,57 @@
+/* ─── CSS Custom Properties / Themes ──────────────────────────────────────── */
 :root {
-    --bg: #f4f7fb;
-    --surface: #ffffff;
-    --surface-alt: #f8fbff;
-    --text: #14213d;
-    --muted: #5f6b7a;
-    --primary: #2563eb;
+    --bg:           #f4f7fb;
+    --surface:      #ffffff;
+    --surface-alt:  #f8fbff;
+    --text:         #14213d;
+    --muted:        #5f6b7a;
+    --primary:      #2563eb;
     --primary-soft: rgba(37, 99, 235, 0.12);
-    --border: #dbe4f0;
-    --success: #15803d;
-    --danger: #dc2626;
-    --shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+    --border:       #dbe4f0;
+    --success:      #15803d;
+    --danger:       #dc2626;
+    --danger-soft:  rgba(220, 38, 38, 0.1);
+    --shadow:       0 16px 40px rgba(15, 23, 42, 0.08);
 }
 
 body[data-theme="dark"] {
-    --bg: #0f172a;
-    --surface: #111c32;
-    --surface-alt: #1e2b44;
-    --text: #e2e8f0;
-    --muted: #94a3b8;
-    --primary: #60a5fa;
+    --bg:           #0f172a;
+    --surface:      #111c32;
+    --surface-alt:  #1e2b44;
+    --text:         #e2e8f0;
+    --muted:        #94a3b8;
+    --primary:      #60a5fa;
     --primary-soft: rgba(96, 165, 250, 0.18);
-    --border: #31415b;
-    --success: #4ade80;
-    --danger: #f87171;
-    --shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+    --border:       #31415b;
+    --success:      #4ade80;
+    --danger:       #f87171;
+    --danger-soft:  rgba(248, 113, 113, 0.12);
+    --shadow:       0 16px 40px rgba(0, 0, 0, 0.28);
 }
 
 body[data-theme="minimal"] {
-    --bg: #f9f7f2;
-    --surface: #fffdf8;
-    --surface-alt: #f3efe7;
-    --text: #2f2a24;
-    --muted: #766f68;
-    --primary: #5b4d3b;
+    --bg:           #f9f7f2;
+    --surface:      #fffdf8;
+    --surface-alt:  #f3efe7;
+    --text:         #2f2a24;
+    --muted:        #766f68;
+    --primary:      #5b4d3b;
     --primary-soft: rgba(91, 77, 59, 0.12);
-    --border: #e4dcca;
-    --success: #4b7f52;
-    --danger: #b45309;
-    --shadow: 0 16px 40px rgba(92, 77, 59, 0.08);
+    --border:       #e4dcca;
+    --success:      #4b7f52;
+    --danger:       #b45309;
+    --danger-soft:  rgba(180, 83, 9, 0.1);
+    --shadow:       0 16px 40px rgba(92, 77, 59, 0.08);
 }
 
-* {
+/* ─── Reset & Base ─────────────────────────────────────────────────────────── */
+*, *::before, *::after {
     box-sizing: border-box;
+}
+
+/* Ensure the HTML `hidden` attribute always wins, even over display:flex rules */
+[hidden] {
+    display: none !important;
 }
 
 body {
@@ -53,13 +63,11 @@ body {
     transition: background 0.3s ease, color 0.3s ease;
 }
 
-button,
-input,
-textarea,
-select {
+button, input, textarea, select {
     font: inherit;
 }
 
+/* ─── Layout Shell ─────────────────────────────────────────────────────────── */
 .page-shell {
     max-width: 1400px;
     margin: 0 auto;
@@ -67,7 +75,7 @@ select {
 }
 
 .intro {
-    margin-bottom: 24px;
+    margin-bottom: 16px;
 }
 
 .intro h1 {
@@ -80,6 +88,42 @@ select {
     color: var(--muted);
 }
 
+/* ─── Progress Bar ─────────────────────────────────────────────────────────── */
+.progress-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.progress-bar-track {
+    flex: 1;
+    height: 8px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+}
+
+.progress-bar-fill.progress-done {
+    background: var(--success);
+}
+
+.progress-label {
+    font-size: 0.82rem;
+    color: var(--muted);
+    white-space: nowrap;
+    min-width: 80px;
+    text-align: right;
+}
+
+/* ─── Settings Bar ─────────────────────────────────────────────────────────── */
 .settings-bar,
 .card,
 .preview-panel {
@@ -87,7 +131,6 @@ select {
     border: 1px solid var(--border);
     border-radius: 18px;
     box-shadow: var(--shadow);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .settings-bar {
@@ -96,7 +139,8 @@ select {
     gap: 12px;
     align-items: center;
     padding: 16px 18px;
-    margin-top: 16px;
+    margin-top: 0;
+    margin-bottom: 16px;
 }
 
 .settings-bar label {
@@ -109,14 +153,16 @@ select {
     border: 1px solid var(--border);
     border-radius: 10px;
     background: var(--surface-alt);
+    color: var(--text);
 }
 
 .settings-bar small {
     width: 100%;
     color: var(--muted);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
+/* ─── App Grid ──────────────────────────────────────────────────────────────── */
 .app-grid {
     display: grid;
     grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
@@ -130,6 +176,7 @@ form {
     gap: 16px;
 }
 
+/* ─── Card ──────────────────────────────────────────────────────────────────── */
 .card {
     padding: 20px;
 }
@@ -138,8 +185,23 @@ form {
     margin-top: 0;
     margin-bottom: 16px;
     font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
+.optional-tag {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--muted);
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 2px 8px;
+    vertical-align: middle;
+}
+
+/* ─── Form Groups ───────────────────────────────────────────────────────────── */
 .form-group {
     margin-bottom: 14px;
 }
@@ -160,6 +222,19 @@ select {
     border-radius: 10px;
     background: var(--surface-alt);
     color: var(--text);
+    transition: border-color 0.15s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+input.is-invalid,
+textarea.is-invalid {
+    border-color: var(--danger);
 }
 
 textarea {
@@ -167,6 +242,7 @@ textarea {
     resize: vertical;
 }
 
+/* ─── Phone ─────────────────────────────────────────────────────────────────── */
 .phone-inputs {
     display: flex;
     gap: 10px;
@@ -180,6 +256,85 @@ textarea {
     flex: 1;
 }
 
+/* ─── Char Counter ──────────────────────────────────────────────────────────── */
+.char-counter {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-align: right;
+    margin-top: 4px;
+    transition: color 0.15s ease;
+}
+
+.char-counter.counter-warn {
+    color: var(--danger);
+    font-weight: 600;
+}
+
+/* ─── Avatar ─────────────────────────────────────────────────────────────────── */
+.avatar-upload-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.avatar-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--surface-alt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.avatar-preview .avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-align: center;
+}
+
+.avatar-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.avatar-file-input {
+    display: none;
+    width: auto;
+}
+
+.avatar-upload-label {
+    cursor: pointer;
+    display: inline-block;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-size: 0.9rem;
+    transition: opacity 0.2s ease;
+}
+
+.avatar-upload-label:hover {
+    opacity: 0.8;
+}
+
+.remove-avatar-btn {
+    font-size: 0.85rem;
+}
+
+/* ─── Buttons ────────────────────────────────────────────────────────────────── */
 .actions-row,
 .preview-actions,
 .entry-header {
@@ -194,16 +349,21 @@ button {
     border-radius: 999px;
     padding: 10px 14px;
     cursor: pointer;
-    transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease;
+    transition: transform 0.15s ease, opacity 0.15s ease, background 0.15s ease;
 }
 
 button:hover {
     transform: translateY(-1px);
 }
 
+button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+}
+
 .primary-btn,
 #saveKeyBtn,
-.ai-enhance-btn,
 .add-entry-btn,
 .preview-actions button {
     background: var(--primary);
@@ -216,6 +376,20 @@ button:hover {
     color: var(--primary);
 }
 
+.danger-btn {
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+
+.ai-enhance-btn {
+    background: var(--primary);
+    color: white;
+    margin-top: 6px;
+    font-size: 0.88rem;
+    padding: 7px 12px;
+}
+
+/* ─── Checkboxes ─────────────────────────────────────────────────────────────── */
 .checkbox-list {
     display: grid;
     gap: 8px;
@@ -229,6 +403,7 @@ button:hover {
     font-weight: 500;
 }
 
+/* ─── Entry Cards ────────────────────────────────────────────────────────────── */
 .entry-card {
     background: var(--surface-alt);
     border: 1px solid var(--border);
@@ -240,8 +415,92 @@ button:hover {
 
 .entry-card h3 {
     margin: 0;
+    font-size: 1rem;
 }
 
+/* ─── Skill Tag Input ────────────────────────────────────────────────────────── */
+.skill-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+    flex-wrap: wrap;
+}
+
+.skill-input-row input {
+    flex: 1 1 160px;
+}
+
+.skill-input-row select {
+    flex: 0 0 140px;
+    width: auto;
+}
+
+.skill-input-row button {
+    flex-shrink: 0;
+    border-radius: 999px;
+}
+
+.skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    min-height: 20px;
+}
+
+.skill-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--primary-soft);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 4px 10px 4px 12px;
+    font-size: 0.88rem;
+    animation: fadeIn 0.2s ease;
+}
+
+.skill-tag-name {
+    color: var(--text);
+    font-weight: 500;
+}
+
+.skill-tag-level {
+    font-size: 0.72rem;
+    border-radius: 999px;
+    padding: 1px 7px;
+    font-weight: 600;
+}
+
+.skill-level-beginner     { background: #fef3c7; color: #92400e; }
+.skill-level-intermediate { background: #dbeafe; color: #1e40af; }
+.skill-level-advanced     { background: #dcfce7; color: #166534; }
+.skill-level-expert       { background: #ede9fe; color: #5b21b6; }
+
+/* Dark theme skill level adjustments */
+body[data-theme="dark"] .skill-level-beginner     { background: #451a03; color: #fcd34d; }
+body[data-theme="dark"] .skill-level-intermediate { background: #1e3a5f; color: #93c5fd; }
+body[data-theme="dark"] .skill-level-advanced     { background: #14532d; color: #86efac; }
+body[data-theme="dark"] .skill-level-expert       { background: #3b0764; color: #d8b4fe; }
+
+.skill-tag-remove {
+    background: none;
+    border: none;
+    padding: 0 2px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1;
+    transition: color 0.15s ease;
+}
+
+.skill-tag-remove:hover {
+    color: var(--danger);
+    transform: none;
+}
+
+/* ─── Field Errors & Feedback ────────────────────────────────────────────────── */
 .field-error,
 .ai-warning,
 .key-feedback,
@@ -262,6 +521,7 @@ button:hover {
     color: var(--success);
 }
 
+/* ─── Restore Banner ─────────────────────────────────────────────────────────── */
 .restore-banner {
     display: flex;
     flex-wrap: wrap;
@@ -272,8 +532,48 @@ button:hover {
     border: 1px solid var(--border);
     border-radius: 12px;
     color: var(--text);
+    margin-bottom: 16px;
 }
 
+/* ─── Clear Form Modal ───────────────────────────────────────────────────────── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    animation: fadeIn 0.15s ease;
+}
+
+.modal-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px 32px;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: var(--shadow);
+}
+
+.modal-box h3 {
+    margin-top: 0;
+    font-size: 1.15rem;
+}
+
+.modal-box p {
+    color: var(--muted);
+    margin-bottom: 20px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* ─── Preview Panel ──────────────────────────────────────────────────────────── */
 .preview-panel {
     padding: 20px;
     position: sticky;
@@ -284,6 +584,7 @@ button:hover {
     margin-bottom: 16px;
 }
 
+/* ─── CV Output ──────────────────────────────────────────────────────────────── */
 .cv-output {
     border-top: 2px solid var(--primary);
     padding-top: 16px;
@@ -293,6 +594,25 @@ button:hover {
     border-bottom: 2px solid var(--border);
     padding-bottom: 14px;
     margin-bottom: 16px;
+}
+
+.cv-header-inner {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.cv-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+}
+
+.cv-header-text {
+    flex: 1;
 }
 
 .cv-header h2 {
@@ -320,6 +640,38 @@ button:hover {
     color: var(--muted);
 }
 
+/* ─── CV Experience / Project Blocks ─────────────────────────────────────────── */
+.cv-exp-block {
+    margin-bottom: 12px;
+}
+
+.cv-exp-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px;
+    font-size: 0.95rem;
+}
+
+.cv-duration {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-left: auto;
+}
+
+.cv-exp-desc {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.cv-project-link {
+    font-size: 0.78rem;
+    color: var(--primary);
+    word-break: break-all;
+}
+
+/* ─── Skills List in CV ──────────────────────────────────────────────────────── */
 .bullet-list {
     margin: 0;
     padding-left: 18px;
@@ -335,12 +687,38 @@ button:hover {
 }
 
 .skills-list li {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
     background: var(--primary-soft);
-    color: var(--primary);
-    padding: 6px 10px;
     border-radius: 999px;
+    padding: 4px 10px;
 }
 
+.skill-name {
+    color: var(--text);
+    font-weight: 500;
+    font-size: 0.88rem;
+}
+
+.skill-badge {
+    font-size: 0.68rem;
+    border-radius: 999px;
+    padding: 1px 6px;
+    font-weight: 600;
+}
+
+.skill-badge-beginner     { background: #fef3c7; color: #92400e; }
+.skill-badge-intermediate { background: #dbeafe; color: #1e40af; }
+.skill-badge-advanced     { background: #dcfce7; color: #166534; }
+.skill-badge-expert       { background: #ede9fe; color: #5b21b6; }
+
+body[data-theme="dark"] .skill-badge-beginner     { background: #451a03; color: #fcd34d; }
+body[data-theme="dark"] .skill-badge-intermediate { background: #1e3a5f; color: #93c5fd; }
+body[data-theme="dark"] .skill-badge-advanced     { background: #14532d; color: #86efac; }
+body[data-theme="dark"] .skill-badge-expert       { background: #3b0764; color: #d8b4fe; }
+
+/* ─── Toast ──────────────────────────────────────────────────────────────────── */
 .toast {
     position: fixed;
     right: 20px;
@@ -349,27 +727,46 @@ button:hover {
     color: var(--text);
     border: 1px solid var(--border);
     border-radius: 999px;
-    padding: 10px 16px;
+    padding: 10px 18px;
     box-shadow: var(--shadow);
     z-index: 1000;
+    animation: fadeIn 0.2s ease;
 }
 
+/* ─── Animations ─────────────────────────────────────────────────────────────── */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(4px); }
-    to { opacity: 1; transform: translateY(0); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-@media (max-width: 768px) {
-    .page-shell {
-        padding: 16px;
-    }
+/* ─── Footer ─────────────────────────────────────────────────────────────────── */
+footer {
+    text-align: center;
+    margin-top: 32px;
+    padding: 24px 0;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.9rem;
+}
 
+footer p {
+    margin: 4px 0;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
     .app-grid {
         grid-template-columns: 1fr;
     }
 
     .preview-panel {
         position: static;
+    }
+}
+
+@media (max-width: 600px) {
+    .page-shell {
+        padding: 12px;
     }
 
     .phone-inputs {
@@ -379,8 +776,34 @@ button:hover {
     .settings-bar {
         align-items: stretch;
     }
+
+    .skill-input-row {
+        flex-direction: column;
+    }
+
+    .skill-input-row select {
+        flex: 1 1 auto;
+        width: 100%;
+    }
+
+    .cv-header-inner {
+        flex-direction: column;
+    }
+
+    .cv-duration {
+        margin-left: 0;
+    }
+
+    .preview-actions {
+        flex-direction: column;
+    }
+
+    .preview-actions button {
+        width: 100%;
+    }
 }
 
+/* ─── Print / PDF Export ─────────────────────────────────────────────────────── */
 @media print {
     body {
         background: white;
@@ -388,11 +811,17 @@ button:hover {
     }
 
     .settings-bar,
+    .progress-bar-wrap,
     form,
     .preview-actions,
     .restore-banner,
+    .modal-overlay,
     footer {
         display: none !important;
+    }
+
+    .app-grid {
+        grid-template-columns: 1fr;
     }
 
     .preview-panel {
@@ -400,9 +829,26 @@ button:hover {
         border: none;
         position: static;
         padding: 0;
+        max-width: 100%;
     }
 
     .cv-output {
         border-top: none;
+    }
+
+    .cv-section {
+        break-inside: avoid;
+    }
+
+    .skill-level-beginner,
+    .skill-level-intermediate,
+    .skill-level-advanced,
+    .skill-level-expert,
+    .skill-badge-beginner,
+    .skill-badge-intermediate,
+    .skill-badge-advanced,
+    .skill-badge-expert {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 }
