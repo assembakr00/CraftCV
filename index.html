@@ -19,28 +19,75 @@
                 <div id="cvProgressBar" class="progress-bar-fill" style="width:0%"></div>
             </div>
             <span id="cvProgressLabel" class="progress-label">0% complete</span>
+            <span id="requiredFieldsLeft" class="required-fields-left">Checking required fields…</span>
         </div>
 
         <div class="settings-bar">
-            <label for="themeSelect">Theme</label>
-            <select id="themeSelect">
-                <option value="classic">Classic Blue</option>
-                <option value="dark">Modern Dark</option>
-                <option value="minimal">Minimal White</option>
-            </select>
+            <div class="theme-control">
+                <span id="themeLabel" class="theme-control-label">Theme</span>
+                <div class="theme-swatches" id="themeSwatches" role="radiogroup" aria-labelledby="themeLabel">
+                    <div class="theme-swatch-item">
+                        <button type="button" class="theme-swatch" data-theme="classic" style="--swatch-color:#2563eb" title="Classic Blue" aria-label="Classic Blue"></button>
+                        <span class="theme-swatch-label">Classic</span>
+                    </div>
+                    <div class="theme-swatch-item">
+                        <button type="button" class="theme-swatch" data-theme="dark" style="--swatch-color:#60a5fa" title="Modern Dark" aria-label="Modern Dark"></button>
+                        <span class="theme-swatch-label">Dark</span>
+                    </div>
+                    <div class="theme-swatch-item">
+                        <button type="button" class="theme-swatch" data-theme="minimal" style="--swatch-color:#5b4d3b" title="Minimal White" aria-label="Minimal White"></button>
+                        <span class="theme-swatch-label">Minimal</span>
+                    </div>
+                    <div class="theme-swatch-item">
+                        <button type="button" class="theme-swatch" data-theme="sunset" style="--swatch-color:#f97316" title="Sunset" aria-label="Sunset"></button>
+                        <span class="theme-swatch-label">Sunset</span>
+                    </div>
+                    <div class="theme-swatch-item">
+                        <button type="button" class="theme-swatch" data-theme="forest" style="--swatch-color:#3f7d3a" title="Forest" aria-label="Forest"></button>
+                        <span class="theme-swatch-label">Forest</span>
+                    </div>
+                    <div class="theme-swatch-item">
+                        <button type="button" class="theme-swatch" data-theme="ocean" style="--swatch-color:#0891b2" title="Ocean" aria-label="Ocean"></button>
+                        <span class="theme-swatch-label">Ocean</span>
+                    </div>
+                    <div class="theme-swatch-item">
+                        <button type="button" class="theme-swatch" data-theme="rose" style="--swatch-color:#db2777" title="Rose" aria-label="Rose"></button>
+                        <span class="theme-swatch-label">Rose</span>
+                    </div>
+                </div>
+            </div>
 
-            <label for="apiKey">Your API Key</label>
-            <input type="password" id="anthropicKey" name="apiKey" placeholder="sk-ant-..." autocomplete="off">
-            <button type="button" id="saveKeyBtn" class="primary-btn">Save Key</button>
-            <div id="keyFeedback" class="key-feedback" aria-live="polite"></div>
-            <small>Your key is saved locally on your device only. Get a free key with $5 credits at platform.claude.com</small>
-        </div>
+    <div class="api-key-container">
+        <label for="anthropicKey">AI API Key</label>
+    <div class="input-wrapper">
+        <input type="password" id="anthropicKey" name="anthropicKey" placeholder="sk-..." autocomplete="off">
+        <button type="button" id="toggleVisibilityBtn" class="icon-btn" aria-label="Toggle Key Visibility">👁️</button>
+    </div>
+    
+    <div class="action-buttons">
+        <button type="button" id="saveKeyBtn" class="primary-btn">Save Key</button>
+        <button type="button" id="testKeyBtn" class="secondary-btn">Test Connection</button>
+    </div>
 
+    <div class="demo-mode-wrapper">
+        <label class="switch-label">
+            <input type="checkbox" id="demoModeCheckbox">
+            <span>Enable Demo Mode (No API key required)</span>
+        </label>
+    </div>
+
+    <div id="keyFeedback" class="key-feedback" aria-live="polite"></div>
+    <small>Using your own key keeps this app free. Standard usage costs less than $0.01 per resume. Your key is saved locally on your device only.</small>
+        
         <div id="restoreBanner" class="restore-banner" hidden>
             <span>Restore your last session?</span>
-            <button type="button" id="restoreBtn" class="primary-btn">Restore</button>
-            <button type="button" id="discardBtn" class="secondary-btn">Discard</button>
+            <div class="restore-actions">
+                <button type="button" id="restoreBtn" class="primary-btn">Restore</button>
+                <button type="button" id="discardBtn" class="secondary-btn">Discard</button>
+            </div>
         </div>
+        </div>
+    </div>
 
         <!-- Clear Form Confirmation Modal -->
         <div id="clearModal" class="modal-overlay" hidden>
@@ -59,7 +106,7 @@
 
                 <!-- ── Personal Information ── -->
                 <section class="card" data-section="personal">
-                    <h2>Personal Information</h2>
+                    <h2><span class="section-title-text">Personal Information</span><button type="button" class="section-collapse-btn" data-section="personal" aria-label="Collapse Personal Information" aria-expanded="true">⌄</button></h2>
 
                     <div class="form-group">
                         <label for="fullName">Full Name</label>
@@ -107,7 +154,7 @@
 
                 <!-- ── Professional Summary ── -->
                 <section class="card" data-section="summary">
-                    <h2>Professional Summary</h2>
+                    <h2><span class="section-title-text">Professional Summary</span><button type="button" class="section-collapse-btn" data-section="summary" aria-label="Collapse Professional Summary" aria-expanded="true">⌄</button></h2>
                     <div class="form-group">
                         <label for="summary">Professional Summary <span class="optional-tag">2–3 sentences</span></label>
                         <textarea id="summary" name="summary" rows="3" required maxlength="600"></textarea>
@@ -120,7 +167,7 @@
 
                 <!-- ── Education ── -->
                 <section class="card" data-section="education">
-                    <h2>Education</h2>
+                    <h2><span class="section-title-text">Education</span><button type="button" class="section-collapse-btn" data-section="education" aria-label="Collapse Education" aria-expanded="true">⌄</button></h2>
                     <div id="educationEntries"></div>
                     <div class="actions-row">
                         <button type="button" class="add-entry-btn primary-btn" data-type="education">+ Add Another Education</button>
@@ -129,7 +176,7 @@
 
                 <!-- ── Experience ── -->
                 <section class="card" data-section="experience">
-                    <h2>Experience</h2>
+                    <h2><span class="section-title-text">Experience</span><button type="button" class="section-collapse-btn" data-section="experience" aria-label="Collapse Experience" aria-expanded="true">⌄</button></h2>
 
                     <div class="form-group">
                         <label>Job Description Preferences</label>
@@ -149,7 +196,7 @@
 
                 <!-- ── Projects / Portfolio ── -->
                 <section class="card" data-section="projects">
-                    <h2>Projects &amp; Portfolio <span class="optional-tag">optional</span></h2>
+                    <h2><span class="section-title-text">Projects &amp; Portfolio <span class="optional-tag">optional</span></span><button type="button" class="section-collapse-btn" data-section="projects" aria-label="Collapse Projects and Portfolio" aria-expanded="true">⌄</button></h2>
                     <div id="projectEntries"></div>
                     <div class="actions-row">
                         <button type="button" class="add-entry-btn primary-btn" data-type="project">+ Add Project</button>
@@ -158,7 +205,7 @@
 
                 <!-- ── Skills ── -->
                 <section class="card" data-section="skills">
-                    <h2>Skills</h2>
+                    <h2><span class="section-title-text">Skills</span><button type="button" class="section-collapse-btn" data-section="skills" aria-label="Collapse Skills" aria-expanded="true">⌄</button></h2>
                     <div class="form-group">
                         <label>Add Skills</label>
                         <div class="skill-input-row">
@@ -179,7 +226,7 @@
 
                 <!-- ── Certifications & Languages ── -->
                 <section class="card" data-section="certifications">
-                    <h2>Certifications &amp; Languages</h2>
+                    <h2><span class="section-title-text">Certifications &amp; Languages</span><button type="button" class="section-collapse-btn" data-section="certifications" aria-label="Collapse Certifications and Languages" aria-expanded="true">⌄</button></h2>
                     <div class="form-group">
                         <label for="certifications">Certifications <span class="optional-tag">comma-separated</span></label>
                         <textarea id="certifications" name="certifications" rows="2" placeholder="PMP, AWS Certified, etc..."></textarea>
@@ -200,6 +247,9 @@
             <aside class="preview-panel">
                 <div class="preview-actions">
                     <button id="copyCvBtn" type="button" class="secondary-btn">Copy CV as Text</button>
+                    <button id="copyJsonBtn" type="button" class="secondary-btn">Copy as JSON</button>
+                    <button id="importJsonBtn" type="button" class="secondary-btn">Import JSON</button>
+                    <input type="file" id="importJsonInput" accept="application/json" hidden>
                     <button id="gmailBtn" type="button" class="secondary-btn">Share via Gmail</button>
                     <button id="printBtn" type="button" class="secondary-btn">Export PDF</button>
                 </div>

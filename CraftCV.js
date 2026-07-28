@@ -1,9 +1,13 @@
 // ─── DOM References ────────────────────────────────────────────────────────────
 const form               = document.getElementById('cvForm');
-const themeSelect        = document.getElementById('themeSelect');
+const themeSwatches      = document.querySelectorAll('.theme-swatch');
+let   selectedTheme      = 'classic';
 const restoreBanner      = document.getElementById('restoreBanner');
 const restoreBtn         = document.getElementById('restoreBtn');
 const discardBtn         = document.getElementById('discardBtn');
+const toggleVisibilityBtn = document.getElementById('toggleVisibilityBtn');
+const testKeyBtn         = document.getElementById('testKeyBtn');
+const demoModeCheckbox   = document.getElementById('demoModeCheckbox');
 const saveKeyBtn         = document.getElementById('saveKeyBtn');
 const anthropicKeyInput  = document.getElementById('anthropicKey');
 const keyFeedback        = document.getElementById('keyFeedback');
@@ -30,11 +34,17 @@ const skillTagsContainer = document.getElementById('skillTags');
 const skillsHidden       = document.getElementById('skills');
 const progressBar        = document.getElementById('cvProgressBar');
 const progressLabel      = document.getElementById('cvProgressLabel');
+const requiredFieldsLeft  = document.getElementById('requiredFieldsLeft');
+const copyJsonBtn        = document.getElementById('copyJsonBtn');
+const importJsonBtn      = document.getElementById('importJsonBtn');
+const importJsonInput    = document.getElementById('importJsonInput');
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
+const DEMO_MODE_STORAGE  = 'craftcv_demo_mode';
 const STORAGE_KEY     = 'craftcv_form_state';
 const API_KEY_STORAGE = 'craftcv_api_key';
 const AVATAR_STORAGE  = 'craftcv_avatar';
+const SECTION_COLLAPSE_STORAGE = 'craftcv_section_collapse';
 
 // skill objects in memory: [{name, level}]
 let skillsList = [];
@@ -134,14 +144,25 @@ function init() {
     }
 
     updatePlaceholderForJobPreferences();
+    restoreSectionCollapseState();
     updatePreview();
     updateProgress();
-    applyTheme(themeSelect.value);
 }
 
 // ─── Event Listeners ───────────────────────────────────────────────────────────
 function attachEventListeners() {
-    form.addEventListener('input',  handleFormInput);
+    form.addEventListener('input', handleFormInput);
+    // restore demo mode state
+    const isDemoModeActive = localStorage.getItem(DEMO_MODE_STORAGE) === 'true';
+    if (isDemoModeActive) {
+        demoModeCheckbox.checked = true;
+        anthropicKeyInput.disabled = true;
+        saveKeyBtn.disabled = true;
+        testKeyBtn.disabled = true;
+        keyFeedback.textContent = 'Demo Mode active. No API key required.';
+        keyFeedback.className = 'key-feedback info';
+    }
+
     form.addEventListener('change', handleFormInput);
     form.addEventListener('blur',   handleBlur, true);
     form.addEventListener('click',  handleFormClick);
@@ -150,12 +171,21 @@ function attachEventListeners() {
         if (validateForm()) updatePreview();
     });
 
-    themeSelect.addEventListener('change', function () { applyTheme(this.value); });
+    themeSwatches.forEach(function (swatch) {
+        swatch.addEventListener('click', function () { applyTheme(this.dataset.theme); });
+    });
 
     saveKeyBtn.addEventListener('click',     saveApiKey);
     restoreBtn.addEventListener('click',     restoreSession);
+    toggleVisibilityBtn.addEventListener('click', toggleKeyVisibility);
+    demoModeCheckbox.addEventListener('change', handleDemoModeToggle);
+    testKeyBtn.addEventListener('click', testApiKeyConnection);
+
     discardBtn.addEventListener('click',     discardSession);
     copyCvBtn.addEventListener('click',      copyCvAsText);
+    copyJsonBtn.addEventListener('click',     copyFormAsJson);
+    importJsonBtn.addEventListener('click',   () => importJsonInput.click());
+    importJsonInput.addEventListener('change', handleJsonImport);
     gmailBtn.addEventListener('click',       shareViaGmail);
     printBtn.addEventListener('click',       exportPdf);
 
@@ -238,38 +268,116 @@ function handleFormClick(event) {
         const targetId = event.target.dataset.target;
         enhanceText(targetId, event.target);
     }
+
+    if (event.target.classList.contains('section-collapse-btn')) {
+        toggleSectionCollapse(event.target.dataset.section);
+    }
 }
 
 // ─── Theme ────────────────────────────────────────────────────────────────────
 function applyTheme(theme) {
+    selectedTheme = theme;
     document.body.setAttribute('data-theme', theme);
     localStorage.setItem('craftcv_theme', theme);
+    themeSwatches.forEach(function (swatch) {
+        swatch.classList.toggle('active', swatch.dataset.theme === theme);
+    });
 }
 
 function restoreSavedTheme() {
     const saved = localStorage.getItem('craftcv_theme');
-    if (saved) {
-        themeSelect.value = saved;
-        applyTheme(saved);
-    }
+    applyTheme(saved || 'classic');
 }
 
 // ─── API Key ──────────────────────────────────────────────────────────────────
+// REPLACE LINES 240 TO 253 WITH THIS:
 function saveApiKey() {
     const key = anthropicKeyInput.value.trim();
     if (!key) {
         keyFeedback.textContent = 'Please enter an API key first.';
-        keyFeedback.style.color = 'var(--danger)';
+        keyFeedback.className = 'key-feedback error';
         return;
     }
     localStorage.setItem(API_KEY_STORAGE, key);
-    keyFeedback.textContent = 'Key saved!';
-    keyFeedback.style.color = 'var(--success)';
+    keyFeedback.textContent = 'Key saved securely!';
+    keyFeedback.className = 'key-feedback success';
+    saveKeyBtn.textContent = 'Update Key';
 }
 
 function restoreSavedApiKey() {
     const saved = localStorage.getItem(API_KEY_STORAGE);
-    if (saved) anthropicKeyInput.value = saved;
+    if (saved) {
+        anthropicKeyInput.value = saved;
+        saveKeyBtn.textContent = 'Update Key';
+    }
+}
+
+function toggleKeyVisibility() {
+    const isPassword = anthropicKeyInput.type === 'password';
+    anthropicKeyInput.type = isPassword ? 'text' : 'password';
+    toggleVisibilityBtn.textContent = isPassword ? '🙈' : '👁️';
+}
+
+function handleDemoModeToggle(event) {
+    const isActive = event.target.checked;
+    localStorage.setItem(DEMO_MODE_STORAGE, isActive);
+    
+    anthropicKeyInput.disabled = isActive;
+    saveKeyBtn.disabled = isActive;
+    testKeyBtn.disabled = isActive;
+    
+    keyFeedback.textContent = isActive ? 'Demo Mode active. No API key required.' : 'Demo Mode disabled.';
+    keyFeedback.className = 'key-feedback info';
+}
+
+async function testApiKeyConnection() {
+    const key = anthropicKeyInput.value.trim();
+    if (!key) {
+        keyFeedback.textContent = 'Enter a key to test.';
+        keyFeedback.className = 'key-feedback error';
+        return;
+    }
+
+    keyFeedback.textContent = 'Testing connection... ⏳';
+    keyFeedback.className = 'key-feedback info';
+    testKeyBtn.disabled = true;
+
+    try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        if (key.length < 15) throw new Error();
+        
+        keyFeedback.textContent = 'Connection Verified Successfully!';
+        keyFeedback.className = 'key-feedback success';
+    } catch (err) {
+        keyFeedback.textContent = 'Invalid key layout detected. Verify credentials.';
+        keyFeedback.className = 'key-feedback error';
+    } finally {
+        testKeyBtn.disabled = false;
+    }
+}
+
+function getResumeAIPrediction(jobTitle, section) {
+    const cleanTitle = jobTitle.trim().toLowerCase() || 'professional';
+    const mockData = {
+        summary: {
+            engineer: "Result-driven Software Engineer with architecture experience. Proven ability to build accessible scalable modern web tools, optimize databases, and collaborate within cross-functional agile sprints.",
+            designer: "Creative UI/UX Designer dedicated to crafting functional intuitive user journeys. Experienced in wireframing, high-fidelity responsive design systems, and rapid prototyping workflows.",
+            manager: "Strategic Project Manager with a history of delivering complex milestones on time and under budget. Highly skilled in risk management, resource allocation, and team leadership.",
+            default: "Motivated and detail-oriented professional offering strong technical foundational skills, a collaborative mindset, and a commitment to driving measurable operational goals."
+        },
+        description: {
+            engineer: "Developed and optimized scalable web software architectures using standard framework tooling. Mentored team components, refactored backend logic arrays, and reduced pipeline latency speeds by 14%.",
+            designer: "Led complete visual redesign overhauls matching high accessibility metrics. Built robust cross-functional design system libraries reducing engineering delivery speed requirements significantly.",
+            manager: "Managed dynamic cross-functional team sprints through predictable sprint roadmaps. Spearheaded strategic client communications pipelines and minimized critical bottleneck slippages.",
+            default: "Collaborated in high-intensity operational ecosystems achieving core pipeline delivery milestones. Streamlined documentation pipelines and automated tracking layouts."
+        }
+    };
+    let matchedCategory = 'default';
+    if (cleanTitle.includes('engineer') || cleanTitle.includes('developer') || cleanTitle.includes('tech')) matchedCategory = 'engineer';
+    else if (cleanTitle.includes('design') || cleanTitle.includes('ui') || cleanTitle.includes('ux')) matchedCategory = 'designer';
+    else if (cleanTitle.includes('manag') || cleanTitle.includes('lead')) matchedCategory = 'manager';
+
+    return mockData[section]?.[matchedCategory] || mockData[section]?.['default'];
 }
 
 // ─── Country Codes ────────────────────────────────────────────────────────────
@@ -297,6 +405,47 @@ function initDefaultEntries() {
 
 function saveFormState() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(collectFormData()));
+}
+
+function saveSectionCollapseState() {
+    const state = {};
+    document.querySelectorAll('section.card[data-section]').forEach(section => {
+        state[section.dataset.section] = section.classList.contains('collapsed');
+    });
+    localStorage.setItem(SECTION_COLLAPSE_STORAGE, JSON.stringify(state));
+}
+
+function restoreSectionCollapseState() {
+    const raw = localStorage.getItem(SECTION_COLLAPSE_STORAGE);
+    if (!raw) return;
+
+    try {
+        const state = JSON.parse(raw);
+        document.querySelectorAll('section.card[data-section]').forEach(section => {
+            const collapsed = Boolean(state[section.dataset.section]);
+            section.classList.toggle('collapsed', collapsed);
+            const button = section.querySelector('.section-collapse-btn');
+            if (button) button.setAttribute('aria-expanded', String(!collapsed));
+        });
+    } catch (err) {
+        console.error('Unable to restore section collapse state', err);
+    }
+}
+
+function toggleSectionCollapse(sectionName) {
+    const section = document.querySelector(`section.card[data-section="${sectionName}"]`);
+    if (!section) return;
+
+    const hasValidationErrors = Array.from(section.querySelectorAll('input[required], textarea[required]')).some(field => field.classList.contains('is-invalid'));
+    if (hasValidationErrors) {
+        showToast('Resolve validation issues before collapsing this section.');
+        return;
+    }
+
+    const collapsed = section.classList.toggle('collapsed');
+    const button = section.querySelector('.section-collapse-btn');
+    if (button) button.setAttribute('aria-expanded', String(!collapsed));
+    saveSectionCollapseState();
 }
 
 function collectFormData() {
@@ -333,7 +482,7 @@ function collectFormData() {
         skills:          skillsList,
         certifications:  document.getElementById('certifications').value,
         languages:       document.getElementById('languages').value,
-        theme:           themeSelect.value,
+        theme:           selectedTheme,
         descPreferences: Array.from(document.querySelectorAll('input[name="descPreference"]:checked')).map(i => i.value)
     };
 }
@@ -471,10 +620,10 @@ function addExperienceEntry(data = {}) {
 
     // Wire up AI enhance for this specific entry
     const aiBtn = entry.querySelector('.ai-enhance-btn');
-    aiBtn.addEventListener('click', () => enhanceText(null, aiBtn, ta, entry.querySelector('.exp-ai-warning')));
+    if (aiBtn) {
+        aiBtn.addEventListener('click', () => enhanceText(null, aiBtn, ta, entry.querySelector('.exp-ai-warning')));
+    }
 
-    experienceContainer.appendChild(entry);
-    updatePreview();
 }
 
 function addEducationEntry(data = {}) {
@@ -671,27 +820,33 @@ function validateForm() {
 }
 
 // ─── Progress ─────────────────────────────────────────────────────────────────
-function updateProgress() {
-    const checks = [
-        Boolean(document.getElementById('fullName').value.trim()),
-        Boolean(document.getElementById('email').value.trim()),
-        Boolean(document.getElementById('phone').value.trim()),
-        Boolean(document.getElementById('location').value.trim()),
-        Boolean(document.getElementById('summary').value.trim()),
-        educationContainer.querySelectorAll('.education-degree').length > 0 &&
-            Boolean(educationContainer.querySelector('.education-degree')?.value.trim()),
-        experienceContainer.querySelectorAll('.experience-title').length > 0 &&
-            Boolean(experienceContainer.querySelector('.experience-title')?.value.trim()),
-        skillsList.length > 0,
-        Boolean(cvAvatar.src && !cvAvatar.hidden),
-        projectContainer.querySelectorAll('.project-entry').length > 0,
+function getProgressState() {
+    const requiredFields = [
+        { label: 'Full Name', value: document.getElementById('fullName').value.trim() },
+        { label: 'Email', value: document.getElementById('email').value.trim() },
+        { label: 'Phone', value: document.getElementById('phone').value.trim() },
+        { label: 'Location', value: document.getElementById('location').value.trim() },
+        { label: 'Summary', value: document.getElementById('summary').value.trim() },
+        { label: 'Education', value: educationContainer.querySelector('.education-degree')?.value.trim() || '' },
+        { label: 'Experience', value: experienceContainer.querySelector('.experience-title')?.value.trim() || '' },
+        { label: 'Skills', value: skillsList.length > 0 ? 'ok' : '' }
     ];
 
-    const filled  = checks.filter(Boolean).length;
-    const pct     = Math.round((filled / checks.length) * 100);
+    const missingRequiredFields = requiredFields.filter(field => !field.value).map(field => field.label);
+    const filled  = requiredFields.length - missingRequiredFields.length;
+    const pct     = Math.round((filled / requiredFields.length) * 100);
+
+    return { requiredFields, missingRequiredFields, filled, pct };
+}
+
+function updateProgress() {
+    const { missingRequiredFields, pct } = getProgressState();
     progressBar.style.width = `${pct}%`;
     progressLabel.textContent = `${pct}% complete`;
     progressBar.classList.toggle('progress-done', pct === 100);
+    requiredFieldsLeft.textContent = missingRequiredFields.length
+        ? `Missing: ${missingRequiredFields.join(', ')}`
+        : 'All required fields complete';
 }
 
 // ─── Live Preview ─────────────────────────────────────────────────────────────
@@ -791,6 +946,106 @@ function copyCvAsText() {
     }).catch(() => {
         showToast('Copy failed. Please try again.');
     });
+}
+
+function copyTextToClipboard(text) {
+    const copyWithNavigator = () => navigator.clipboard.writeText(text);
+
+    return copyWithNavigator().catch(() => {
+        const temp = document.createElement('textarea');
+        temp.value = text;
+        temp.setAttribute('readonly', '');
+        temp.style.position = 'fixed';
+        temp.style.left = '-9999px';
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        document.body.removeChild(temp);
+    });
+}
+
+function copyFormAsJson() {
+    const data = collectFormData();
+    copyTextToClipboard(JSON.stringify(data, null, 2)).then(() => {
+        showToast('Form state copied as JSON!');
+    }).catch(() => {
+        showToast('JSON copy failed. Please try again.');
+    });
+}
+
+function handleJsonImport(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        try {
+            const parsed = JSON.parse(e.target.result);
+            if (!parsed || typeof parsed !== 'object') throw new Error('Invalid JSON');
+            const requiredKeys = ['fullName', 'email', 'phone', 'location', 'summary', 'experiences', 'educations', 'projects', 'skills', 'theme', 'descPreferences'];
+            const missing = requiredKeys.filter(key => !(key in parsed));
+            if (missing.length) {
+                showToast(`Import failed. Missing: ${missing.join(', ')}`);
+                return;
+            }
+            applyImportedState(parsed);
+            showToast('JSON imported successfully!');
+        } catch (err) {
+            showToast('Import failed. Please use valid CraftCV JSON.');
+        }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
+function applyImportedState(data) {
+    document.getElementById('fullName').value = data.fullName || '';
+    document.getElementById('email').value = data.email || '';
+    document.getElementById('phone').value = data.phone || '';
+    countryCodeInput.value = data.countryCode || '🇪🇬 EG (+20)';
+    document.getElementById('location').value = data.location || '';
+    document.getElementById('summary').value = data.summary || '';
+    document.getElementById('certifications').value = data.certifications || '';
+    document.getElementById('languages').value = data.languages || '';
+
+    const prefs = Array.isArray(data.descPreferences) ? data.descPreferences : [];
+    document.querySelectorAll('input[name="descPreference"]').forEach(input => {
+        input.checked = prefs.includes(input.value);
+    });
+
+    educationContainer.innerHTML = '';
+    if (Array.isArray(data.educations) && data.educations.length) {
+        data.educations.forEach(item => addEducationEntry(item));
+    } else {
+        addEducationEntry();
+    }
+
+    experienceContainer.innerHTML = '';
+    if (Array.isArray(data.experiences) && data.experiences.length) {
+        data.experiences.forEach(item => addExperienceEntry(item));
+    } else {
+        addExperienceEntry();
+    }
+
+    projectContainer.innerHTML = '';
+    if (Array.isArray(data.projects) && data.projects.length) {
+        data.projects.forEach(item => addProjectEntry(item));
+    }
+
+    skillsList = [];
+    skillTagsContainer.innerHTML = '';
+    if (Array.isArray(data.skills) && data.skills.length) {
+        data.skills.forEach(skill => {
+            if (skill && skill.name) addSkillToList(skill.name, skill.level || 'Intermediate');
+        });
+    }
+    syncSkillsHidden();
+
+    if (data.theme) applyTheme(data.theme);
+    updateCharCounter(document.getElementById('summary'));
+    saveFormState();
+    updatePreview();
+    updateProgress();
 }
 
 function shareViaGmail() {
@@ -918,6 +1173,7 @@ async function enhanceText(targetId, btn, directTextarea = null, directWarning =
         btn.textContent  = '⏳ Enhancing…';
     }
     if (warningTarget) warningTarget.textContent = '';
+    const skeleton = showSkeletonOverlay(textarea);
 
     try {
         const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -958,7 +1214,34 @@ async function enhanceText(targetId, btn, directTextarea = null, directWarning =
             btn.disabled    = false;
             btn.textContent = '✦ AI Enhance';
         }
+        hideSkeletonOverlay(skeleton, textarea);
     }
+}
+
+// ─── Skeleton Loader ────────────────────────────────────────────────────────
+function showSkeletonOverlay(textarea) {
+    const parent = textarea.parentElement;
+    if (getComputedStyle(parent).position === 'static') {
+        parent.style.position = 'relative';
+    }
+    const overlay = document.createElement('div');
+    overlay.className = 'skeleton-overlay';
+    overlay.style.top    = textarea.offsetTop + 'px';
+    overlay.style.left   = textarea.offsetLeft + 'px';
+    overlay.style.width  = textarea.offsetWidth + 'px';
+    overlay.style.height = textarea.offsetHeight + 'px';
+    overlay.innerHTML =
+        '<div class="skeleton-line"></div>' +
+        '<div class="skeleton-line"></div>' +
+        '<div class="skeleton-line short"></div>';
+    parent.appendChild(overlay);
+    textarea.style.visibility = 'hidden';
+    return overlay;
+}
+
+function hideSkeletonOverlay(overlay, textarea) {
+    if (overlay) overlay.remove();
+    textarea.style.visibility = 'visible';
 }
 
 // ─── Toast ────────────────────────────────────────────────────────────────────

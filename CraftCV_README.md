@@ -15,7 +15,8 @@ CraftCV is a lightweight CV builder designed to help job seekers create professi
 - Copy CV as formatted plain text to clipboard
 - Share via Gmail with pre-filled subject and body
 - PDF export via print
-- Color theme selector (Classic Blue, Modern Dark, Minimal White) — persists across reloads
+- Color theme picker — 7 swatch-based themes (Classic Blue, Modern Dark, Minimal White, Sunset, Forest, Ocean, Rose) — persists across reloads
+- Skeleton loading animation on AI Enhance while waiting for a response
 - Inline form validation with per-field error messages
 - Browser autofill support
 - Personal API key input, stored locally in the browser only
@@ -29,6 +30,10 @@ CraftCV is a lightweight CV builder designed to help job seekers create professi
 - **Character counters** — summary and per-entry job description fields show live character count with a warning colour when approaching the limit
 - **Profile photo / avatar upload** — upload a photo that appears in the CV header preview; stored locally in the browser via localStorage
 - **CV completion progress bar** — shows how complete your CV is (0–100%) and turns green at 100%
+
+### New in v2.1
+- **Theme swatch picker** — click a color circle instead of choosing from a dropdown; 4 new palettes added (Sunset, Forest, Ocean, Rose) alongside the original 3
+- **AI Enhance skeleton loader** — the field being enhanced shows an animated placeholder instead of just a disabled button while waiting on Claude's response
 
 ## 🚀 How to Use
 1. Open the app in your browser.
@@ -44,6 +49,13 @@ CraftCV is a lightweight CV builder designed to help job seekers create professi
 - **Vanilla JavaScript** — no framework dependencies
 - **Anthropic Claude API** (`claude-sonnet-4-6`) — AI text enhancement
 - *(Planned)* **Python + FastAPI** — backend for user accounts and CV storage
+
+## ⚠️ Known Issues
+- **Test Connection is a placeholder** — it currently only checks that the key string is a plausible length, it does not verify the key against the Anthropic API yet.
+- **Demo Mode is not fully wired up** — the toggle saves its state and disables the key input, but AI Enhance still requires a saved API key. "No API key required" is currently inaccurate.
+- **Settings bar isn't mobile-optimized yet** — on narrow phone screens the Theme/API-key panel can feel cramped since it's still laid out as a 2-column grid at that width. Everything below it (form, preview) is responsive.
+- **Avatar uploads aren't quota-checked** — a large photo can silently fail to save if it pushes `localStorage` past its size limit; there's no error message yet.
+- **API key is stored client-side and used directly from the browser** — fine for personal/local use, but it means the key lives in `localStorage` and is sent straight to Anthropic from the page. The planned FastAPI backend (below) would move this server-side.
 
 ## 📁 File Structure
 ```
