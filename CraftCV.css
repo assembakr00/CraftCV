@@ -1015,6 +1015,16 @@ footer p {
 
     .settings-bar {
         align-items: stretch;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+    }
+
+    .settings-bar .api-key-container {
+        grid-column: 1 / -1;
+    }
+
+    .settings-bar input {
+        flex: 1 1 auto;
     }
 
     .skill-input-row {

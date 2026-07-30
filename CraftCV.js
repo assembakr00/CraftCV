@@ -338,18 +338,36 @@ async function testApiKeyConnection() {
         return;
     }
 
-    keyFeedback.textContent = 'Testing connection... ⏳';
+    keyFeedback.textContent = 'Testing connection...⏳';
     keyFeedback.className = 'key-feedback info';
     testKeyBtn.disabled = true;
 
     try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        if (key.length < 15) throw new Error();
-        
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': key,
+                'anthropic-version': '2023-06-01',
+                // This header is required for direct browser calls until a secure backend proxy is available.
+                'anthropic-dangerous-direct-browser-access': 'true'
+            },
+            body: JSON.stringify({
+                model: 'claude-sonnet-4-6',
+                max_tokens: 1,
+                system: 'You are a test helper, only respond with a single token or short acknowledgement.',
+                messages: [{ role: 'user', content: 'Ping' }]
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Anthropic responded with status ${response.status}`);
+        }
+
         keyFeedback.textContent = 'Connection Verified Successfully!';
         keyFeedback.className = 'key-feedback success';
     } catch (err) {
-        keyFeedback.textContent = 'Invalid key layout detected. Verify credentials.';
+        keyFeedback.textContent = 'Invalid key — verify your credentials.';
         keyFeedback.className = 'key-feedback error';
     } finally {
         testKeyBtn.disabled = false;
@@ -1161,8 +1179,9 @@ async function enhanceText(targetId, btn, directTextarea = null, directWarning =
         return;
     }
 
+    const isDemoActive = localStorage.getItem(DEMO_MODE_STORAGE) === 'true';
     const savedKey = localStorage.getItem(API_KEY_STORAGE);
-    if (!savedKey) {
+    if (!savedKey && !isDemoActive) {
         if (warningTarget) warningTarget.textContent = 'Please add your Anthropic API key above to use AI features.';
         return;
     }
@@ -1174,6 +1193,27 @@ async function enhanceText(targetId, btn, directTextarea = null, directWarning =
     }
     if (warningTarget) warningTarget.textContent = '';
     const skeleton = showSkeletonOverlay(textarea);
+
+    if (isDemoActive) {
+        const section = targetId === 'summary' ? 'summary' : 'description';
+        const jobTitle = targetId === 'summary'
+            ? (document.getElementById('fullName')?.value || 'professional')
+            : textarea.closest('.experience-entry')?.querySelector('.experience-title')?.value || 'professional';
+        const improved = getResumeAIPrediction(jobTitle, section);
+
+        textarea.value = improved;
+        updateCharCounter(textarea);
+        updatePreview();
+        saveFormState();
+        showToast('Demo Mode enhancement applied.');
+
+        if (btn) {
+            btn.disabled    = false;
+            btn.textContent = '✦ AI Enhance';
+        }
+        hideSkeletonOverlay(skeleton, textarea);
+        return;
+    }
 
     try {
         const response = await fetch('https://api.anthropic.com/v1/messages', {
