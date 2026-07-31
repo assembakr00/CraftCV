@@ -8,7 +8,7 @@ CraftCV is a lightweight CV builder designed to help job seekers create professi
 
 ### Core
 - Live CV preview as you type
-- AI-powered text enhancement (Claude claude-sonnet-4-6) per section
+- AI-powered text enhancement per section
 - Country code phone selector with flags (190+ countries)
 - Multiple experience and education entries (add/remove)
 - LocalStorage autosave with session restore banner
@@ -19,11 +19,11 @@ CraftCV is a lightweight CV builder designed to help job seekers create professi
 - Skeleton loading animation on AI Enhance while waiting for a response
 - Inline form validation with per-field error messages
 - Browser autofill support
-- Personal API key input, stored locally in the browser only
+- Personal API key input, stored locally in thes browser only
 
-### New in v2
+### New in v1.1
 - **Per-entry Job Descriptions** — each experience entry now has its own description field with AI Enhance and a character counter (previously one shared global field)
-- **AI Enhance loading state** — button disables and shows "Enhancing…" while waiting for Claude, preventing double-clicks and user confusion
+- **AI Enhance loading state** — button disables and shows "Enhancing…" while waiting for the LLM, preventing double-clicks and user confusion
 - **Clear Form confirmation modal** — a dialog asks you to confirm before wiping all data, preventing accidental data loss
 - **Projects & Portfolio section** — add multiple projects with name, technologies used, URL, and description; appears in the preview and export only when filled
 - **Skills tag input with proficiency levels** — add skills one at a time with Beginner / Intermediate / Advanced / Expert badges; no more comma-separated textarea
@@ -31,15 +31,15 @@ CraftCV is a lightweight CV builder designed to help job seekers create professi
 - **Profile photo / avatar upload** — upload a photo that appears in the CV header preview; stored locally in the browser via localStorage
 - **CV completion progress bar** — shows how complete your CV is (0–100%) and turns green at 100%
 
-### New in v2.1
+### New in v1.2
 - **Theme swatch picker** — click a color circle instead of choosing from a dropdown; 4 new palettes added (Sunset, Forest, Ocean, Rose) alongside the original 3
 - **AI Enhance skeleton loader** — the field being enhanced shows an animated placeholder instead of just a disabled button while waiting on Claude's response
 
 ## 🚀 How to Use
 1. Open the app in your browser.
-2. (Optional) Add your Anthropic API key in the settings bar at the top to enable AI Enhance.
+2. (Optional) Add your API key in the settings bar at the top to enable AI Enhance.
 3. Fill in your personal details, experience, education, projects, and skills.
-4. Use **✦ AI Enhance** on any section to polish your text with Claude.
+4. Use **✦ AI Enhance** on any section to polish your text with your LLM.
 5. Watch the live preview update on the right as you type.
 6. Export, share, or copy your CV whenever you are ready.
 
@@ -48,7 +48,7 @@ CraftCV is a lightweight CV builder designed to help job seekers create professi
 - **CSS3** — custom properties, flexbox/grid, responsive layout, print styles
 - **Vanilla JavaScript** — no framework dependencies
 - **Anthropic Claude API** (`claude-sonnet-4-6`) — AI text enhancement
-- *(Planned)* **Python + FastAPI** — backend for user accounts and CV storage
+- *(Planned)* **Python + FastAPI & React** — backend for user accounts and CV storage and more motion in the frontend
 
 ## ⚠️ Known Issues
 - **Test Connection is a placeholder** — it currently only checks that the key string is a plausible length, it does not verify the key against the Anthropic API yet.
@@ -84,7 +84,7 @@ CraftCV/
 - `encodeURIComponent` for Gmail URL building
 - `window.print()` for PDF export with dedicated print CSS
 
-## 🗂️ Planned Backend (Coming Soon)
+## 🗂️ Planned Backend (Comsing Soon)
 The frontend is fully functional as a standalone tool. A Python backend is planned to add cloud features:
 
 - **Framework:** Python with FastAPI
@@ -108,7 +108,7 @@ The frontend is fully functional as a standalone tool. A Python backend is plann
 
 ## 👨‍💻 Developer
 **Assem Bakr**
-Built with passion and too much coffee.
+Built with passion and too much error.
 Open to feedback, collaboration, and opportunities.
 
 ## 📄 License
