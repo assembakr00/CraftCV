@@ -1,4 +1,4 @@
-# CraftCV
+# CraftCV https://assembakr00.github.io/CraftCV/
 Build polished CVs faster with a modern, smart, and beautifully structured experience.
 
 ## 🌟 Overview
@@ -63,7 +63,7 @@ CraftCV/
 ├── index.html        — Main entry page
 ├── CraftCV.css       — Styles: layout, themes, preview, print, new UI components
 ├── CraftCV.js        — All logic: live preview, form, AI, autosave, skills, avatar
-└── CraftCV_README.md — This file
+└── README.md — This file
 ```
 
 ## 🔐 API Key Setup
@@ -105,6 +105,9 @@ The frontend is fully functional as a standalone tool. A Python backend is plann
 - [ ] More CV layout templates
 - [ ] Python FastAPI backend (see above)
 - [ ] Dark-mode-aware PDF export
+
+## Demo Link
+-https://assembakr00.github.io/CraftCV/
 
 ## 👨‍💻 Developer
 **Assem Bakr**
