@@ -33,7 +33,7 @@ CraftCV is a lightweight CV builder designed to help job seekers create professi
 
 ### New in v1.2
 - **Theme swatch picker** — click a color circle instead of choosing from a dropdown; 4 new palettes added (Sunset, Forest, Ocean, Rose) alongside the original 3
-- **AI Enhance skeleton loader** — the field being enhanced shows an animated placeholder instead of just a disabled button while waiting on Claude's response
+- **AI Enhance skeleton loader** — the field being enhanced shows an animated placeholder instead of just a disabled button while waiting on the LLM response
 
 ## 🚀 How to Use
 1. Open the app in your browser.
