@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="CraftCV.css">
 </head>
 <body>
+    <button type="button" id="themeToggle" class="theme-toggle" role="switch" aria-checked="false" aria-label="Switch to dark theme">
+        <img class="theme-toggle-sun" src="%20Sun%20icon%20-%20Copy.png" alt="" aria-hidden="true">
+        <img class="theme-toggle-moon" src="Moon.png" alt="" aria-hidden="true">
+        <span class="theme-toggle-thumb" aria-hidden="true"></span>
+    </button>
     <div class="page-shell">
         <header class="intro">
             <h1>CraftCV Builder</h1>
@@ -23,40 +28,6 @@
         </div>
 
         <div class="settings-bar">
-            <div class="theme-control">
-                <span id="themeLabel" class="theme-control-label">Theme</span>
-                <div class="theme-swatches" id="themeSwatches" role="radiogroup" aria-labelledby="themeLabel">
-                    <div class="theme-swatch-item">
-                        <button type="button" class="theme-swatch" data-theme="classic" style="--swatch-color:#2563eb" title="Classic Blue" aria-label="Classic Blue"></button>
-                        <span class="theme-swatch-label">Classic</span>
-                    </div>
-                    <div class="theme-swatch-item">
-                        <button type="button" class="theme-swatch" data-theme="dark" style="--swatch-color:#60a5fa" title="Modern Dark" aria-label="Modern Dark"></button>
-                        <span class="theme-swatch-label">Dark</span>
-                    </div>
-                    <div class="theme-swatch-item">
-                        <button type="button" class="theme-swatch" data-theme="minimal" style="--swatch-color:#5b4d3b" title="Minimal White" aria-label="Minimal White"></button>
-                        <span class="theme-swatch-label">Minimal</span>
-                    </div>
-                    <div class="theme-swatch-item">
-                        <button type="button" class="theme-swatch" data-theme="sunset" style="--swatch-color:#f97316" title="Sunset" aria-label="Sunset"></button>
-                        <span class="theme-swatch-label">Sunset</span>
-                    </div>
-                    <div class="theme-swatch-item">
-                        <button type="button" class="theme-swatch" data-theme="forest" style="--swatch-color:#3f7d3a" title="Forest" aria-label="Forest"></button>
-                        <span class="theme-swatch-label">Forest</span>
-                    </div>
-                    <div class="theme-swatch-item">
-                        <button type="button" class="theme-swatch" data-theme="ocean" style="--swatch-color:#0891b2" title="Ocean" aria-label="Ocean"></button>
-                        <span class="theme-swatch-label">Ocean</span>
-                    </div>
-                    <div class="theme-swatch-item">
-                        <button type="button" class="theme-swatch" data-theme="rose" style="--swatch-color:#db2777" title="Rose" aria-label="Rose"></button>
-                        <span class="theme-swatch-label">Rose</span>
-                    </div>
-                </div>
-            </div>
-
     <div class="api-key-container">
         <label for="anthropicKey">AI API Key</label>
     <div class="input-wrapper">

@@ -1,7 +1,7 @@
 // ─── DOM References ────────────────────────────────────────────────────────────
 const form               = document.getElementById('cvForm');
-const themeSwatches      = document.querySelectorAll('.theme-swatch');
-let   selectedTheme      = 'classic';
+const themeToggle        = document.getElementById('themeToggle');
+let   selectedTheme      = 'forest';
 const restoreBanner      = document.getElementById('restoreBanner');
 const restoreBtn         = document.getElementById('restoreBtn');
 const discardBtn         = document.getElementById('discardBtn');
@@ -171,8 +171,8 @@ function attachEventListeners() {
         if (validateForm()) updatePreview();
     });
 
-    themeSwatches.forEach(function (swatch) {
-        swatch.addEventListener('click', function () { applyTheme(this.dataset.theme); });
+    themeToggle.addEventListener('click', function () {
+        applyTheme(selectedTheme === 'dark' ? 'forest' : 'dark');
     });
 
     saveKeyBtn.addEventListener('click',     saveApiKey);
@@ -276,17 +276,16 @@ function handleFormClick(event) {
 
 // ─── Theme ────────────────────────────────────────────────────────────────────
 function applyTheme(theme) {
-    selectedTheme = theme;
-    document.body.setAttribute('data-theme', theme);
-    localStorage.setItem('craftcv_theme', theme);
-    themeSwatches.forEach(function (swatch) {
-        swatch.classList.toggle('active', swatch.dataset.theme === theme);
-    });
+    selectedTheme = theme === 'dark' ? 'dark' : 'forest';
+    document.body.setAttribute('data-theme', selectedTheme);
+    localStorage.setItem('craftcv_theme', selectedTheme);
+    themeToggle.setAttribute('aria-checked', String(selectedTheme === 'dark'));
+    themeToggle.setAttribute('aria-label', `Switch to ${selectedTheme === 'dark' ? 'light' : 'dark'} theme`);
 }
 
 function restoreSavedTheme() {
     const saved = localStorage.getItem('craftcv_theme');
-    applyTheme(saved || 'classic');
+    applyTheme(saved || 'forest');
 }
 
 // ─── API Key ──────────────────────────────────────────────────────────────────
