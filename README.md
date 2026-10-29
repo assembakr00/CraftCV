@@ -6,11 +6,13 @@ CraftCV is a lightweight CV builder designed to help job seekers create professi
 
 ##  How to Use?
 1. Open the app in your browser.
-2. (Optional) Add your API key in the settings bar at the top to enable AI Enhance.
+2. Open Settings from the menu to choose a font or add your API key for AI Enhance.
 3. Fill in your personal details, experience, education, projects, and skills.
 4. Use AI Enhance on any section to polish your text with your LLM if u added an api
 5. Watch the live preview update on the right as you type.
 6. Export, share, or copy your CV whenever you are ready.
+
+Use **Restart Demo** in Settings to clear all saved browser data, including your API key.
 
 ## Demo Link
 -https://assembakr00.github.io/CraftCV/
@@ -20,5 +22,4 @@ CraftCV is a lightweight CV builder designed to help job seekers create professi
 Built with passion and too much error oh and dry humor too
 
 also NOTE: u have extradocs,md file in the projects check it out if u like to see details and formal nerdy stuff and what i did in each version
-
 

@@ -7,11 +7,66 @@
     <link rel="stylesheet" href="CraftCV.css">
 </head>
 <body>
+    <button type="button" id="settingsMenuToggle" class="settings-menu-toggle" aria-expanded="false" aria-controls="settingsDrawer" aria-label="Open settings menu">
+        <img src="assets/hamburger.png" alt="" aria-hidden="true">
+    </button>
     <button type="button" id="themeToggle" class="theme-toggle" role="switch" aria-checked="false" aria-label="Switch to dark theme">
-        <img class="theme-toggle-sun" src="%20Sun%20icon%20-%20Copy.png" alt="" aria-hidden="true">
-        <img class="theme-toggle-moon" src="Moon.png" alt="" aria-hidden="true">
+        <img class="theme-toggle-sun" src="assets/%20Sun%20icon%20.png" alt="" aria-hidden="true">
+        <img class="theme-toggle-moon" src="assets/Moon.png" alt="" aria-hidden="true">
         <span class="theme-toggle-thumb" aria-hidden="true"></span>
     </button>
+    <button type="button" id="settingsBackdrop" class="settings-backdrop" aria-label="Close settings menu" hidden></button>
+    <aside id="settingsDrawer" class="settings-drawer" aria-labelledby="settingsTitle" aria-hidden="true">
+        <div class="settings-drawer-header">
+            <h2 id="settingsTitle">Settings</h2>
+            <button type="button" id="settingsClose" class="secondary-btn" aria-label="Close settings">×</button>
+        </div>
+        <nav class="settings-nav" aria-label="Settings menu">
+            <button type="button" id="settingsPageNav" class="settings-nav-item">Settings</button>
+        </nav>
+    </aside>
+    <main id="settingsPage" class="settings-page" aria-labelledby="settingsPageTitle" hidden>
+        <header class="settings-page-header">
+            <button type="button" id="backToBuilderBtn" class="secondary-btn">← Back to Builder</button>
+            <h1 id="settingsPageTitle" tabindex="-1">Settings</h1>
+        </header>
+        <section id="settingsContent" class="settings-content" aria-label="Settings">
+            <div class="form-group">
+                <label for="fontSelect">Font</label>
+                <select id="fontSelect">
+                    <option value="normal">Normal text</option>
+                    <option value="pixel">Pixel art text (Peaberry)</option>
+                </select>
+            </div>
+            <div class="api-key-container">
+                <label for="anthropicKey">AI API Key</label>
+                <div class="input-wrapper">
+                    <input type="password" id="anthropicKey" name="anthropicKey" placeholder="sk-..." autocomplete="off">
+                    <button type="button" id="toggleVisibilityBtn" class="icon-btn" aria-label="Toggle Key Visibility">👁️</button>
+                </div>
+                <div class="action-buttons">
+                    <button type="button" id="saveKeyBtn" class="primary-btn">Save Key</button>
+                    <button type="button" id="testKeyBtn" class="secondary-btn">Test Connection</button>
+                </div>
+                <div class="demo-mode-wrapper">
+                    <label class="switch-label">
+                        <input type="checkbox" id="demoModeCheckbox">
+                        <span>Enable Demo Mode (No API key required)</span>
+                    </label>
+                </div>
+                <div id="keyFeedback" class="key-feedback" aria-live="polite"></div>
+                <small>Using your own key keeps this app free. Your key is saved locally on your device only.</small>
+            </div>
+            <div id="restoreBanner" class="restore-banner" hidden>
+                <span>Restore your last session?</span>
+                <div class="restore-actions">
+                    <button type="button" id="restoreBtn" class="primary-btn">Restore</button>
+                    <button type="button" id="discardBtn" class="secondary-btn">Discard</button>
+                </div>
+            </div>
+            <button type="button" id="restartDemoBtn" class="danger-btn restart-demo-btn">Restart Demo</button>
+        </section>
+    </main>
     <div class="page-shell">
         <header class="intro">
             <h1>CraftCV Builder</h1>
@@ -26,39 +81,6 @@
             <span id="cvProgressLabel" class="progress-label">0% complete</span>
             <span id="requiredFieldsLeft" class="required-fields-left">Checking required fields…</span>
         </div>
-
-        <div class="settings-bar">
-    <div class="api-key-container">
-        <label for="anthropicKey">AI API Key</label>
-    <div class="input-wrapper">
-        <input type="password" id="anthropicKey" name="anthropicKey" placeholder="sk-..." autocomplete="off">
-        <button type="button" id="toggleVisibilityBtn" class="icon-btn" aria-label="Toggle Key Visibility">👁️</button>
-    </div>
-    
-    <div class="action-buttons">
-        <button type="button" id="saveKeyBtn" class="primary-btn">Save Key</button>
-        <button type="button" id="testKeyBtn" class="secondary-btn">Test Connection</button>
-    </div>
-
-    <div class="demo-mode-wrapper">
-        <label class="switch-label">
-            <input type="checkbox" id="demoModeCheckbox">
-            <span>Enable Demo Mode (No API key required)</span>
-        </label>
-    </div>
-
-    <div id="keyFeedback" class="key-feedback" aria-live="polite"></div>
-    <small>Using your own key keeps this app free. Standard usage costs less than $0.01 per resume. Your key is saved locally on your device only.</small>
-        
-        <div id="restoreBanner" class="restore-banner" hidden>
-            <span>Restore your last session?</span>
-            <div class="restore-actions">
-                <button type="button" id="restoreBtn" class="primary-btn">Restore</button>
-                <button type="button" id="discardBtn" class="secondary-btn">Discard</button>
-            </div>
-        </div>
-        </div>
-    </div>
 
         <!-- Clear Form Confirmation Modal -->
         <div id="clearModal" class="modal-overlay" hidden>

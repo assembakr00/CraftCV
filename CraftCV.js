@@ -1,6 +1,16 @@
 // ─── DOM References ────────────────────────────────────────────────────────────
 const form               = document.getElementById('cvForm');
 const themeToggle        = document.getElementById('themeToggle');
+const settingsMenuToggle = document.getElementById('settingsMenuToggle');
+const settingsDrawer     = document.getElementById('settingsDrawer');
+const settingsBackdrop   = document.getElementById('settingsBackdrop');
+const settingsClose      = document.getElementById('settingsClose');
+const settingsPageNav    = document.getElementById('settingsPageNav');
+const settingsPage       = document.getElementById('settingsPage');
+const settingsPageTitle  = document.getElementById('settingsPageTitle');
+const backToBuilderBtn   = document.getElementById('backToBuilderBtn');
+const fontSelect         = document.getElementById('fontSelect');
+const restartDemoBtn     = document.getElementById('restartDemoBtn');
 let   selectedTheme      = 'forest';
 const restoreBanner      = document.getElementById('restoreBanner');
 const restoreBtn         = document.getElementById('restoreBtn');
@@ -41,6 +51,7 @@ const importJsonInput    = document.getElementById('importJsonInput');
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
 const DEMO_MODE_STORAGE  = 'craftcv_demo_mode';
+const FONT_STORAGE       = 'craftcv_font';
 const STORAGE_KEY     = 'craftcv_form_state';
 const API_KEY_STORAGE = 'craftcv_api_key';
 const AVATAR_STORAGE  = 'craftcv_avatar';
@@ -134,6 +145,7 @@ function init() {
     populateCountryOptions();
     restoreSavedApiKey();
     restoreSavedTheme();
+    restoreSavedFont();
     attachEventListeners();
     restoreAvatarFromStorage();
 
@@ -152,16 +164,7 @@ function init() {
 // ─── Event Listeners ───────────────────────────────────────────────────────────
 function attachEventListeners() {
     form.addEventListener('input', handleFormInput);
-    // restore demo mode state
-    const isDemoModeActive = localStorage.getItem(DEMO_MODE_STORAGE) === 'true';
-    if (isDemoModeActive) {
-        demoModeCheckbox.checked = true;
-        anthropicKeyInput.disabled = true;
-        saveKeyBtn.disabled = true;
-        testKeyBtn.disabled = true;
-        keyFeedback.textContent = 'Demo Mode active. No API key required.';
-        keyFeedback.className = 'key-feedback info';
-    }
+    setDemoMode(localStorage.getItem(DEMO_MODE_STORAGE) === 'true');
 
     form.addEventListener('change', handleFormInput);
     form.addEventListener('blur',   handleBlur, true);
@@ -174,11 +177,25 @@ function attachEventListeners() {
     themeToggle.addEventListener('click', function () {
         applyTheme(selectedTheme === 'dark' ? 'forest' : 'dark');
     });
+    settingsMenuToggle.addEventListener('click', function () {
+        setSettingsDrawerOpen(settingsMenuToggle.getAttribute('aria-expanded') !== 'true');
+    });
+    settingsClose.addEventListener('click', function () { setSettingsDrawerOpen(false); });
+    settingsBackdrop.addEventListener('click', function () { setSettingsDrawerOpen(false); });
+    settingsPageNav.addEventListener('click', showSettingsPage);
+    backToBuilderBtn.addEventListener('click', showBuilderPage);
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && settingsDrawer.getAttribute('aria-hidden') === 'false') {
+            setSettingsDrawerOpen(false);
+        }
+    });
+    fontSelect.addEventListener('change', function () { applyFont(fontSelect.value); });
+    restartDemoBtn.addEventListener('click', restartDemo);
 
     saveKeyBtn.addEventListener('click',     saveApiKey);
     restoreBtn.addEventListener('click',     restoreSession);
     toggleVisibilityBtn.addEventListener('click', toggleKeyVisibility);
-    demoModeCheckbox.addEventListener('change', handleDemoModeToggle);
+    demoModeCheckbox.addEventListener('change', function () { setDemoMode(demoModeCheckbox.checked); });
     testKeyBtn.addEventListener('click', testApiKeyConnection);
 
     discardBtn.addEventListener('click',     discardSession);
@@ -288,8 +305,48 @@ function restoreSavedTheme() {
     applyTheme(saved || 'forest');
 }
 
+function restoreSavedFont() {
+    applyFont(localStorage.getItem(FONT_STORAGE) || 'normal');
+}
+
+function applyFont(font) {
+    const selectedFont = font === 'pixel' ? 'pixel' : 'normal';
+    document.body.dataset.font = selectedFont;
+    fontSelect.value = selectedFont;
+    localStorage.setItem(FONT_STORAGE, selectedFont);
+}
+
+function setSettingsDrawerOpen(isOpen) {
+    settingsDrawer.setAttribute('aria-hidden', String(!isOpen));
+    settingsMenuToggle.setAttribute('aria-expanded', String(isOpen));
+    settingsMenuToggle.setAttribute('aria-label', isOpen ? 'Close settings menu' : 'Open settings menu');
+    settingsBackdrop.hidden = !isOpen;
+    document.body.classList.toggle('settings-open', isOpen);
+
+    if (isOpen) fontSelect.focus();
+    else settingsMenuToggle.focus();
+}
+
+function showSettingsPage() {
+    setSettingsDrawerOpen(false);
+    settingsPage.hidden = false;
+    document.body.dataset.page = 'settings';
+    settingsPageTitle.focus();
+}
+
+function showBuilderPage() {
+    settingsPage.hidden = true;
+    delete document.body.dataset.page;
+    settingsMenuToggle.focus();
+}
+
+function restartDemo() {
+    if (!window.confirm('Restart the demo? This clears all saved data, including your API key.')) return;
+    localStorage.clear();
+    window.location.reload();
+}
+
 // ─── API Key ──────────────────────────────────────────────────────────────────
-// REPLACE LINES 240 TO 253 WITH THIS:
 function saveApiKey() {
     const key = anthropicKeyInput.value.trim();
     if (!key) {
@@ -317,16 +374,14 @@ function toggleKeyVisibility() {
     toggleVisibilityBtn.textContent = isPassword ? '🙈' : '👁️';
 }
 
-function handleDemoModeToggle(event) {
-    const isActive = event.target.checked;
+function setDemoMode(isActive) {
     localStorage.setItem(DEMO_MODE_STORAGE, isActive);
-    
+    demoModeCheckbox.checked = isActive;
     anthropicKeyInput.disabled = isActive;
     saveKeyBtn.disabled = isActive;
     testKeyBtn.disabled = isActive;
-    
-    keyFeedback.textContent = isActive ? 'Demo Mode active. No API key required.' : 'Demo Mode disabled.';
-    keyFeedback.className = 'key-feedback info';
+    keyFeedback.textContent = isActive ? 'Demo Mode active. No API key required.' : '';
+    keyFeedback.className = isActive ? 'key-feedback info' : 'key-feedback';
 }
 
 async function testApiKeyConnection() {
