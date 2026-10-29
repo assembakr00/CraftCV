@@ -46,3 +46,31 @@ The frontend is fully functional as a standalone tool. A Python backend is plann
 - Theme swatch picker— choose between the Forest Light theme and Dark theme
 - AI Enhance skeleton loader — the field being enhanced shows an animated placeholder instead of just a disabled button while waiting on the LLM response
 
+
+## What it has
+- Live CV preview as you type
+- AI-powered text enhancement per section
+- Country code phone selector with flags (190+ countries)
+- Multiple experience and education entries (add/remove)
+- LocalStorage autosave with session restore banner
+- Copy CV as formatted plain text to clipboard
+- Share via Gmail with pre-filled subject and body
+- PDF export via print
+- Color theme picker — Forest Light and Dark themes, saved across reloads
+- Skeleton loading animation on AI Enhance while waiting for a response
+- Inline form validation with per-field error messages
+- Browser autofill support
+- Personal API key input, stored locally in thes browser only
+
+## Known Issues
+- **Test Connection is a placeholder** — it currently only checks that the key string is a plausible length, it does not verify the key against the Anthropic API yet.
+- **Demo Mode is not fully wired up** — the toggle saves its state and disables the key input, but AI Enhance still requires a saved API key. "No API key required" is currently inaccurate.
+- **Avatar uploads aren't quota-checked** — a large photo can silently fail to save if it pushes `localStorage` past its size limit; there's no error message yet.
+- **API key is stored client-side and used directly from the browser** — fine for personal/local use, but it means the key lives in `localStorage` and is sent straight to Anthropic from the page. The planned FastAPI backend (below) would move this server-side.
+
+
+
+## 📄 License
+MIT License
+Copyright (c) 2025 Assem Bakr
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software to use, copy, modify, merge, publish, or distribute it, subject to the condition that the above copyright notice appears in all copies.
