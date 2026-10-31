@@ -30,7 +30,6 @@ The frontend is fully functional as a standalone tool. A Python backend is plann
 - [ ] ATS (Applicant Tracking System) keyword score checker
 - [ ] More CV layout templates
 - [ ] Python FastAPI backend (see above)
-- [ ] Dark-mode-aware PDF export
 
 ### New in v1.1
 - **Per-entry Job Descriptions** — each experience entry now has its own description field with AI Enhance and a character counter (previously one shared global field)
@@ -43,7 +42,7 @@ The frontend is fully functional as a standalone tool. A Python backend is plann
 - **CV completion progress bar** — shows how complete your CV is (0–100%) and turns green at 100%
 
 ### New in v1.2
-- Theme swatch picker— choose between the Forest Light theme and Dark theme
+- Theme toggle — Forest Light and Dark only; the CSS was flattened (no animations/shadow effects)
 - AI Enhance skeleton loader — the field being enhanced shows an animated placeholder instead of just a disabled button while waiting on the LLM response
 
 
@@ -63,12 +62,8 @@ The frontend is fully functional as a standalone tool. A Python backend is plann
 - Personal API key input, stored locally in thes browser only
 
 ## Known Issues
-- **Test Connection is a placeholder** — it currently only checks that the key string is a plausible length, it does not verify the key against the Anthropic API yet.
-- **Demo Mode is not fully wired up** — the toggle saves its state and disables the key input, but AI Enhance still requires a saved API key. "No API key required" is currently inaccurate.
-- **Avatar uploads aren't quota-checked** — a large photo can silently fail to save if it pushes `localStorage` past its size limit; there's no error message yet.
-- **API key is stored client-side and used directly from the browser** — fine for personal/local use, but it means the key lives in `localStorage` and is sent straight to Anthropic from the page. The planned FastAPI backend (below) would move this server-side.
-
-
+- **API key is stored client-side and used directly from the browser** — fine for personal/local use, but the key lives in `localStorage` and is sent straight to Anthropic from the page. The planned FastAPI backend would move this server-side.
+- **Large avatars may not persist** — if a photo exceeds the `localStorage` quota it shows for the session only (a toast warns you).
 
 ## 📄 License
 MIT License

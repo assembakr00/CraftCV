@@ -470,7 +470,8 @@ select:focus {
 }
 
 input.is-invalid,
-textarea.is-invalid {
+textarea.is-invalid,
+select.is-invalid {
     border-color: var(--danger);
 }
 
@@ -479,7 +480,7 @@ textarea {
     resize: vertical;
 }
 
-.phone-inputs input:first-child {
+.phone-inputs select:first-child {
     flex: 0 0 180px;
 }
 
@@ -880,7 +881,7 @@ footer p {
         align-items: stretch;
     }
 
-    .phone-inputs input:first-child,
+    .phone-inputs select:first-child,
     .skill-input-row select {
         width: 100%;
         flex-basis: auto;
@@ -896,9 +897,22 @@ footer p {
 }
 
 @media print {
+    body,
+    body[data-theme="dark"] {
+        --bg: #fff;
+        --surface: #fff;
+        --surface-alt: #fff;
+        --text: #000;
+        --muted: #444;
+        --border: #ccc;
+        --primary: #3f7d3a;
+        --primary-soft: #e3efdc;
+    }
+
     body {
         background: #fff;
         color: #000;
+        font-family: Arial, sans-serif !important;
     }
 
     .settings-drawer,
@@ -906,6 +920,7 @@ footer p {
     .settings-menu-toggle,
     .theme-toggle,
     .settings-page,
+    .intro,
     .progress-bar-wrap,
     form,
     .preview-actions,
@@ -928,6 +943,11 @@ footer p {
 
     .cv-output {
         border-top: 0;
+        font-family: Arial, sans-serif !important;
+    }
+
+    .cv-output * {
+        font-family: Arial, sans-serif !important;
     }
 
     .cv-section {

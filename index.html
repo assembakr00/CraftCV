@@ -116,9 +116,8 @@
                     <div class="form-group">
                         <label for="phone">Phone</label>
                         <div class="phone-inputs">
-                            <input type="text" id="countryCodeInput" list="countryCodes" autocomplete="off" aria-label="Country code" value="🇪🇬 EG (+20)">
-                            <datalist id="countryCodes"></datalist>
-                            <input type="tel" id="phone" name="phone" required autocomplete="tel">
+                            <select id="countryCodeInput" autocomplete="tel-country-code" aria-label="Country code"></select>
+                            <input type="tel" id="phone" name="phone" required autocomplete="tel-national" inputmode="numeric" pattern="[0-9]*">
                         </div>
                         <div class="field-error" data-error-for="phone"></div>
                     </div>
@@ -170,6 +169,7 @@
                 <!-- ── Experience ── -->
                 <section class="card" data-section="experience">
                     <h2><span class="section-title-text">Experience</span><button type="button" class="section-collapse-btn" data-section="experience" aria-label="Collapse Experience" aria-expanded="true">⌄</button></h2>
+                    <p class="section-help">Add your current or previous jobs. Each entry appears in your CV with the job title, company, dates, and description of your work and impact.</p>
 
                     <div class="form-group">
                         <label>Job Description Preferences</label>
@@ -260,8 +260,8 @@
                     </div>
 
                     <section class="cv-section">
-                        <div class="divider"></d>
                         <h3>Professional Summary</h3>
+                        <div class="divider"></div>
                         <p id="cvSummary"></p>
                     </section>
 

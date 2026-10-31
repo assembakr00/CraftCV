@@ -165,13 +165,20 @@ function init() {
 function attachEventListeners() {
     form.addEventListener('input', handleFormInput);
     setDemoMode(localStorage.getItem(DEMO_MODE_STORAGE) === 'true');
+    phoneInput.addEventListener('input', function () {
+        const digitsOnly = phoneInput.value.replace(/\D/g, '');
+        if (phoneInput.value !== digitsOnly) phoneInput.value = digitsOnly;
+    });
 
     form.addEventListener('change', handleFormInput);
     form.addEventListener('blur',   handleBlur, true);
     form.addEventListener('click',  handleFormClick);
     form.addEventListener('submit', function (e) {
         e.preventDefault();
-        if (validateForm()) updatePreview();
+        if (!validateForm()) return;
+        updatePreview();
+        showToast('Your CV preview is ready.');
+        document.getElementById('cvOutput').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
     themeToggle.addEventListener('click', function () {
@@ -454,12 +461,32 @@ function getResumeAIPrediction(jobTitle, section) {
 
 // ─── Country Codes ────────────────────────────────────────────────────────────
 function populateCountryOptions() {
-    const list = document.getElementById('countryCodes');
-    if (!list) return;
-    list.innerHTML = COUNTRY_OPTIONS.map(item =>
-        `<option value="${item.flag} ${item.code} (${item.dial})"></option>`
-    ).join('');
-    if (!countryCodeInput.value.trim()) countryCodeInput.value = '🇪🇬 EG (+20)';
+    const countryNames = new Intl.DisplayNames([navigator.language || 'en'], { type: 'region' });
+    const options = COUNTRY_OPTIONS.map(item => ({
+        ...item,
+        name: countryNames.of(item.code) || item.code
+    })).sort((a, b) => a.name.localeCompare(b.name));
+
+    countryCodeInput.replaceChildren(...options.map(item => {
+        const option = document.createElement('option');
+        option.value = item.code;
+        option.textContent = `${item.flag} ${item.name} (${item.dial})`;
+        return option;
+    }));
+    setCountrySelection(countryCodeInput.value || 'EG');
+}
+
+function getCountryOption(value = countryCodeInput.value) {
+    return COUNTRY_OPTIONS.find(item =>
+        item.code === value ||
+        value === `${item.flag} ${item.code} (${item.dial})` ||
+        value.includes(`${item.code} (${item.dial})`)
+    ) || COUNTRY_OPTIONS.find(item => item.code === 'EG');
+}
+
+function setCountrySelection(value) {
+    const country = getCountryOption(value);
+    countryCodeInput.value = country.code;
 }
 
 // ─── Session Storage ──────────────────────────────────────────────────────────
@@ -570,7 +597,7 @@ function hydrateFromStorage() {
         document.getElementById('fullName').value     = d.fullName    || '';
         document.getElementById('email').value         = d.email       || '';
         document.getElementById('phone').value         = d.phone       || '';
-        countryCodeInput.value                          = d.countryCode || '🇪🇬 EG (+20)';
+        setCountrySelection(d.countryCode || 'EG');
         document.getElementById('location').value      = d.location    || '';
         document.getElementById('summary').value       = d.summary     || '';
         document.getElementById('certifications').value = d.certifications || '';
@@ -671,7 +698,7 @@ function addExperienceEntry(data = {}) {
             <input type="text" class="experience-company" value="${escapeHtml(data.company || '')}" placeholder="e.g., Insight Labs">
         </div>
         <div class="form-group">
-            <label>Duration</label>
+            <label>Dates</label>
             <input type="text" class="experience-duration" value="${escapeHtml(data.duration || '')}" placeholder="e.g., Jan 2022 – Present">
         </div>
         <div class="form-group">
@@ -696,6 +723,9 @@ function addExperienceEntry(data = {}) {
         aiBtn.addEventListener('click', () => enhanceText(null, aiBtn, ta, entry.querySelector('.exp-ai-warning')));
     }
 
+    experienceContainer.appendChild(entry);
+    updatePlaceholderForJobPreferences();
+    updatePreview();
 }
 
 function addEducationEntry(data = {}) {
@@ -717,7 +747,7 @@ function addEducationEntry(data = {}) {
         </div>
         <div class="form-group">
             <label>Graduation Year</label>
-            <input type="text" class="education-year" value="${escapeHtml(data.year || '')}" placeholder="e.g., 2024">
+            <input type="number" class="education-year" value="${escapeHtml(data.year || '')}" placeholder="e.g., 2024" min="1900" max="2100" step="1" inputmode="numeric">
         </div>
     `;
     educationContainer.appendChild(entry);
@@ -815,7 +845,11 @@ function handleAvatarUpload(event) {
     reader.onload = function (e) {
         const dataUrl = e.target.result;
         setAvatar(dataUrl);
-        localStorage.setItem(AVATAR_STORAGE, dataUrl);
+        try {
+            localStorage.setItem(AVATAR_STORAGE, dataUrl);
+        } catch (err) {
+            showToast('Photo is too large to save. It will be lost on reload.');
+        }
     };
     reader.readAsDataURL(file);
 }
@@ -870,24 +904,37 @@ function updatePlaceholderForJobPreferences() {
 
 // ─── Validation ───────────────────────────────────────────────────────────────
 function validateField(field) {
-    if (!field.id) return true;
-    const errorTarget = document.querySelector(`[data-error-for="${field.id}"]`);
-    if (!errorTarget) return true;
+    const errorTarget = field.id ? document.querySelector(`[data-error-for="${field.id}"]`) : null;
     if (field.required && !field.value.trim()) {
-        errorTarget.textContent = 'This field is required.';
+        if (errorTarget) errorTarget.textContent = 'This field is required.';
         field.classList.add('is-invalid');
         return false;
     }
-    errorTarget.textContent = '';
+
+    if (!field.validity.valid) {
+        if (errorTarget) {
+            errorTarget.textContent = field.type === 'email'
+                ? 'Enter a valid email address.'
+                : field.type === 'tel'
+                    ? 'Use numbers only for the phone number.'
+                    : field.validationMessage;
+        }
+        field.classList.add('is-invalid');
+        return false;
+    }
+
+    if (errorTarget) errorTarget.textContent = '';
     field.classList.remove('is-invalid');
     return true;
 }
 
 function validateForm() {
     let valid = true;
-    form.querySelectorAll('input[required], textarea[required]').forEach(field => {
+    form.querySelectorAll('input[required], textarea[required], select[required]').forEach(field => {
         if (!validateField(field)) valid = false;
     });
+    const firstInvalid = form.querySelector('.is-invalid');
+    if (firstInvalid) firstInvalid.focus();
     return valid;
 }
 
@@ -926,7 +973,7 @@ function updatePreview() {
     const fullName     = document.getElementById('fullName').value.trim()   || 'Your Name';
     const email        = document.getElementById('email').value.trim();
     const phone        = document.getElementById('phone').value.trim();
-    const countryCode  = countryCodeInput.value.trim();
+    const countryCode  = getCountryOption().dial;
     const location     = document.getElementById('location').value.trim();
     const summary      = document.getElementById('summary').value.trim()    || 'Add a concise summary of your professional background.';
     const certifications = document.getElementById('certifications').value.split(',').map(s => s.trim()).filter(Boolean);
@@ -1074,7 +1121,7 @@ function applyImportedState(data) {
     document.getElementById('fullName').value = data.fullName || '';
     document.getElementById('email').value = data.email || '';
     document.getElementById('phone').value = data.phone || '';
-    countryCodeInput.value = data.countryCode || '🇪🇬 EG (+20)';
+    setCountrySelection(data.countryCode || 'EG');
     document.getElementById('location').value = data.location || '';
     document.getElementById('summary').value = data.summary || '';
     document.getElementById('certifications').value = data.certifications || '';
@@ -1131,6 +1178,12 @@ function shareViaGmail() {
 }
 
 function exportPdf() {
+    const previousTitle = document.title;
+    const fullName = document.getElementById('fullName').value.trim();
+    document.title = fullName ? `${fullName} - CV` : 'CV';
+    window.addEventListener('afterprint', function restoreTitle() {
+        document.title = previousTitle;
+    }, { once: true });
     window.print();
 }
 
@@ -1139,7 +1192,7 @@ function buildCvText() {
     const fullName    = document.getElementById('fullName').value.trim()   || 'Your Name';
     const email       = document.getElementById('email').value.trim();
     const phone       = document.getElementById('phone').value.trim();
-    const countryCode = countryCodeInput.value.trim();
+    const countryCode = getCountryOption().dial;
     const location    = document.getElementById('location').value.trim();
     const summary     = document.getElementById('summary').value.trim();
     const certifications = document.getElementById('certifications').value.trim() || 'None';
@@ -1275,7 +1328,8 @@ async function enhanceText(targetId, btn, directTextarea = null, directWarning =
             headers: {
                 'Content-Type':     'application/json',
                 'x-api-key':        savedKey,
-                'anthropic-version': '2023-06-01'
+                'anthropic-version': '2023-06-01',
+                'anthropic-dangerous-direct-browser-access': 'true'
             },
             body: JSON.stringify({
                 model:      'claude-sonnet-4-6',
