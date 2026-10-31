@@ -199,6 +199,7 @@ select {
 }
 
 .theme-toggle {
+    direction: ltr;
     position: fixed;
     z-index: 1500;
     top: 18px;
@@ -323,7 +324,7 @@ body[data-theme="dark"] .theme-toggle-thumb {
     background: var(--primary-soft);
     color: var(--text);
     border-radius: 5px;
-    text-align: left;
+    text-align: start;
 }
 
 .api-key-container small {
@@ -335,13 +336,13 @@ body[data-theme="dark"] .theme-toggle-thumb {
 }
 
 .input-wrapper input {
-    padding-right: 44px;
+    padding-inline-end: 44px;
 }
 
 .icon-btn {
     position: absolute;
     top: 50%;
-    right: 8px;
+    inset-inline-end: 8px;
     padding: 4px;
     background: transparent;
     color: var(--text);
@@ -499,7 +500,7 @@ textarea {
 
 .char-counter {
     margin-top: 4px;
-    text-align: right;
+    text-align: end;
 }
 
 .char-counter.counter-warn {
@@ -621,9 +622,6 @@ button:disabled {
     font-size: 1rem;
 }
 
-.remove-entry-btn {
-    margin-left: auto;
-}
 
 .skill-input-row {
     display: flex;
@@ -752,7 +750,7 @@ button:disabled {
 }
 
 .cv-duration {
-    margin-left: auto;
+    margin-inline-start: auto;
 }
 
 .cv-exp-desc {
@@ -767,7 +765,7 @@ button:disabled {
 
 .bullet-list {
     margin: 0;
-    padding-left: 20px;
+    padding-inline-start: 20px;
 }
 
 .skills-list {
@@ -854,13 +852,133 @@ button:disabled {
 .toast {
     position: fixed;
     z-index: 1000;
-    right: 16px;
+    inset-inline-end: 16px;
     bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     padding: 10px 16px;
     background: var(--surface);
     color: var(--text);
     border: 1px solid var(--border);
     border-radius: 6px;
+}
+
+/* entry actions, dates, settings lists */
+.entry-actions {
+    display: flex;
+    gap: 6px;
+    margin-inline-start: auto;
+}
+
+.move-entry-btn {
+    min-width: 36px;
+}
+
+.date-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.date-row .form-group {
+    flex: 1 1 140px;
+}
+
+.section-help {
+    color: var(--muted);
+}
+
+.order-list {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 10px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+}
+
+.template-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.template-row select {
+    width: auto;
+    flex: 1;
+}
+
+.toast-action {
+    padding: 2px 8px;
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+/* CV templates (Classic is the default look above) */
+.tpl-modern .cv-header {
+    padding: 16px;
+    background: var(--primary);
+    color: var(--surface);
+    border: 0;
+    border-radius: 6px;
+}
+
+.tpl-modern .cv-header p {
+    color: var(--surface);
+}
+
+.tpl-modern .cv-section h3 {
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.tpl-modern .divider,
+.tpl-minimal .divider {
+    display: none;
+}
+
+.tpl-minimal {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: .95rem;
+}
+
+.tpl-minimal .cv-header {
+    text-align: center;
+    border-bottom: 2px solid var(--text);
+}
+
+.tpl-minimal .cv-header-inner {
+    justify-content: center;
+}
+
+.tpl-minimal .cv-header-text {
+    flex: 0 1 auto;
+}
+
+.tpl-minimal .cv-section {
+    margin-bottom: 12px;
+}
+
+.tpl-minimal .cv-section h3 {
+    padding-bottom: 2px;
+    border-bottom: 1px solid var(--border);
+    font-size: .85rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
 }
 
 footer {
@@ -911,7 +1029,7 @@ footer p {
     }
 
     .cv-duration {
-        margin-left: 0;
+        margin-inline-start: 0;
     }
 }
 
@@ -943,6 +1061,8 @@ footer p {
     .progress-bar-wrap,
     form,
     .preview-actions,
+    .template-row,
+    .toast,
     .modal-overlay,
     footer {
         display: none !important;
@@ -966,7 +1086,16 @@ footer p {
     }
 
     .cv-output * {
-        font-family: Arial, sans-serif !important;
+        font-family: inherit !important;
+    }
+
+    .cv-output.tpl-minimal {
+        font-family: Georgia, "Times New Roman", serif !important;
+    }
+
+    .tpl-modern .cv-header {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 
     .cv-section {

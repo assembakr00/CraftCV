@@ -25,10 +25,10 @@ The frontend is fully functional as a standalone tool. A Python backend is plann
 
 ## Upgrade Roadmap
 - [ ] LinkedIn profile data import
-- [ ] Multiple language support (i18n)
-- [ ] Drag-and-drop section reordering
+- [x] Multiple language support (English + Arabic with RTL; more languages can be added in the `I18N` object)
+- [x] Reordering (up/down buttons for entries and for CV sections; drag-and-drop not implemented)
 - [ ] ATS (Applicant Tracking System) keyword score checker
-- [ ] More CV layout templates
+- [x] More CV layout templates (Classic, Modern, Minimal)
 - [ ] Python FastAPI backend (see above)
 
 ### New in v1.1
@@ -46,6 +46,15 @@ The frontend is fully functional as a standalone tool. A Python backend is plann
 - AI Enhance skeleton loader — the field being enhanced shows an animated placeholder instead of just a disabled button while waiting on the LLM response
 
 
+### New in v1.3
+- **Arabic + RTL** — pick the language in Settings; all labels, errors, the preview and the text export switch language and direction
+- **CV templates** — Classic, Modern and Minimal, chosen above the preview; the choice is saved and used for PDF export
+- **Start / end dates with "I currently work here"** — replaces the free-text dates; the end date is optional. Old saved free-text dates still show
+- **Reordering** — ↑ ↓ buttons on every experience / education / project entry, and a section-order list in Settings that controls the preview, copied text and PDF
+- **Undo for Clear Form** — an Undo button appears for 8 seconds after clearing
+- **Input rules** — name and city accept letters only, email/phone formats are checked, location is City + a country from a list
+- **Clearer API errors** — AI Enhance tells you to open Settings when the key is missing or rejected
+
 ## What it has
 - Live CV preview as you type
 - AI-powered text enhancement per section
@@ -55,7 +64,10 @@ The frontend is fully functional as a standalone tool. A Python backend is plann
 - Copy CV as formatted plain text to clipboard
 - Share via Gmail with pre-filled subject and body
 - PDF export via print
-- Color theme picker — Forest Light and Dark themes, saved across reloads
+- Forest Light and Dark themes, saved across reloads
+- English / Arabic interface with right-to-left layout
+- Three CV templates and a configurable section order
+- Undo after clearing the form
 - Skeleton loading animation on AI Enhance while waiting for a response
 - Inline form validation with per-field error messages
 - Browser autofill support
@@ -69,3 +81,5 @@ The frontend is fully functional as a standalone tool. A Python backend is plann
 MIT License
 Copyright (c) 2025 Assem Bakr
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software to use, copy, modify, merge, publish, or distribute it, subject to the condition that the above copyright notice appears in all copies.
+
+Note: I used ai help here for formating but not in the readme
