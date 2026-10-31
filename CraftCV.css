@@ -137,6 +137,7 @@ select {
 .preview-actions,
 .entry-header,
 .phone-inputs,
+.location-inputs,
 .avatar-upload-row,
 .avatar-controls,
 .action-buttons {
@@ -484,6 +485,14 @@ textarea {
     flex: 0 0 180px;
 }
 
+.location-inputs input {
+    flex: 1 1 160px;
+}
+
+.location-inputs select {
+    flex: 0 0 200px;
+}
+
 .phone-inputs input:last-child {
     flex: 1;
 }
@@ -543,6 +552,14 @@ button {
 
 button:hover {
     border-color: var(--primary);
+}
+
+.link-btn {
+    padding: 0;
+    background: none;
+    color: var(--primary);
+    border: 0;
+    text-decoration: underline;
 }
 
 button:disabled {
@@ -875,6 +892,7 @@ footer p {
     }
 
     .phone-inputs,
+    .location-inputs,
     .skill-input-row,
     .cv-header-inner {
         flex-direction: column;
@@ -882,6 +900,7 @@ footer p {
     }
 
     .phone-inputs select:first-child,
+    .location-inputs select,
     .skill-input-row select {
         width: 100%;
         flex-basis: auto;

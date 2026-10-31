@@ -22,6 +22,9 @@ const saveKeyBtn         = document.getElementById('saveKeyBtn');
 const anthropicKeyInput  = document.getElementById('anthropicKey');
 const keyFeedback        = document.getElementById('keyFeedback');
 const countryCodeInput   = document.getElementById('countryCodeInput');
+const cityInput          = document.getElementById('cityInput');
+const locationCountry    = document.getElementById('locationCountry');
+const locationHidden     = document.getElementById('location');
 const phoneInput         = document.getElementById('phone');
 const experienceContainer = document.getElementById('experienceEntries');
 const educationContainer  = document.getElementById('educationEntries');
@@ -143,6 +146,7 @@ const COUNTRY_OPTIONS = [
 // ─── Init ──────────────────────────────────────────────────────────────────────
 function init() {
     populateCountryOptions();
+    populateLocationCountries();
     restoreSavedApiKey();
     restoreSavedTheme();
     restoreSavedFont();
@@ -177,7 +181,7 @@ function attachEventListeners() {
         e.preventDefault();
         if (!validateForm()) return;
         updatePreview();
-        showToast('Your CV preview is ready.');
+        showToast('All required fields look good.');
         document.getElementById('cvOutput').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
@@ -235,11 +239,68 @@ function attachEventListeners() {
     });
 }
 
+// ─── API key help (points the user to Settings) ──────────────────────────────
+function showApiKeyHelp(target, message) {
+    if (!target) return;
+    target.textContent = message + ' ';
+    const link = document.createElement('button');
+    link.type = 'button';
+    link.className = 'link-btn';
+    link.textContent = 'Open Settings';
+    link.addEventListener('click', showSettingsPage);
+    target.appendChild(link);
+}
+
+// ─── Location (city + country list → "City, Country") ────────────────────────
+function populateLocationCountries() {
+    const en  = new Intl.DisplayNames(['en'], { type: 'region' });
+    const loc = new Intl.DisplayNames([navigator.language || 'en'], { type: 'region' });
+    const items = COUNTRY_OPTIONS
+        .map(c => ({ value: en.of(c.code) || c.code, label: loc.of(c.code) || c.code }))
+        .sort((a, b) => a.label.localeCompare(b.label));
+    const placeholder = new Option('Select country', '');
+    locationCountry.replaceChildren(placeholder, ...items.map(i => new Option(i.label, i.value)));
+}
+
+function syncLocation() {
+    const city = cityInput.value.trim();
+    const country = locationCountry.value;
+    locationHidden.value = city && country ? `${city}, ${country}` : '';
+}
+
+function setLocation(value) {
+    const text = String(value || '');
+    const cut = text.lastIndexOf(',');
+    const city = (cut === -1 ? text : text.slice(0, cut)).trim();
+    const country = cut === -1 ? '' : text.slice(cut + 1).trim();
+    cityInput.value = city;
+    locationCountry.value = Array.from(locationCountry.options).some(o => o.value === country) ? country : '';
+    syncLocation();
+}
+
+// ─── Input restrictions ───────────────────────────────────────────────────────
+const INPUT_FILTERS = {
+    fullName: /[^\p{L}\p{M}\s'.-]/gu,         // letters, spaces, ' . -
+    cityInput: /[^\p{L}\p{M}\s'.-]/gu        // letters, spaces, ' . -
+};
+
+function applyInputFilter(field) {
+    const filter = INPUT_FILTERS[field.id];
+    if (!filter) return;
+    const cleaned = field.value.replace(filter, '').replace(/\s{2,}/g, ' ');
+    if (cleaned !== field.value) field.value = cleaned;
+}
+
 // ─── Form Input Handling ───────────────────────────────────────────────────────
 function handleFormInput(event) {
     const t = event.target;
     if (!t.matches('input, textarea, select')) return;
 
+    applyInputFilter(t);
+    if (t === cityInput || t === locationCountry) {
+        syncLocation();
+        if (locationHidden.value) validateField(locationHidden);
+    }
     saveFormState();
 
     if (t.matches('input[type="checkbox"][name="descPreference"]')) {
@@ -256,6 +317,10 @@ function handleFormInput(event) {
 }
 
 function handleBlur(event) {
+    if (event.target === locationCountry) {
+        validateField(locationHidden);
+        return;
+    }
     if (event.target.matches('input, textarea') && event.target.id) {
         validateField(event.target);
     }
@@ -598,7 +663,7 @@ function hydrateFromStorage() {
         document.getElementById('email').value         = d.email       || '';
         document.getElementById('phone').value         = d.phone       || '';
         setCountrySelection(d.countryCode || 'EG');
-        document.getElementById('location').value      = d.location    || '';
+        setLocation(d.location);
         document.getElementById('summary').value       = d.summary     || '';
         document.getElementById('certifications').value = d.certifications || '';
         document.getElementById('languages').value     = d.languages   || '';
@@ -691,15 +756,15 @@ function addExperienceEntry(data = {}) {
         </div>
         <div class="form-group">
             <label>Job Title</label>
-            <input type="text" class="experience-title" value="${escapeHtml(data.title || '')}" placeholder="e.g., Product Manager">
+            <input type="text" class="experience-title" maxlength="80" value="${escapeHtml(data.title || '')}" placeholder="e.g., Product Manager">
         </div>
         <div class="form-group">
             <label>Company</label>
-            <input type="text" class="experience-company" value="${escapeHtml(data.company || '')}" placeholder="e.g., Insight Labs">
+            <input type="text" class="experience-company" maxlength="80" value="${escapeHtml(data.company || '')}" placeholder="e.g., Insight Labs">
         </div>
         <div class="form-group">
             <label>Dates</label>
-            <input type="text" class="experience-duration" value="${escapeHtml(data.duration || '')}" placeholder="e.g., Jan 2022 – Present">
+            <input type="text" class="experience-duration" maxlength="40" value="${escapeHtml(data.duration || '')}" placeholder="e.g., Jan 2022 – Present">
         </div>
         <div class="form-group">
             <label>Job Description</label>
@@ -739,15 +804,15 @@ function addEducationEntry(data = {}) {
         </div>
         <div class="form-group">
             <label>Degree</label>
-            <input type="text" class="education-degree" value="${escapeHtml(data.degree || '')}" placeholder="e.g., BSc Computer Science">
+            <input type="text" class="education-degree" maxlength="80" value="${escapeHtml(data.degree || '')}" placeholder="e.g., BSc Computer Science">
         </div>
         <div class="form-group">
             <label>School or University</label>
-            <input type="text" class="education-school" value="${escapeHtml(data.school || '')}" placeholder="e.g., Cairo University">
+            <input type="text" class="education-school" maxlength="80" value="${escapeHtml(data.school || '')}" placeholder="e.g., Cairo University">
         </div>
         <div class="form-group">
             <label>Graduation Year</label>
-            <input type="number" class="education-year" value="${escapeHtml(data.year || '')}" placeholder="e.g., 2024" min="1900" max="2100" step="1" inputmode="numeric">
+            <input type="number" class="education-year" value="${escapeHtml(data.year || '')}" placeholder="e.g., 2024" min="1950" max="2100" step="1" oninput="if(this.value.length>4)this.value=this.value.slice(0,4)" inputmode="numeric">
         </div>
     `;
     educationContainer.appendChild(entry);
@@ -765,15 +830,15 @@ function addProjectEntry(data = {}) {
         </div>
         <div class="form-group">
             <label>Project Name</label>
-            <input type="text" class="project-name" value="${escapeHtml(data.name || '')}" placeholder="e.g., E-commerce Dashboard">
+            <input type="text" class="project-name" maxlength="80" value="${escapeHtml(data.name || '')}" placeholder="e.g., E-commerce Dashboard">
         </div>
         <div class="form-group">
             <label>Technologies Used</label>
-            <input type="text" class="project-tech" value="${escapeHtml(data.tech || '')}" placeholder="e.g., React, Node.js, PostgreSQL">
+            <input type="text" class="project-tech" maxlength="100" value="${escapeHtml(data.tech || '')}" placeholder="e.g., React, Node.js, PostgreSQL">
         </div>
         <div class="form-group">
             <label>Project URL <span class="optional-tag">optional</span></label>
-            <input type="url" class="project-url" value="${escapeHtml(data.url || '')}" placeholder="https://github.com/you/project">
+            <input type="url" class="project-url" maxlength="200" value="${escapeHtml(data.url || '')}" placeholder="https://github.com/you/project">
         </div>
         <div class="form-group">
             <label>Description</label>
@@ -904,6 +969,13 @@ function updatePlaceholderForJobPreferences() {
 
 // ─── Validation ───────────────────────────────────────────────────────────────
 function validateField(field) {
+    if (field === locationHidden) {
+        const ok = Boolean(field.value);
+        const err = document.querySelector('[data-error-for="location"]');
+        if (err) err.textContent = ok ? '' : 'Enter your city and choose a country.';
+        [cityInput, locationCountry, field].forEach(el => el.classList.toggle('is-invalid', !ok));
+        return ok;
+    }
     const errorTarget = field.id ? document.querySelector(`[data-error-for="${field.id}"]`) : null;
     if (field.required && !field.value.trim()) {
         if (errorTarget) errorTarget.textContent = 'This field is required.';
@@ -914,10 +986,12 @@ function validateField(field) {
     if (!field.validity.valid) {
         if (errorTarget) {
             errorTarget.textContent = field.type === 'email'
-                ? 'Enter a valid email address.'
+                ? 'Enter a valid email like name@example.com.'
                 : field.type === 'tel'
-                    ? 'Use numbers only for the phone number.'
-                    : field.validationMessage;
+                    ? (field.validity.tooShort ? 'Phone number looks too short.' : 'Use numbers only for the phone number.')
+                    : field.id === 'fullName'
+                        ? 'Use at least 2 letters (letters, spaces, - and . only).'
+                        : field.validationMessage;
         }
         field.classList.add('is-invalid');
         return false;
@@ -1122,7 +1196,7 @@ function applyImportedState(data) {
     document.getElementById('email').value = data.email || '';
     document.getElementById('phone').value = data.phone || '';
     setCountrySelection(data.countryCode || 'EG');
-    document.getElementById('location').value = data.location || '';
+    setLocation(data.location);
     document.getElementById('summary').value = data.summary || '';
     document.getElementById('certifications').value = data.certifications || '';
     document.getElementById('languages').value = data.languages || '';
@@ -1289,7 +1363,7 @@ async function enhanceText(targetId, btn, directTextarea = null, directWarning =
     const isDemoActive = localStorage.getItem(DEMO_MODE_STORAGE) === 'true';
     const savedKey = localStorage.getItem(API_KEY_STORAGE);
     if (!savedKey && !isDemoActive) {
-        if (warningTarget) warningTarget.textContent = 'Please add your Anthropic API key above to use AI features.';
+        showApiKeyHelp(warningTarget, 'No API key yet. Open the menu (☰) → Settings → AI API Key to add yours, or turn on Demo Mode.');
         return;
     }
 
@@ -1340,7 +1414,11 @@ async function enhanceText(targetId, btn, directTextarea = null, directWarning =
         });
 
         if (response.status === 401 || response.status === 403) {
-            if (warningTarget) warningTarget.textContent = 'Invalid API key. Please check and update it above.';
+            showApiKeyHelp(warningTarget, 'Your API key was rejected. Open the menu (☰) → Settings → AI API Key and check it.');
+            return;
+        }
+        if (response.status === 429) {
+            if (warningTarget) warningTarget.textContent = 'Rate limit or usage limit reached. Wait a moment and try again.';
             return;
         }
         if (!response.ok) throw new Error(`Request failed with status ${response.status}`);
@@ -1356,7 +1434,7 @@ async function enhanceText(targetId, btn, directTextarea = null, directWarning =
             showToast('Text enhanced!');
         }
     } catch (err) {
-        if (warningTarget) warningTarget.textContent = 'AI enhancement failed. Please try again.';
+        if (warningTarget) warningTarget.textContent = 'AI enhancement failed. Check your internet connection and API key (menu ☰ → Settings), then try again.';
     } finally {
         if (btn) {
             btn.disabled    = false;

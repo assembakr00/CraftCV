@@ -103,13 +103,13 @@
 
                     <div class="form-group">
                         <label for="fullName">Full Name</label>
-                        <input type="text" id="fullName" name="fullName" required autocomplete="name">
+                        <input type="text" id="fullName" name="fullName" required minlength="2" maxlength="60" autocomplete="name">
                         <div class="field-error" data-error-for="fullName"></div>
                     </div>
 
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required autocomplete="email">
+                        <input type="email" id="email" name="email" required maxlength="100" pattern="[^@\s]+@[^@\s]+\.[^@\s]{2,}" autocomplete="email">
                         <div class="field-error" data-error-for="email"></div>
                     </div>
 
@@ -117,14 +117,18 @@
                         <label for="phone">Phone</label>
                         <div class="phone-inputs">
                             <select id="countryCodeInput" autocomplete="tel-country-code" aria-label="Country code"></select>
-                            <input type="tel" id="phone" name="phone" required autocomplete="tel-national" inputmode="numeric" pattern="[0-9]*">
+                            <input type="tel" id="phone" name="phone" required minlength="6" maxlength="15" autocomplete="tel-national" inputmode="numeric" pattern="[0-9]*">
                         </div>
                         <div class="field-error" data-error-for="phone"></div>
                     </div>
 
                     <div class="form-group">
-                        <label for="location">Location (City, Country)</label>
-                        <input type="text" id="location" name="location" required autocomplete="address-level2">
+                        <label for="cityInput">Location</label>
+                        <div class="location-inputs">
+                            <input type="text" id="cityInput" maxlength="60" placeholder="City" autocomplete="address-level2">
+                            <select id="locationCountry" aria-label="Country"></select>
+                        </div>
+                        <input type="hidden" id="location" name="location" required>
                         <div class="field-error" data-error-for="location"></div>
                     </div>
 
@@ -202,7 +206,7 @@
                     <div class="form-group">
                         <label>Add Skills</label>
                         <div class="skill-input-row">
-                            <input type="text" id="skillInput" placeholder="e.g., Python" autocomplete="off">
+                            <input type="text" id="skillInput" maxlength="40" placeholder="e.g., Python" autocomplete="off">
                             <select id="skillLevel">
                                 <option value="Beginner">Beginner</option>
                                 <option value="Intermediate" selected>Intermediate</option>
@@ -231,7 +235,7 @@
                 </section>
 
                 <div class="actions-row">
-                    <button type="submit" class="primary-btn">Generate CV</button>
+                    <button type="submit" class="primary-btn">Check &amp; Preview</button>
                     <button type="button" id="clearFormBtn" class="danger-btn">Clear Form</button>
                 </div>
             </form>
