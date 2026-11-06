@@ -5,7 +5,7 @@ Build polished CVs faster with a modern, smart, and beautifully structured exper
 CraftCV is a smal designed to help job seekers or student or ppl who jsut wanna see their cvs without much work create prof. resumes quickly and confidently It solves the common problem of formatting and presenting career information clearly by turning a simple form into a cool and polished live-updating CV preview and all in the browser plus its with zero setup and no backend required (for now).
 
 ## BIG SUPER IMP CHANGE
-seeing how hard is it to make an api and use it and was forced to use ai and got flagged from shipwrights bec of ai usage i decided to entierly del it so its now under 10% or even more in ai usage so i hope u have fun with what here now and i will try to use and make api myself
+seeing how hard is it to make an api and use it and was forced to use ai and got flagged from shipwrights bec of ai usage i decided to entierly del it so its now under the ai usage or even more in ai usage so i hope u have fun with what here now and i will try to use and make api myself
 
 ##  How to Use?
 1. Open the app in your browser ofc
