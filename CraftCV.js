@@ -1,8 +1,8 @@
 
-// hey this is my craftcv js i have comments so it can be explanied easy for the shipwrights and i stated which part i used ai in which is ofc 
-// 30% mybe even 20% i used ai to write the translations and the country list and some of the helper functions but i wrote the rest myself so 
-// dont say i used ai for everything and dont reject it plsssss u already rejected two games bec u say it was made for a jame gam
-// anyways pls have fun and acept me PLSSSSS
+// Hey! This is my CraftCV project.
+// I built the main app myself and used a little help for repetitive data like translations
+// and country names. I removed the AI feature so the project stays simple and privaTE and i del the api btw.
+// Hope you enjoy checking it out!
 const translations = {
     en: {
         switchDark: 'Switch to dark theme', switchLight: 'Switch to light theme', openSettingsAria: 'Open settings',
