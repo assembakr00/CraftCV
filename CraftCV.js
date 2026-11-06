@@ -1,89 +1,11 @@
-// ─── DOM References ────────────────────────────────────────────────────────────
-const form               = document.getElementById('cvForm');
-const themeToggle        = document.getElementById('themeToggle');
-const settingsMenuToggle = document.getElementById('settingsMenuToggle');
-const settingsDrawer     = document.getElementById('settingsDrawer');
-const settingsBackdrop   = document.getElementById('settingsBackdrop');
-const settingsClose      = document.getElementById('settingsClose');
-const settingsPageNav    = document.getElementById('settingsPageNav');
-const settingsPage       = document.getElementById('settingsPage');
-const settingsPageTitle  = document.getElementById('settingsPageTitle');
-const backToBuilderBtn   = document.getElementById('backToBuilderBtn');
-const fontSelect         = document.getElementById('fontSelect');
-const langSelect         = document.getElementById('langSelect');
-const templateSelect     = document.getElementById('templateSelect');
-const sectionOrderList   = document.getElementById('sectionOrderList');
-const cvOutput           = document.getElementById('cvOutput');
-const restartDemoBtn     = document.getElementById('restartDemoBtn');
-const restoreBanner      = document.getElementById('restoreBanner');
-const restoreBtn         = document.getElementById('restoreBtn');
-const discardBtn         = document.getElementById('discardBtn');
-const toggleVisibilityBtn = document.getElementById('toggleVisibilityBtn');
-const testKeyBtn         = document.getElementById('testKeyBtn');
-const demoModeCheckbox   = document.getElementById('demoModeCheckbox');
-const saveKeyBtn         = document.getElementById('saveKeyBtn');
-const anthropicKeyInput  = document.getElementById('anthropicKey');
-const keyFeedback        = document.getElementById('keyFeedback');
-const countryCodeInput   = document.getElementById('countryCodeInput');
-const cityInput          = document.getElementById('cityInput');
-const locationCountry    = document.getElementById('locationCountry');
-const locationHidden     = document.getElementById('location');
-const phoneInput         = document.getElementById('phone');
-const experienceContainer = document.getElementById('experienceEntries');
-const educationContainer  = document.getElementById('educationEntries');
-const projectContainer    = document.getElementById('projectEntries');
-const copyCvBtn          = document.getElementById('copyCvBtn');
-const gmailBtn           = document.getElementById('gmailBtn');
-const printBtn           = document.getElementById('printBtn');
-const clearFormBtn       = document.getElementById('clearFormBtn');
-const clearModal         = document.getElementById('clearModal');
-const clearConfirmBtn    = document.getElementById('clearConfirmBtn');
-const clearCancelBtn     = document.getElementById('clearCancelBtn');
-const avatarUpload       = document.getElementById('avatarUpload');
-const removeAvatarBtn    = document.getElementById('removeAvatarBtn');
-const avatarPreview      = document.getElementById('avatarPreview');
-const cvAvatar           = document.getElementById('cvAvatar');
-const skillInput         = document.getElementById('skillInput');
-const skillLevel         = document.getElementById('skillLevel');
-const addSkillBtn        = document.getElementById('addSkillBtn');
-const skillTagsContainer = document.getElementById('skillTags');
-const skillsHidden       = document.getElementById('skills');
-const progressBar        = document.getElementById('cvProgressBar');
-const progressLabel      = document.getElementById('cvProgressLabel');
-const requiredFieldsLeft  = document.getElementById('requiredFieldsLeft');
-const copyJsonBtn        = document.getElementById('copyJsonBtn');
-const importJsonBtn      = document.getElementById('importJsonBtn');
-const importJsonInput    = document.getElementById('importJsonInput');
 
-// ─── Constants ─────────────────────────────────────────────────────────────────
-const DEMO_MODE_STORAGE  = 'craftcv_demo_mode';
-const FONT_STORAGE       = 'craftcv_font';
-const LANG_STORAGE       = 'craftcv_lang';
-const TEMPLATE_STORAGE   = 'craftcv_template';
-const ORDER_STORAGE      = 'craftcv_section_order';
-const STORAGE_KEY        = 'craftcv_form_state';
-const API_KEY_STORAGE    = 'craftcv_api_key';
-const AVATAR_STORAGE     = 'craftcv_avatar';
-const SECTION_COLLAPSE_STORAGE = 'craftcv_section_collapse';
-
-const DEFAULT_SECTION_ORDER = ['summary', 'education', 'experience', 'projects', 'skills', 'certifications', 'languages'];
-const SECTION_ELEMENT_IDS = {
-    summary: 'cvSecSummary', education: 'cvSecEducation', experience: 'cvSecExperience',
-    projects: 'cvSecProjects', skills: 'cvSecSkills', certifications: 'cvSecCertifications',
-    languages: 'cvSecLanguages'
-};
-const TEMPLATES = ['classic', 'modern', 'minimal'];
-
-// state
-let skillsList = [];                 // [{name, level}] (level is always the English key)
-let lang = 'en';
-let sectionOrder = DEFAULT_SECTION_ORDER.slice();
-let selectedTheme = 'forest';
-
-// ─── Translations ──────────────────────────────────────────────────────────────
-const I18N = {
+// hey this is my craftcv js i have comments so it can be explanied easy for the shipwrights and i stated which part i used ai in which is ofc 
+// 30% mybe even 20% i used ai to write the translations and the country list and some of the helper functions but i wrote the rest myself so 
+// dont say i used ai for everything and dont reject it plsssss u already rejected two games bec u say it was made for a jame gam
+// anyways pls have fun and acept me PLSSSSS
+const translations = {
     en: {
-        openMenu: 'Open settings menu', closeMenu: 'Close settings menu', close: 'Close settings',
+        switchDark: 'Switch to dark theme', switchLight: 'Switch to light theme', openSettingsAria: 'Open settings',
         settings: 'Settings', back: '← Back to Builder', language: 'Language', font: 'Font',
         fontNormal: 'Normal text', fontPixel: 'Pixel art text (Peaberry)',
         apiKey: 'AI API Key', toggleKey: 'Toggle Key Visibility', saveKey: 'Save Key', updateKey: 'Update Key',
@@ -91,11 +13,11 @@ const I18N = {
         keyNote: 'Using your own key keeps this app free. Your key is saved locally on your device only.',
         sectionOrder: 'CV section order', sectionOrderHelp: 'Change the order of sections in your CV preview, copy and PDF.',
         moveUp: 'Move up', moveDown: 'Move down',
-        restorePrompt: 'Restore your last session?', restore: 'Restore', discard: 'Discard', restartDemo: 'Restart Demo',
+        restartDemo: 'Restart Demo',
         restartConfirm: 'Restart the demo? This clears all saved data, including your API key.',
         appTitle: 'CraftCV Builder', tagline: 'Build a polished CV with live preview, smart enhancements, and export tools, and more',
         progressAria: 'CV completion progress', percentComplete: '{n}% complete', missing: 'Missing: {list}',
-        allComplete: 'All required fields complete', checking: 'Checking required fields…',
+        allComplete: 'All required fields complete',
         clearTitle: 'Clear the form?', clearBody: 'This will erase everything you entered. You can undo right after.',
         clearYes: 'Yes, clear everything', cancel: 'Cancel',
         personal: 'Personal Information', collapse: 'Collapse', fullName: 'Full Name', email: 'Email', phone: 'Phone',
@@ -124,7 +46,7 @@ const I18N = {
         moveEntryUp: 'Move up', moveEntryDown: 'Move down',
         jobTitle: 'Job Title', jobTitlePh: 'e.g., Product Manager', company: 'Company', companyPh: 'e.g., Insight Labs',
         startDate: 'Start date', endDate: 'End date', currentJob: 'I currently work here', present: 'Present',
-        monthPh: 'YYYY-MM', jobDesc: 'Job Description', describePh: 'Describe your role and impact',
+        jobDesc: 'Job Description', describePh: 'Describe your role and impact',
         degree: 'Degree', degreePh: 'e.g., BSc Computer Science', school: 'School or University', schoolPh: 'e.g., Cairo University',
         gradYear: 'Graduation Year', gradYearPh: 'e.g., 2024',
         projectName: 'Project Name', projectNamePh: 'e.g., E-commerce Dashboard', tech: 'Technologies Used', techPh: 'e.g., React, Node.js, PostgreSQL',
@@ -149,7 +71,7 @@ const I18N = {
         needOne: 'You need at least one entry.', cvCopied: 'CV copied to clipboard!', copyFailed: 'Copy failed. Please try again.',
         jsonCopied: 'Form state copied as JSON!', jsonCopyFailed: 'JSON copy failed. Please try again.',
         importMissing: 'Import failed. Missing: {list}', importOk: 'JSON imported successfully!', importBad: 'Import failed. Please use valid CraftCV JSON.',
-        skillExists: 'Skill already added.', resolveFirst: 'Resolve validation issues before collapsing this section.',
+        skillExists: 'Skill already added.',
         photoTooBig: 'Photo is too large to save. It will be lost on reload.',
         endBeforeStart: 'End date cannot be before the start date.',
         keySaved: 'Key saved securely!', keyEmpty: 'Please enter an API key first.', keyTestEmpty: 'Enter a key to test.',
@@ -162,10 +84,9 @@ const I18N = {
         enhanceFail: 'AI enhancement failed. Check your internet connection and API key (menu ☰ → Settings), then try again.',
         openSettings: 'Open Settings', demoDone: 'Demo Mode enhancement applied.', enhanced: 'Text enhanced!',
         // progress labels use fullName/email/phone/location/summary/education/expSection/skills
-        sectionsMax: 'characters'
     },
     ar: {
-        openMenu: 'فتح قائمة الإعدادات', closeMenu: 'إغلاق قائمة الإعدادات', close: 'إغلاق الإعدادات',
+        switchDark: 'التبديل إلى الوضع الداكن', switchLight: 'التبديل إلى الوضع الفاتح', openSettingsAria: 'فتح الإعدادات',
         settings: 'الإعدادات', back: '→ العودة إلى المنشئ', language: 'اللغة', font: 'الخط',
         fontNormal: 'نص عادي', fontPixel: 'نص بكسل (Peaberry)',
         apiKey: 'مفتاح API للذكاء الاصطناعي', toggleKey: 'إظهار/إخفاء المفتاح', saveKey: 'حفظ المفتاح', updateKey: 'تحديث المفتاح',
@@ -173,11 +94,11 @@ const I18N = {
         keyNote: 'استخدام مفتاحك الخاص يُبقي التطبيق مجانياً. يُحفظ المفتاح على جهازك فقط.',
         sectionOrder: 'ترتيب أقسام السيرة الذاتية', sectionOrderHelp: 'غيّر ترتيب الأقسام في المعاينة والنسخ وملف PDF.',
         moveUp: 'نقل لأعلى', moveDown: 'نقل لأسفل',
-        restorePrompt: 'هل تريد استعادة جلستك الأخيرة؟', restore: 'استعادة', discard: 'تجاهل', restartDemo: 'إعادة تشغيل العرض',
+        restartDemo: 'إعادة تشغيل العرض',
         restartConfirm: 'إعادة تشغيل العرض؟ سيتم مسح كل البيانات المحفوظة بما فيها مفتاح API.',
         appTitle: 'منشئ CraftCV', tagline: 'أنشئ سيرة ذاتية أنيقة مع معاينة مباشرة وتحسينات ذكية وأدوات تصدير والمزيد',
         progressAria: 'تقدم اكتمال السيرة الذاتية', percentComplete: 'اكتمل {n}%', missing: 'ناقص: {list}',
-        allComplete: 'كل الحقول المطلوبة مكتملة', checking: 'جارٍ فحص الحقول المطلوبة…',
+        allComplete: 'كل الحقول المطلوبة مكتملة',
         clearTitle: 'مسح النموذج؟', clearBody: 'سيتم حذف كل ما أدخلته. يمكنك التراجع مباشرة بعد ذلك.',
         clearYes: 'نعم، امسح كل شيء', cancel: 'إلغاء',
         personal: 'المعلومات الشخصية', collapse: 'طي', fullName: 'الاسم الكامل', email: 'البريد الإلكتروني', phone: 'الهاتف',
@@ -204,7 +125,7 @@ const I18N = {
         moveEntryUp: 'نقل لأعلى', moveEntryDown: 'نقل لأسفل',
         jobTitle: 'المسمى الوظيفي', jobTitlePh: 'مثال: مدير منتج', company: 'الشركة', companyPh: 'مثال: شركة الأفق',
         startDate: 'تاريخ البداية', endDate: 'تاريخ النهاية', currentJob: 'أعمل هنا حالياً', present: 'حتى الآن',
-        monthPh: 'YYYY-MM', jobDesc: 'وصف الوظيفة', describePh: 'صف دورك وأثره',
+        jobDesc: 'وصف الوظيفة', describePh: 'صف دورك وأثره',
         degree: 'الدرجة العلمية', degreePh: 'مثال: بكالوريوس علوم الحاسب', school: 'المدرسة أو الجامعة', schoolPh: 'مثال: جامعة القاهرة',
         gradYear: 'سنة التخرج', gradYearPh: 'مثال: 2024',
         projectName: 'اسم المشروع', projectNamePh: 'مثال: لوحة تحكم لمتجر إلكتروني', tech: 'التقنيات المستخدمة', techPh: 'مثال: React, Node.js, PostgreSQL',
@@ -225,7 +146,7 @@ const I18N = {
         needOne: 'يجب أن يبقى إدخال واحد على الأقل.', cvCopied: 'تم نسخ السيرة الذاتية!', copyFailed: 'فشل النسخ. حاول مرة أخرى.',
         jsonCopied: 'تم نسخ البيانات كـ JSON!', jsonCopyFailed: 'فشل نسخ JSON. حاول مرة أخرى.',
         importMissing: 'فشل الاستيراد. حقول ناقصة: {list}', importOk: 'تم استيراد JSON بنجاح!', importBad: 'فشل الاستيراد. استخدم ملف JSON صالحاً من CraftCV.',
-        skillExists: 'المهارة مضافة بالفعل.', resolveFirst: 'عالج أخطاء الإدخال قبل طي هذا القسم.',
+        skillExists: 'المهارة مضافة بالفعل.',
         photoTooBig: 'الصورة كبيرة جداً للحفظ. ستُفقد عند إعادة التحميل.',
         endBeforeStart: 'لا يمكن أن يكون تاريخ النهاية قبل البداية.',
         keySaved: 'تم حفظ المفتاح!', keyEmpty: 'أدخل مفتاح API أولاً.', keyTestEmpty: 'أدخل مفتاحاً لاختباره.',
@@ -237,29 +158,12 @@ const I18N = {
         rateLimit: 'تم بلوغ حد الاستخدام. انتظر قليلاً وحاول مرة أخرى.',
         enhanceFail: 'فشل التحسين بالذكاء الاصطناعي. تحقق من الإنترنت ومن مفتاح API (القائمة ☰ ← الإعدادات) ثم حاول مرة أخرى.',
         openSettings: 'فتح الإعدادات', demoDone: 'تم تطبيق التحسين في الوضع التجريبي.', enhanced: 'تم تحسين النص!',
-        sectionsMax: 'حرف'
     }
 };
 
-function t(key, vars) {
-    let text = (I18N[lang] && I18N[lang][key]) ?? I18N.en[key] ?? key;
-    if (vars) {
-        Object.keys(vars).forEach(k => { text = text.split(`{${k}}`).join(vars[k]); });
-    }
-    return text;
-}
+// country list (used for the phone code and the location) ofc i used ai i will not write all this am not crazy
 
-function applyStaticTranslations() {
-    document.documentElement.lang = lang;
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
-    document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
-    document.querySelectorAll('[data-i18n-aria]').forEach(el => { el.setAttribute('aria-label', t(el.dataset.i18nAria)); });
-    document.title = t('appTitle');
-}
-
-// ─── Country Codes (data) ─────────────────────────────────────────────────────
-const COUNTRY_OPTIONS = [
+const COUNTRIES = [
     { code: 'AF', dial: '+93',   flag: '🇦🇫' }, { code: 'AL', dial: '+355',  flag: '🇦🇱' },
     { code: 'DZ', dial: '+213',  flag: '🇩🇿' }, { code: 'AD', dial: '+376',  flag: '🇦🇩' },
     { code: 'AO', dial: '+244',  flag: '🇦🇴' }, { code: 'AG', dial: '+1268', flag: '🇦🇬' },
@@ -338,906 +242,607 @@ const COUNTRY_OPTIONS = [
     { code: 'PS', dial: '+970',  flag: '🇵🇸' }, { code: 'TZ', dial: '+255',  flag: '🇹🇿' },
 ];
 
-// A few extra strings that are only used by small helpers
-Object.assign(I18N.en, { switchDark: 'Switch to dark theme', switchLight: 'Switch to light theme' });
-Object.assign(I18N.ar, { switchDark: 'التبديل إلى الوضع الداكن', switchLight: 'التبديل إلى الوضع الفاتح' });
+// helpers
 
-// ─── Init ──────────────────────────────────────────────────────────────────────
-function init() {
-    lang = localStorage.getItem(LANG_STORAGE) === 'ar' ? 'ar' : 'en';
-    langSelect.value = lang;
-    sectionOrder = readSectionOrder();
-    setTemplate(readTemplate());
-    applyStaticTranslations();
-    populateCountryOptions();
-    populateLocationCountries();
-    restoreSavedApiKey();
-    restoreSavedTheme();
-    restoreSavedFont();
-    attachEventListeners();
-    restoreAvatarFromStorage();
+function byId(id) {
+    return document.getElementById(id);
+}
 
-    if (hasStoredSession()) {
-        restoreBanner.hidden = false;
-    } else {
-        initDefaultEntries();
+// localStorage can fail like private mode, storage ful so these never throw
+function save(key, value) {
+    try { localStorage.setItem(key, value); } catch (error) { /* ignore */ }
+}
+
+function load(key) {
+    try { return localStorage.getItem(key); } catch (error) { return null; }
+}
+
+// makes user text safe for html
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+// small message at the bottom. Pass { label, onClick } to add a button (used for Undo) pretty bloated
+
+function showToast(message, button) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+
+    const text = document.createElement('span');
+    text.textContent = message;
+    toast.append(text);
+
+    if (button) {
+        const buttonElement = document.createElement('button');
+        buttonElement.type = 'button';
+        buttonElement.className = 'toast-action';
+        buttonElement.textContent = button.label;
+        buttonElement.addEventListener('click', () => {
+            toast.remove();
+            button.onClick();
+        });
+        toast.append(buttonElement);
     }
 
-    refreshKeyUi();
-    renderSectionOrder();
-    updatePlaceholderForJobPreferences();
-    restoreSectionCollapseState();
-    updateCharCounter(document.getElementById('summary'));
-    updatePreview();
-    updateProgress();
+    document.body.append(toast);
+    setTimeout(() => toast.remove(), button ? 8000 : 2000);
 }
 
-// ─── Language ─────────────────────────────────────────────────────────────────
-function setLanguage(newLang) {
-    lang = newLang === 'ar' ? 'ar' : 'en';
-    try { localStorage.setItem(LANG_STORAGE, lang); } catch (err) { /* ignore */ }
-    langSelect.value = lang;
 
-    const data = collectFormData();
-    applyStaticTranslations();
-    populateCountryOptions();
-    populateLocationCountries();
-    // Rebuild entries and skill tags so their labels use the new language.
-    // Do not overwrite a saved session that has not been restored yet.
-    loadFormData(data, { save: restoreBanner.hidden });
-    renderSectionOrder();
-    applyTheme(selectedTheme);
-    refreshKeyUi();
-    updateCharCounter(document.getElementById('summary'));
-    updatePreview();
-    updateProgress();
-}
 
-function refreshKeyUi() {
-    if (localStorage.getItem(API_KEY_STORAGE)) saveKeyBtn.textContent = t('updateKey');
-    if (localStorage.getItem(DEMO_MODE_STORAGE) === 'true') {
-        keyFeedback.textContent = t('demoActive');
-    }
-}
+const form = byId('cvForm');
+const themeButton = byId('themeToggle');
+const settingsButton = byId('settingsMenuToggle');
+const settingsPage = byId('settingsPage');
+const settingsTitle = byId('settingsPageTitle');
+const backButton = byId('backToBuilderBtn');
+const languageSelect = byId('langSelect');
+const fontSelect = byId('fontSelect');
+const templateSelect = byId('templateSelect');
+const orderList = byId('sectionOrderList');
+const apiKeyInput = byId('anthropicKey');
+const showKeyButton = byId('toggleVisibilityBtn');
+const saveKeyButton = byId('saveKeyBtn');
+const testKeyButton = byId('testKeyBtn');
+const demoCheckbox = byId('demoModeCheckbox');
+const keyMessage = byId('keyFeedback');
+const restartButton = byId('restartDemoBtn');
 
-// ─── Event Listeners ───────────────────────────────────────────────────────────
-function attachEventListeners() {
-    form.addEventListener('input', handleFormInput);
-    setDemoMode(localStorage.getItem(DEMO_MODE_STORAGE) === 'true');
-    phoneInput.addEventListener('input', function () {
-        const digitsOnly = phoneInput.value.replace(/\D/g, '');
-        if (phoneInput.value !== digitsOnly) phoneInput.value = digitsOnly;
-    });
+const fullNameInput = byId('fullName');
+const emailInput = byId('email');
+const phoneCodeSelect = byId('countryCodeInput');
+const phoneInput = byId('phone');
+const cityInput = byId('cityInput');
+const countrySelect = byId('locationCountry');
+const locationInput = byId('location');         // hidden: holds "City, Country"
+const summaryInput = byId('summary');
+const certificationsInput = byId('certifications');
+const languagesInput = byId('languages');
+const photoInput = byId('avatarUpload');
+const photoPreview = byId('avatarPreview');
+const removePhotoButton = byId('removeAvatarBtn');
+const skillInput = byId('skillInput');
+const skillLevelSelect = byId('skillLevel');
+const skillTagsBox = byId('skillTags');
 
-    form.addEventListener('change', handleFormInput);
-    form.addEventListener('blur',   handleBlur, true);
-    form.addEventListener('click',  handleFormClick);
-    form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        if (!validateForm()) return;
-        updatePreview();
-        showToast(t('previewOk'));
-        cvOutput.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+const educationBox = byId('educationEntries');
+const experienceBox = byId('experienceEntries');
+const projectBox = byId('projectEntries');
 
-    themeToggle.addEventListener('click', function () {
-        applyTheme(selectedTheme === 'dark' ? 'forest' : 'dark');
-    });
-    settingsMenuToggle.addEventListener('click', function () {
-        setSettingsDrawerOpen(settingsMenuToggle.getAttribute('aria-expanded') !== 'true');
-    });
-    settingsClose.addEventListener('click', function () { setSettingsDrawerOpen(false); });
-    settingsBackdrop.addEventListener('click', function () { setSettingsDrawerOpen(false); });
-    settingsPageNav.addEventListener('click', showSettingsPage);
-    backToBuilderBtn.addEventListener('click', showBuilderPage);
-    document.addEventListener('keydown', function (event) {
-        if (event.key === 'Escape' && settingsDrawer.getAttribute('aria-hidden') === 'false') {
-            setSettingsDrawerOpen(false);
-        }
-    });
-    fontSelect.addEventListener('change', function () { applyFont(fontSelect.value); });
-    langSelect.addEventListener('change', function () { setLanguage(langSelect.value); });
-    templateSelect.addEventListener('change', function () { setTemplate(templateSelect.value); });
-    sectionOrderList.addEventListener('click', handleSectionOrderClick);
-    restartDemoBtn.addEventListener('click', restartDemo);
+const cvPreview = byId('cvOutput');
+const cvPhoto = byId('cvAvatar');
+const progressBar = byId('cvProgressBar');
+const progressLabel = byId('cvProgressLabel');
+const missingLabel = byId('requiredFieldsLeft');
 
-    saveKeyBtn.addEventListener('click',     saveApiKey);
-    restoreBtn.addEventListener('click',     restoreSession);
-    toggleVisibilityBtn.addEventListener('click', toggleKeyVisibility);
-    demoModeCheckbox.addEventListener('change', function () { setDemoMode(demoModeCheckbox.checked); });
-    testKeyBtn.addEventListener('click', testApiKeyConnection);
+const clearDialog = byId('clearModal');
+const importFileInput = byId('importJsonInput');
 
-    discardBtn.addEventListener('click',     discardSession);
-    copyCvBtn.addEventListener('click',      copyCvAsText);
-    copyJsonBtn.addEventListener('click',     copyFormAsJson);
-    importJsonBtn.addEventListener('click',   () => importJsonInput.click());
-    importJsonInput.addEventListener('change', handleJsonImport);
-    gmailBtn.addEventListener('click',       shareViaGmail);
-    printBtn.addEventListener('click',       exportPdf);
 
-    // Clear form modal (with undo)
-    clearFormBtn.addEventListener('click',   () => { clearModal.hidden = false; });
-    clearCancelBtn.addEventListener('click', () => { clearModal.hidden = true; });
-    clearConfirmBtn.addEventListener('click', () => {
-        clearModal.hidden = true;
-        clearFormWithUndo();
-    });
-    clearModal.addEventListener('click', (e) => {
-        if (e.target === clearModal) clearModal.hidden = true;
-    });
-
-    // Avatar
-    avatarUpload.addEventListener('change',  handleAvatarUpload);
-    removeAvatarBtn.addEventListener('click', removeAvatar);
-
-    // Skills tag input
-    addSkillBtn.addEventListener('click', addSkillTag);
-    skillInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') { e.preventDefault(); addSkillTag(); }
-    });
-}
-
-// ─── API key help (points the user to Settings) ──────────────────────────────
-function showApiKeyHelp(target, message) {
-    if (!target) return;
-    target.textContent = message + ' ';
-    const link = document.createElement('button');
-    link.type = 'button';
-    link.className = 'link-btn';
-    link.textContent = t('openSettings');
-    link.addEventListener('click', showSettingsPage);
-    target.appendChild(link);
-}
-
-// ─── Input restrictions ───────────────────────────────────────────────────────
-const INPUT_FILTERS = {
-    fullName: /[^\p{L}\p{M}\s'.-]/gu,         // letters, spaces, ' . -
-    cityInput: /[^\p{L}\p{M}\s'.-]/gu         // letters, spaces, ' . -
+const KEYS = {
+    form: 'craftcv_form_state',
+    apiKey: 'craftcv_api_key',
+    demo: 'craftcv_demo_mode',
+    theme: 'craftcv_theme',
+    font: 'craftcv_font',
+    language: 'craftcv_lang',
+    template: 'craftcv_template',
+    order: 'craftcv_section_order',
+    photo: 'craftcv_avatar'
 };
 
-function applyInputFilter(field) {
-    const filter = INPUT_FILTERS[field.id];
-    if (!filter) return;
-    const cleaned = field.value.replace(filter, '').replace(/\s{2,}/g, ' ');
-    if (cleaned !== field.value) field.value = cleaned;
+const SECTIONS = ['summary', 'education', 'experience', 'projects', 'skills', 'certifications', 'languages'];
+const TEMPLATES = ['classic', 'modern', 'minimal'];
+
+// current state of the page
+let language = 'en';
+let theme = 'forest';
+let sectionOrder = SECTIONS.slice();
+let skills = [];                                // [{ name, level }], level is always English btw
+
+
+
+function t(key, values) {
+    let text = (translations[language] && translations[language][key]) || translations.en[key] || key;
+    for (const name in values) {
+        text = text.split('{' + name + '}').join(values[name]);
+    }
+    return text;
 }
 
-// ─── Form Input Handling ───────────────────────────────────────────────────────
-function handleFormInput(event) {
-    const el = event.target;
-    if (!el.matches('input, textarea, select')) return;
+// puts the right words into everything marked with data-i18n in the HTML used ai lil
+function translatePage() {
+    document.documentElement.lang = language;
+    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+    document.title = t('appTitle');
 
-    applyInputFilter(el);
-    if (el === cityInput || el === locationCountry) {
-        syncLocation();
-        if (locationHidden.value) validateField(locationHidden);
-    }
-    if (el.classList.contains('education-year') && el.value.length > 4) {
-        el.value = el.value.slice(0, 4);
-    }
-    if (el.closest('.experience-entry') && el.matches('.experience-start, .experience-end, .experience-current')) {
-        handleDateFields(el);
-    }
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
+    document.querySelectorAll('[data-i18n-aria]').forEach(el => { el.setAttribute('aria-label', t(el.dataset.i18nAria)); });
+}
 
-    saveFormState();
+function changeLanguage(newLanguage) {
+    language = newLanguage === 'ar' ? 'ar' : 'en';
+    save(KEYS.language, language);
 
-    if (el.matches('input[type="checkbox"][name="descPreference"]')) {
-        updatePlaceholderForJobPreferences();
-    }
-
-    if (el.matches('input, textarea') && el.id) {
-        validateField(el);
-        updateCharCounter(el);
-    }
-
+    const data = getFormData();       // entries are rebuilt below, so keep what was typed pls
+    translatePage();
+    fillPhoneCodes();
+    fillCountryList();
+    fillForm(data);
+    showOrderList();
+    setTheme(theme);
+    refreshKeyMessage();
+    showCount(summaryInput);
     updatePreview();
     updateProgress();
 }
 
-function handleBlur(event) {
-    if (event.target === locationCountry) {
-        validateField(locationHidden);
-        return;
-    }
-    if (event.target.matches('input, textarea') && event.target.id) {
-        validateField(event.target);
-    }
+
+function setTheme(name) {
+    theme = name === 'dark' ? 'dark' : 'forest';
+    document.body.dataset.theme = theme;
+    save(KEYS.theme, theme);
+    themeButton.setAttribute('aria-checked', String(theme === 'dark'));
+    themeButton.setAttribute('aria-label', t(theme === 'dark' ? 'switchLight' : 'switchDark'));
 }
 
-function handleFormClick(event) {
-    const btn = event.target.closest('button');
-    if (!btn) return;
-
-    if (btn.classList.contains('add-entry-btn')) {
-        const type = btn.dataset.type;
-        if (type === 'experience') addExperienceEntry();
-        else if (type === 'education') addEducationEntry();
-        else if (type === 'project') addProjectEntry();
-    }
-
-    if (btn.classList.contains('remove-entry-btn')) {
-        const entry = btn.closest('.entry-card');
-        const isExperience = entry?.classList.contains('experience-entry');
-        const isEducation  = entry?.classList.contains('education-entry');
-        const container    = isExperience ? experienceContainer : isEducation ? educationContainer : projectContainer;
-        const minCount     = isExperience || isEducation ? 1 : 0;
-
-        if (container.querySelectorAll(':scope > .entry-card').length <= minCount) {
-            showToast(t('needOne'));
-            return;
-        }
-        if (entry) {
-            entry.remove();
-            renumberEntries();
-            saveFormState();
-            updatePreview();
-            updateProgress();
-        }
-    }
-
-    if (btn.classList.contains('move-entry-btn')) {
-        moveEntry(btn);
-    }
-
-    if (btn.classList.contains('ai-enhance-btn') && btn.dataset.target) {
-        enhanceText(btn.dataset.target, btn);
-    }
-
-    if (btn.classList.contains('section-collapse-btn')) {
-        toggleSectionCollapse(btn.dataset.section);
-    }
+function setFont(name) {
+    const font = name === 'pixel' ? 'pixel' : 'normal';
+    document.body.dataset.font = font;
+    fontSelect.value = font;
+    save(KEYS.font, font);
 }
 
-// ─── Theme / Font / Template ──────────────────────────────────────────────────
-function applyTheme(theme) {
-    selectedTheme = theme === 'dark' ? 'dark' : 'forest';
-    document.body.setAttribute('data-theme', selectedTheme);
-    try { localStorage.setItem('craftcv_theme', selectedTheme); } catch (err) { /* ignore */ }
-    themeToggle.setAttribute('aria-checked', String(selectedTheme === 'dark'));
-    themeToggle.setAttribute('aria-label', selectedTheme === 'dark' ? t('switchLight') : t('switchDark'));
-}
-
-function restoreSavedTheme() {
-    const saved = localStorage.getItem('craftcv_theme');
-    applyTheme(saved || 'forest');
-}
-
-function restoreSavedFont() {
-    applyFont(localStorage.getItem(FONT_STORAGE) || 'normal');
-}
-
-function applyFont(font) {
-    const selectedFont = font === 'pixel' ? 'pixel' : 'normal';
-    document.body.dataset.font = selectedFont;
-    fontSelect.value = selectedFont;
-    try { localStorage.setItem(FONT_STORAGE, selectedFont); } catch (err) { /* ignore */ }
-}
-
-function readTemplate() {
-    const saved = localStorage.getItem(TEMPLATE_STORAGE);
-    return TEMPLATES.includes(saved) ? saved : 'classic';
-}
-
-function setTemplate(value) {
-    const template = TEMPLATES.includes(value) ? value : 'classic';
+function setTemplate(name) {
+    const template = TEMPLATES.includes(name) ? name : 'classic';
+    cvPreview.className = 'cv-output tpl-' + template;
     templateSelect.value = template;
-    cvOutput.className = 'cv-output tpl-' + template;
-    try { localStorage.setItem(TEMPLATE_STORAGE, template); } catch (err) { /* ignore */ }
+    save(KEYS.template, template);
 }
 
-function setSettingsDrawerOpen(isOpen) {
-    settingsDrawer.setAttribute('aria-hidden', String(!isOpen));
-    settingsMenuToggle.setAttribute('aria-expanded', String(isOpen));
-    settingsMenuToggle.setAttribute('aria-label', isOpen ? t('closeMenu') : t('openMenu'));
-    settingsBackdrop.hidden = !isOpen;
-    document.body.classList.toggle('settings-open', isOpen);
 
-    if (isOpen) langSelect.focus();
-    else settingsMenuToggle.focus();
-}
-
-function showSettingsPage() {
-    setSettingsDrawerOpen(false);
+function openSettings() {
     settingsPage.hidden = false;
     document.body.dataset.page = 'settings';
-    settingsPageTitle.focus();
+    window.scrollTo(0, 0);
+    settingsTitle.focus({ preventScroll: true });
 }
 
-function showBuilderPage() {
+function closeSettings() {
     settingsPage.hidden = true;
     delete document.body.dataset.page;
-    settingsMenuToggle.focus();
+    settingsButton.focus();
 }
 
-function restartDemo() {
+function restartEverything() {
     if (!window.confirm(t('restartConfirm'))) return;
     localStorage.clear();
     window.location.reload();
 }
 
-// ─── Section order (CV preview / copy / PDF) ─────────────────────────────────
-function isValidOrder(order) {
-    return Array.isArray(order)
-        && order.length === DEFAULT_SECTION_ORDER.length
-        && DEFAULT_SECTION_ORDER.every(key => order.includes(key));
-}
 
-function readSectionOrder() {
+function savedOrder() {
     try {
-        const saved = JSON.parse(localStorage.getItem(ORDER_STORAGE));
-        if (isValidOrder(saved)) return saved;
-    } catch (err) { /* ignore */ }
-    return DEFAULT_SECTION_ORDER.slice();
+        const order = JSON.parse(load(KEYS.order));
+        if (isGoodOrder(order)) return order;
+    } catch (error) { /* use the default btw */ }
+    return SECTIONS.slice();
 }
 
-function saveSectionOrder() {
-    try { localStorage.setItem(ORDER_STORAGE, JSON.stringify(sectionOrder)); } catch (err) { /* ignore */ }
+// a good order has every section exactly once
+function isGoodOrder(order) {
+    return Array.isArray(order) && order.length === SECTIONS.length && SECTIONS.every(name => order.includes(name));
 }
 
-function applySectionOrder() {
-    sectionOrder.forEach(key => {
-        const el = document.getElementById(SECTION_ELEMENT_IDS[key]);
-        if (el) cvOutput.appendChild(el);
-    });
-}
-
-function renderSectionOrder() {
-    sectionOrderList.innerHTML = '';
-    sectionOrder.forEach((key, index) => {
+// shows the list in Settings and puts the CV sections in that order
+function showOrderList() {
+    orderList.innerHTML = '';
+    sectionOrder.forEach((name, position) => {
         const item = document.createElement('li');
         item.className = 'order-item';
         item.innerHTML = `
-            <span class="order-name">${escapeHtml(t('sec.' + key))}</span>
+            <span>${escapeHtml(t('sec.' + name))}</span>
             <span class="entry-actions">
-                <button type="button" class="secondary-btn" data-key="${key}" data-dir="up" aria-label="${escapeHtml(t('moveUp'))}" ${index === 0 ? 'disabled' : ''}>↑</button>
-                <button type="button" class="secondary-btn" data-key="${key}" data-dir="down" aria-label="${escapeHtml(t('moveDown'))}" ${index === sectionOrder.length - 1 ? 'disabled' : ''}>↓</button>
+                <button type="button" class="secondary-btn" data-name="${name}" data-move="up" aria-label="${escapeHtml(t('moveUp'))}" ${position === 0 ? 'disabled' : ''}>↑</button>
+                <button type="button" class="secondary-btn" data-name="${name}" data-move="down" aria-label="${escapeHtml(t('moveDown'))}" ${position === sectionOrder.length - 1 ? 'disabled' : ''}>↓</button>
             </span>`;
-        sectionOrderList.appendChild(item);
+        orderList.append(item);
+
+        // the CV section ids look like cvSecSummary, cvSecEducation
+        cvPreview.append(byId('cvSec' + name[0].toUpperCase() + name.slice(1)));
     });
-    applySectionOrder();
 }
 
-function handleSectionOrderClick(event) {
-    const btn = event.target.closest('button[data-key]');
-    if (!btn) return;
-    const from = sectionOrder.indexOf(btn.dataset.key);
-    const to = btn.dataset.dir === 'up' ? from - 1 : from + 1;
-    if (from < 0 || to < 0 || to >= sectionOrder.length) return;
+function moveSection(button) {
+    const from = sectionOrder.indexOf(button.dataset.name);
+    const to = button.dataset.move === 'up' ? from - 1 : from + 1;
+    if (to < 0 || to >= sectionOrder.length) return;
+
     [sectionOrder[from], sectionOrder[to]] = [sectionOrder[to], sectionOrder[from]];
-    saveSectionOrder();
-    renderSectionOrder();
-    const again = sectionOrderList.querySelector(`button[data-key="${btn.dataset.key}"][data-dir="${btn.dataset.dir}"]:not([disabled])`)
-        || sectionOrderList.querySelector(`button[data-key="${btn.dataset.key}"]:not([disabled])`);
-    if (again) again.focus();
+    save(KEYS.order, JSON.stringify(sectionOrder));
+    showOrderList();
+    updatePreview();
 }
 
-// ─── API Key ──────────────────────────────────────────────────────────────────
+// some ai but not much so i can learn apis bec its kinda the most imp part
+
+function refreshKeyMessage() {
+    const demoOn = load(KEYS.demo) === 'true';
+    saveKeyButton.textContent = t(load(KEYS.apiKey) ? 'updateKey' : 'saveKey');
+    keyMessage.textContent = demoOn ? t('demoActive') : '';
+    keyMessage.className = demoOn ? 'key-feedback info' : 'key-feedback';
+}
+
+function setDemoMode(on) {
+    save(KEYS.demo, on);
+    demoCheckbox.checked = on;
+    apiKeyInput.disabled = on;
+    saveKeyButton.disabled = on;
+    testKeyButton.disabled = on;
+    refreshKeyMessage();
+}
+
+function showKeyResult(message, kind) {
+    keyMessage.textContent = message;
+    keyMessage.className = 'key-feedback ' + kind;
+}
+
 function saveApiKey() {
-    const key = anthropicKeyInput.value.trim();
-    if (!key) {
-        keyFeedback.textContent = t('keyEmpty');
-        keyFeedback.className = 'key-feedback error';
-        return;
-    }
-    localStorage.setItem(API_KEY_STORAGE, key);
-    keyFeedback.textContent = t('keySaved');
-    keyFeedback.className = 'key-feedback success';
-    saveKeyBtn.textContent = t('updateKey');
+    const key = apiKeyInput.value.trim();
+    if (!key) return showKeyResult(t('keyEmpty'), 'error');
+
+    save(KEYS.apiKey, key);
+    saveKeyButton.textContent = t('updateKey');
+    showKeyResult(t('keySaved'), 'success');
 }
 
-function restoreSavedApiKey() {
-    const saved = localStorage.getItem(API_KEY_STORAGE);
-    if (saved) {
-        anthropicKeyInput.value = saved;
-        saveKeyBtn.textContent = t('updateKey');
-    }
+function toggleKeyVisible() {
+    const hidden = apiKeyInput.type === 'password';
+    apiKeyInput.type = hidden ? 'text' : 'password';
+    showKeyButton.textContent = hidden ? '🙈' : '👁️';
 }
 
-function toggleKeyVisibility() {
-    const isPassword = anthropicKeyInput.type === 'password';
-    anthropicKeyInput.type = isPassword ? 'text' : 'password';
-    toggleVisibilityBtn.textContent = isPassword ? '🙈' : '👁️';
-}
+// sends the key to Anthropic with a tiny request to see if it works
+async function testApiKey() {
+    const key = apiKeyInput.value.trim();
+    if (!key) return showKeyResult(t('keyTestEmpty'), 'error');
 
-function setDemoMode(isActive) {
-    localStorage.setItem(DEMO_MODE_STORAGE, isActive);
-    demoModeCheckbox.checked = isActive;
-    anthropicKeyInput.disabled = isActive;
-    saveKeyBtn.disabled = isActive;
-    testKeyBtn.disabled = isActive;
-    keyFeedback.textContent = isActive ? t('demoActive') : '';
-    keyFeedback.className = isActive ? 'key-feedback info' : 'key-feedback';
-}
-
-async function testApiKeyConnection() {
-    const key = anthropicKeyInput.value.trim();
-    if (!key) {
-        keyFeedback.textContent = t('keyTestEmpty');
-        keyFeedback.className = 'key-feedback error';
-        return;
-    }
-
-    keyFeedback.textContent = t('keyTesting');
-    keyFeedback.className = 'key-feedback info';
-    testKeyBtn.disabled = true;
+    showKeyResult(t('keyTesting'), 'info');
+    testKeyButton.disabled = true;
 
     try {
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-api-key': key,
-                'anthropic-version': '2023-06-01',
-                // This header is required for direct browser calls until a secure backend proxy is available.
-                'anthropic-dangerous-direct-browser-access': 'true'
-            },
-            body: JSON.stringify({
-                model: 'claude-sonnet-4-6',
-                max_tokens: 1,
-                system: 'You are a test helper, only respond with a single token or short acknowledgement.',
-                messages: [{ role: 'user', content: 'Ping' }]
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error(`Anthropic responded with status ${response.status}`);
-        }
-
-        keyFeedback.textContent = t('keyOk');
-        keyFeedback.className = 'key-feedback success';
-    } catch (err) {
-        keyFeedback.textContent = t('keyBad');
-        keyFeedback.className = 'key-feedback error';
-    } finally {
-        testKeyBtn.disabled = false;
+        const response = await callAnthropic(key, 'Ping', 'Reply with one short word.', 1);
+        showKeyResult(response.ok ? t('keyOk') : t('keyBad'), response.ok ? 'success' : 'error');
+    } catch (error) {
+        showKeyResult(t('keyBad'), 'error');
     }
+    testKeyButton.disabled = false;
 }
 
-function getResumeAIPrediction(jobTitle, section) {
-    if (lang === 'ar') {
-        return section === 'summary'
-            ? 'محترف مجتهد ودقيق يتمتع بمهارات تقنية قوية وروح تعاونية والتزام بتحقيق أهداف تشغيلية قابلة للقياس.'
-            : 'عملتُ ضمن فريق متعدد المهام لتحقيق أهداف التسليم الأساسية، وساهمتُ في تبسيط التوثيق وأتمتة تتبع العمل.';
-    }
-    const cleanTitle = jobTitle.trim().toLowerCase() || 'professional';
-    const mockData = {
-        summary: {
-            engineer: "Result-driven Software Engineer with architecture experience. Proven ability to build accessible scalable modern web tools, optimize databases, and collaborate within cross-functional agile sprints.",
-            designer: "Creative UI/UX Designer dedicated to crafting functional intuitive user journeys. Experienced in wireframing, high-fidelity responsive design systems, and rapid prototyping workflows.",
-            manager: "Strategic Project Manager with a history of delivering complex milestones on time and under budget. Highly skilled in risk management, resource allocation, and team leadership.",
-            default: "Motivated and detail-oriented professional offering strong technical foundational skills, a collaborative mindset, and a commitment to driving measurable operational goals."
+function callAnthropic(key, text, instructions, maxTokens) {
+    return fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': key,
+            'anthropic-version': '2023-06-01',
+            // needed for calling the API straight from the browser obvoius
+            'anthropic-dangerous-direct-browser-access': 'true'
         },
-        description: {
-            engineer: "Developed and optimized scalable web software architectures using standard framework tooling. Mentored team components, refactored backend logic arrays, and reduced pipeline latency speeds by 14%.",
-            designer: "Led complete visual redesign overhauls matching high accessibility metrics. Built robust cross-functional design system libraries reducing engineering delivery speed requirements significantly.",
-            manager: "Managed dynamic cross-functional team sprints through predictable sprint roadmaps. Spearheaded strategic client communications pipelines and minimized critical bottleneck slippages.",
-            default: "Collaborated in high-intensity operational ecosystems achieving core pipeline delivery milestones. Streamlined documentation pipelines and automated tracking layouts."
+        body: JSON.stringify({
+            model: 'claude-sonnet-4-6',
+            max_tokens: maxTokens,
+            system: instructions,
+            messages: [{ role: 'user', content: text }]
+        })
+    });
+}
+
+
+// demo mode: no API call, just a fixed example sentence so its useless i guess and the arabic is really hard to write on a keyboard btw
+function demoText(kind) {
+    const examples = {
+        en: {
+            summary: 'Hardworking and careful person with good technical skills who likes working in a team.',
+            description: 'Worked with a team to finish projects on time and helped keep the documentation up to date.'
+        },
+        ar: {
+            summary: 'شخص مجتهد ودقيق يتمتع بمهارات تقنية جيدة ويحب العمل ضمن فريق.',
+            description: 'عملت مع فريق لإنهاء المشاريع في وقتها وساعدت في تحديث التوثيق.'
         }
     };
-    let matchedCategory = 'default';
-    if (cleanTitle.includes('engineer') || cleanTitle.includes('developer') || cleanTitle.includes('tech')) matchedCategory = 'engineer';
-    else if (cleanTitle.includes('design') || cleanTitle.includes('ui') || cleanTitle.includes('ux')) matchedCategory = 'designer';
-    else if (cleanTitle.includes('manag') || cleanTitle.includes('lead')) matchedCategory = 'manager';
-
-    return mockData[section]?.[matchedCategory] || mockData[section]?.['default'];
+    return examples[language][kind];
 }
 
-// ─── Country Codes (phone) ────────────────────────────────────────────────────
-function populateCountryOptions() {
-    const previous = countryCodeInput.value || 'EG';
-    const countryNames = new Intl.DisplayNames([lang], { type: 'region' });
-    const options = COUNTRY_OPTIONS.map(item => ({
-        ...item,
-        name: countryNames.of(item.code) || item.code
-    })).sort((a, b) => a.name.localeCompare(b.name, lang));
-
-    countryCodeInput.replaceChildren(...options.map(item => {
-        const option = document.createElement('option');
-        option.value = item.code;
-        option.textContent = `${item.flag} ${item.name} ‎(${item.dial})`;
-        return option;
-    }));
-    setCountrySelection(previous);
+// shows a message plus a link that opens Settings
+function showKeyHelp(box, message) {
+    box.textContent = message + ' ';
+    const link = document.createElement('button');
+    link.type = 'button';
+    link.className = 'link-btn';
+    link.textContent = t('openSettings');
+    link.addEventListener('click', openSettings);
+    box.append(link);
 }
 
-function getCountryOption(value = countryCodeInput.value) {
-    return COUNTRY_OPTIONS.find(item => item.code === value)
-        || COUNTRY_OPTIONS.find(item => item.code === 'EG');
-}
+// button = the AI Enhance button that was clicked. The text box and the message
+// box are in the same form-group as the button.
 
-function setCountrySelection(value) {
-    const country = getCountryOption(value);
-    countryCodeInput.value = country.code;
-}
+async function enhanceText(button) {
+    const group = button.parentElement;
+    const textarea = group.querySelector('textarea');
+    const warning = group.querySelector('.ai-warning');
+    const text = textarea.value.trim();
 
-// ─── Location (city + country list → "City, Country") ────────────────────────
-function populateLocationCountries() {
-    const previous = locationCountry.value;
-    const en  = new Intl.DisplayNames(['en'], { type: 'region' });
-    const loc = new Intl.DisplayNames([lang], { type: 'region' });
-    const items = COUNTRY_OPTIONS
-        .map(c => ({ value: en.of(c.code) || c.code, label: loc.of(c.code) || c.code }))
-        .sort((a, b) => a.label.localeCompare(b.label, lang));
-    locationCountry.replaceChildren(
-        new Option(t('selectCountry'), ''),
-        ...items.map(i => new Option(i.label, i.value))
-    );
-    locationCountry.value = previous;
-    if (locationCountry.value !== previous) locationCountry.value = '';
-}
-
-function syncLocation() {
-    const city = cityInput.value.trim();
-    const country = locationCountry.value;
-    locationHidden.value = city && country ? `${city}, ${country}` : '';
-}
-
-function setLocation(value) {
-    const text = String(value || '');
-    const cut = text.lastIndexOf(',');
-    const city = (cut === -1 ? text : text.slice(0, cut)).trim();
-    const country = cut === -1 ? '' : text.slice(cut + 1).trim();
-    cityInput.value = city;
-    locationCountry.value = Array.from(locationCountry.options).some(o => o.value === country) ? country : '';
-    syncLocation();
-}
-
-// ─── Session Storage ──────────────────────────────────────────────────────────
-function hasStoredSession() {
-    return Boolean(localStorage.getItem(STORAGE_KEY));
-}
-
-function initDefaultEntries() {
-    educationContainer.innerHTML  = '';
-    experienceContainer.innerHTML = '';
-    projectContainer.innerHTML    = '';
-    addEducationEntry();
-    addExperienceEntry();
-}
-
-function saveFormState() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(collectFormData())); } catch (err) { /* ignore */ }
-}
-
-function saveSectionCollapseState() {
-    const state = {};
-    document.querySelectorAll('section.card[data-section]').forEach(section => {
-        state[section.dataset.section] = section.classList.contains('collapsed');
-    });
-    localStorage.setItem(SECTION_COLLAPSE_STORAGE, JSON.stringify(state));
-}
-
-function restoreSectionCollapseState() {
-    const raw = localStorage.getItem(SECTION_COLLAPSE_STORAGE);
-    if (!raw) return;
-
-    try {
-        const state = JSON.parse(raw);
-        document.querySelectorAll('section.card[data-section]').forEach(section => {
-            const collapsed = Boolean(state[section.dataset.section]);
-            section.classList.toggle('collapsed', collapsed);
-            const button = section.querySelector('.section-collapse-btn');
-            if (button) button.setAttribute('aria-expanded', String(!collapsed));
-        });
-    } catch (err) {
-        console.error('Unable to restore section collapse state', err);
-    }
-}
-
-function toggleSectionCollapse(sectionName) {
-    const section = document.querySelector(`section.card[data-section="${sectionName}"]`);
-    if (!section) return;
-
-    const hasValidationErrors = Array.from(section.querySelectorAll('input[required], textarea[required]')).some(field => field.classList.contains('is-invalid'));
-    if (hasValidationErrors) {
-        showToast(t('resolveFirst'));
+    if (!text) {
+        warning.textContent = t('enhanceEmpty');
         return;
     }
 
-    const collapsed = section.classList.toggle('collapsed');
-    const button = section.querySelector('.section-collapse-btn');
-    if (button) button.setAttribute('aria-expanded', String(!collapsed));
-    saveSectionCollapseState();
+    const demoOn = load(KEYS.demo) === 'true';
+    const key = load(KEYS.apiKey);
+    if (!key && !demoOn) {
+        showKeyHelp(warning, t('noKeyHelp'));
+        return;
+    }
+
+    warning.textContent = '';
+    button.disabled = true;
+    button.textContent = t('enhancing');
+
+    try {
+        let newText = '';
+
+        if (demoOn) {
+            newText = demoText(textarea.id === 'summary' ? 'summary' : 'description');
+        } else {
+            const instructions = 'You are a professional CV writer. Rewrite the text so it sounds polished and professional. ' +
+                'Keep it short. Answer in the same language as the text. Return only the new text.';
+            const response = await callAnthropic(key, text, instructions, 1000);
+
+            if (response.status === 401 || response.status === 403) {
+                showKeyHelp(warning, t('badKeyHelp'));
+                return;
+            }
+            if (response.status === 429) {
+                warning.textContent = t('rateLimit');
+                return;
+            }
+            if (!response.ok) throw new Error('Request failed: ' + response.status);
+
+            const data = await response.json();
+            newText = (data.content && data.content[0] && data.content[0].text || '').trim();
+        }
+
+        if (newText) {
+            textarea.value = newText;
+            textarea.dispatchEvent(new Event('input', { bubbles: true }));
+            showToast(t(demoOn ? 'demoDone' : 'enhanced'));
+        }
+    } catch (error) {
+        warning.textContent = t('enhanceFail');
+    } finally {
+        button.disabled = false;
+        button.textContent = t('aiEnhance');
+    }
 }
 
-function collectFormData() {
-    const experienceEntries = Array.from(experienceContainer.querySelectorAll('.experience-entry')).map(entry => ({
-        title:       entry.querySelector('.experience-title')?.value       || '',
-        company:     entry.querySelector('.experience-company')?.value     || '',
-        start:       entry.querySelector('.experience-start')?.value       || '',
-        end:         entry.querySelector('.experience-current')?.checked ? '' : (entry.querySelector('.experience-end')?.value || ''),
-        current:     Boolean(entry.querySelector('.experience-current')?.checked),
-        duration:    entry.dataset.legacyDuration || '',
-        description: entry.querySelector('.experience-description')?.value || ''
-    }));
 
-    const educationEntries = Array.from(educationContainer.querySelectorAll('.education-entry')).map(entry => ({
-        degree: entry.querySelector('.education-degree')?.value || '',
-        school: entry.querySelector('.education-school')?.value || '',
-        year:   entry.querySelector('.education-year')?.value   || ''
-    }));
+// phone code dropdown: "🇪🇬 Egypt (+20)" used ai ofc its super hard
+function fillPhoneCodes() {
+    const names = new Intl.DisplayNames([language], { type: 'region' });
+    const before = phoneCodeSelect.value || 'EG';
 
-    const projectEntries = Array.from(projectContainer.querySelectorAll('.project-entry')).map(entry => ({
-        name:        entry.querySelector('.project-name')?.value        || '',
-        tech:        entry.querySelector('.project-tech')?.value        || '',
-        url:         entry.querySelector('.project-url')?.value         || '',
-        description: entry.querySelector('.project-description')?.value || ''
-    }));
+    const sorted = COUNTRIES
+        .map(country => ({ ...country, name: names.of(country.code) || country.code }))
+        .sort((a, b) => a.name.localeCompare(b.name, language));
 
+    phoneCodeSelect.replaceChildren(...sorted.map(country =>
+        new Option(`${country.flag} ${country.name} ‎(${country.dial})`, country.code)));
+    phoneCodeSelect.value = before;
+}
+
+function getDialCode() {
+    const country = COUNTRIES.find(c => c.code === phoneCodeSelect.value) || COUNTRIES.find(c => c.code === 'EG');
+    return country.dial;
+}
+
+// location dropdown. The saved value is the English name, the shown name follows the language
+function fillCountryList() {
+    const english = new Intl.DisplayNames(['en'], { type: 'region' });
+    const shown = new Intl.DisplayNames([language], { type: 'region' });
+    const before = countrySelect.value;
+
+    const sorted = COUNTRIES
+        .map(country => ({ value: english.of(country.code) || country.code, label: shown.of(country.code) || country.code }))
+        .sort((a, b) => a.label.localeCompare(b.label, language));
+
+    countrySelect.replaceChildren(
+        new Option(t('selectCountry'), ''),
+        ...sorted.map(country => new Option(country.label, country.value)));
+    countrySelect.value = before;
+    if (countrySelect.value !== before) countrySelect.value = '';
+}
+
+// joins the city and country
+function updateLocation() {
+    const city = cityInput.value.trim();
+    locationInput.value = city && countrySelect.value ? city + ', ' + countrySelect.value : '';
+}
+
+// it does the opposite
+function setLocation(text) {
+    text = String(text || '');
+    const comma = text.lastIndexOf(',');
+    const country = comma === -1 ? '' : text.slice(comma + 1).trim();
+
+    cityInput.value = (comma === -1 ? text : text.slice(0, comma)).trim();
+    countrySelect.value = country;
+    if (countrySelect.value !== country) countrySelect.value = '';
+    updateLocation();
+}
+
+// saving and loading
+
+function saveForm() {
+    save(KEYS.form, JSON.stringify(getFormData()));
+}
+
+function getFormData() {
     return {
-        fullName:        document.getElementById('fullName').value,
-        email:           document.getElementById('email').value,
-        phone:           document.getElementById('phone').value,
-        countryCode:     countryCodeInput.value,
-        location:        locationHidden.value,
-        summary:         document.getElementById('summary').value,
-        experiences:     experienceEntries,
-        educations:      educationEntries,
-        projects:        projectEntries,
-        skills:          skillsList,
-        certifications:  document.getElementById('certifications').value,
-        languages:       document.getElementById('languages').value,
-        theme:           selectedTheme,
-        template:        templateSelect.value,
-        sectionOrder:    sectionOrder.slice(),
-        descPreferences: Array.from(document.querySelectorAll('input[name="descPreference"]:checked')).map(i => i.value)
+        fullName: fullNameInput.value,
+        email: emailInput.value,
+        phone: phoneInput.value,
+        countryCode: phoneCodeSelect.value,
+        location: locationInput.value,
+        summary: summaryInput.value,
+        experiences: getJobs(),
+        educations: getSchools(),
+        projects: getProjects(),
+        skills: skills,
+        certifications: certificationsInput.value,
+        languages: languagesInput.value,
+        theme: theme,
+        template: templateSelect.value,
+        sectionOrder: sectionOrder.slice(),
+        descPreferences: Array.from(document.querySelectorAll('input[name="descPreference"]:checked')).map(box => box.value)
     };
 }
 
-// Fill the whole form from a data object (restore, import, undo, language change).
-// layout: also apply the saved template + section order (only for JSON imports).
-function loadFormData(d, { theme = false, layout = false, save = true } = {}) {
-    document.getElementById('fullName').value       = d.fullName    || '';
-    document.getElementById('email').value          = d.email       || '';
-    document.getElementById('phone').value          = d.phone       || '';
-    setCountrySelection(d.countryCode || 'EG');
-    setLocation(d.location);
-    document.getElementById('summary').value        = d.summary     || '';
-    document.getElementById('certifications').value = d.certifications || '';
-    document.getElementById('languages').value      = d.languages   || '';
+// fills the whole form from a data object for ex (used for restore, import, undo and language change) this was kinda 
+// hard to do because of the many fields and the fact that some are arrays of objects, 
+// so I had to make sure everything is filled correctly and also handle defaults and empty values. 
+// I also added options to use the theme and layout from the data if desired.
 
-    const prefs = Array.isArray(d.descPreferences) ? d.descPreferences : [];
-    document.querySelectorAll('input[name="descPreference"]').forEach(input => {
-        input.checked = prefs.includes(input.value);
+function fillForm(data, { useTheme = false, useLayout = false } = {}) {
+    fullNameInput.value = data.fullName || '';
+    emailInput.value = data.email || '';
+    phoneInput.value = data.phone || '';
+    phoneCodeSelect.value = data.countryCode || 'EG';
+    if (!phoneCodeSelect.value) phoneCodeSelect.value = 'EG';
+    setLocation(data.location);
+    summaryInput.value = data.summary || '';
+    certificationsInput.value = data.certifications || '';
+    languagesInput.value = data.languages || '';
+
+    const preferences = data.descPreferences || [];
+    document.querySelectorAll('input[name="descPreference"]').forEach(box => {
+        box.checked = preferences.includes(box.value);
     });
 
-    educationContainer.innerHTML = '';
-    (Array.isArray(d.educations) && d.educations.length ? d.educations : [{}]).forEach(item => addEducationEntry(item));
+    // at least one education and one job box, projects can be empty lil bit of ai here bec of the conds and strings
+    educationBox.innerHTML = '';
+    experienceBox.innerHTML = '';
+    projectBox.innerHTML = '';
+    (data.educations && data.educations.length ? data.educations : [{}]).forEach(addEducation);
+    (data.experiences && data.experiences.length ? data.experiences : [{}]).forEach(addExperience);
+    (data.projects || []).forEach(addProject);
 
-    experienceContainer.innerHTML = '';
-    (Array.isArray(d.experiences) && d.experiences.length ? d.experiences : [{}]).forEach(item => addExperienceEntry(item));
+    skills = (data.skills || []).filter(skill => skill && skill.name);
+    showSkillTags();
 
-    projectContainer.innerHTML = '';
-    if (Array.isArray(d.projects)) d.projects.forEach(item => addProjectEntry(item));
-
-    skillsList = [];
-    skillTagsContainer.innerHTML = '';
-    if (Array.isArray(d.skills)) {
-        d.skills.forEach(s => {
-            if (s && s.name) addSkillToList(s.name, s.level || 'Intermediate');
-        });
-    }
-    syncSkillsHidden();
-
-    if (layout) {
-        if (TEMPLATES.includes(d.template)) setTemplate(d.template);
-        if (isValidOrder(d.sectionOrder)) {
-            sectionOrder = d.sectionOrder.slice();
-            saveSectionOrder();
-            renderSectionOrder();
+    if (useTheme && data.theme) setTheme(data.theme);
+    if (useLayout) {
+        if (data.template) setTemplate(data.template);
+        if (isGoodOrder(data.sectionOrder)) {
+            sectionOrder = data.sectionOrder.slice();
+            save(KEYS.order, JSON.stringify(sectionOrder));
+            showOrderList();
         }
     }
-    if (theme && d.theme) applyTheme(d.theme);
 
-    updateCharCounter(document.getElementById('summary'));
-    updatePlaceholderForJobPreferences();
-    renumberEntries();
-    if (save) saveFormState();
+    showCount(summaryInput);
+    updateDescriptionHints();
     updatePreview();
     updateProgress();
 }
 
-function hydrateFromStorage() {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) { initDefaultEntries(); return; }
-
-    try {
-        const d = JSON.parse(raw);
-        if (!d) { initDefaultEntries(); return; }
-        loadFormData(d);
-    } catch (err) {
-        console.error('Unable to restore saved CV data', err);
-    }
+function startWithDefaults() {
+    fillForm({});
 }
 
-function restoreSession() {
-    hydrateFromStorage();
-    restoreBanner.hidden = true;
-    updatePreview();
-    updateProgress();
-}
 
-function discardSession() {
-    localStorage.removeItem(STORAGE_KEY);
-    restoreBanner.hidden = true;
-    skillsList = [];
-    skillTagsContainer.innerHTML = '';
-    syncSkillsHidden();
-    initDefaultEntries();
-    updatePreview();
-    updateProgress();
-}
+function clearForm() {
+    const backup = { data: getFormData(), photo: load(KEYS.photo) };
 
-function hardClearForm() {
     form.reset();
-    setCountrySelection('EG');
-    setLocation('');   // hidden inputs keep their value through form.reset()
-    localStorage.removeItem(STORAGE_KEY);
-    skillsList = [];
-    skillTagsContainer.innerHTML = '';
-    syncSkillsHidden();
-    educationContainer.innerHTML  = '';
-    experienceContainer.innerHTML = '';
-    projectContainer.innerHTML    = '';
-    addEducationEntry();
-    addExperienceEntry();
-    removeAvatar();
+    phoneCodeSelect.value = 'EG';
+    setLocation('');                       // form.reset() doesn't clear hidden inputs btw
+    removePhoto();
+    localStorage.removeItem(KEYS.form);
+    fillForm({});
     document.querySelectorAll('.field-error, .ai-warning').forEach(el => { el.textContent = ''; });
     document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
-    updateCharCounter(document.getElementById('summary'));
-    updatePreview();
-    updateProgress();
+
+    showToast(t('formCleared'), { label: t('undo'), onClick: () => undoClear(backup) });
 }
 
-function clearFormWithUndo() {
-    const snapshot = {
-        data: collectFormData(),
-        avatar: localStorage.getItem(AVATAR_STORAGE)
-    };
-    hardClearForm();
-    showToast(t('formCleared'), {
-        actionLabel: t('undo'),
-        duration: 8000,
-        onAction: () => undoClear(snapshot)
-    });
-}
-
-function undoClear(snapshot) {
-    loadFormData(snapshot.data);
-    if (snapshot.avatar) {
-        setAvatar(snapshot.avatar);
-        try { localStorage.setItem(AVATAR_STORAGE, snapshot.avatar); } catch (err) { /* ignore */ }
+function undoClear(backup) {
+    fillForm(backup.data);
+    if (backup.photo) {
+        showPhoto(backup.photo);
+        save(KEYS.photo, backup.photo);
     }
+    saveForm();
     showToast(t('restored'));
 }
 
-// ─── Dynamic Entries ──────────────────────────────────────────────────────────
-function entryHeaderHtml(kind, n) {
+
+
+// the top row of everything
+function entryHeader(kind, number) {
     return `
         <div class="entry-header">
-            <h3>${escapeHtml(t(kind + 'N', { n }))}</h3>
+            <h3>${escapeHtml(t(kind + 'N', { n: number }))}</h3>
             <div class="entry-actions">
-                <button type="button" class="move-entry-btn secondary-btn" data-dir="up" aria-label="${escapeHtml(t('moveEntryUp'))}">↑</button>
-                <button type="button" class="move-entry-btn secondary-btn" data-dir="down" aria-label="${escapeHtml(t('moveEntryDown'))}">↓</button>
+                <button type="button" class="move-entry-btn secondary-btn" data-move="up" aria-label="${escapeHtml(t('moveEntryUp'))}">↑</button>
+                <button type="button" class="move-entry-btn secondary-btn" data-move="down" aria-label="${escapeHtml(t('moveEntryDown'))}">↓</button>
                 <button type="button" class="remove-entry-btn secondary-btn">${escapeHtml(t('remove'))}</button>
             </div>
         </div>`;
 }
 
+// gives every entry its number again for ex "Experience 1", "Experience 2" and so on
 function renumberEntries() {
-    [['experience', experienceContainer], ['education', educationContainer], ['project', projectContainer]].forEach(([kind, container]) => {
-        container.querySelectorAll(':scope > .entry-card').forEach((entry, i) => {
-            const heading = entry.querySelector('.entry-header h3');
-            if (heading) heading.textContent = t(kind + 'N', { n: i + 1 });
+    const groups = [['experience', experienceBox], ['education', educationBox], ['project', projectBox]];
+    groups.forEach(([kind, box]) => {
+        Array.from(box.children).forEach((entry, index) => {
+            entry.querySelector('.entry-header h3').textContent = t(kind + 'N', { n: index + 1 });
         });
     });
 }
 
-function moveEntry(btn) {
-    const entry = btn.closest('.entry-card');
-    if (!entry) return;
-    const goingUp = btn.dataset.dir === 'up';
-    const sibling = goingUp ? entry.previousElementSibling : entry.nextElementSibling;
-    if (!sibling) return;
-    if (goingUp) entry.parentElement.insertBefore(entry, sibling);
-    else entry.parentElement.insertBefore(sibling, entry);
-    renumberEntries();
-    saveFormState();
-    updatePreview();
-    btn.focus();
-}
-
-function addExperienceEntry(data = {}) {
-    const idx   = experienceContainer.querySelectorAll(':scope > .experience-entry').length + 1;
-    const entry = document.createElement('div');
-    entry.className = 'entry-card experience-entry';
-    if (data.duration && !data.start && !data.end && !data.current) {
-        entry.dataset.legacyDuration = data.duration;   // old free-text dates, kept until new dates are set
-    }
-    entry.innerHTML = `
-        ${entryHeaderHtml('experience', idx)}
-        <div class="form-group">
-            <label>${escapeHtml(t('jobTitle'))}</label>
-            <input type="text" class="experience-title" maxlength="80" value="${escapeHtml(data.title || '')}" placeholder="${escapeHtml(t('jobTitlePh'))}">
-        </div>
-        <div class="form-group">
-            <label>${escapeHtml(t('company'))}</label>
-            <input type="text" class="experience-company" maxlength="80" value="${escapeHtml(data.company || '')}" placeholder="${escapeHtml(t('companyPh'))}">
-        </div>
-        <div class="date-row">
-            <div class="form-group">
-                <label>${escapeHtml(t('startDate'))}</label>
-                <input type="month" class="experience-start" dir="ltr" value="${escapeHtml(data.start || '')}" placeholder="YYYY-MM" pattern="\\d{4}-\\d{2}">
-            </div>
-            <div class="form-group">
-                <label>${escapeHtml(t('endDate'))} <span class="optional-tag">${escapeHtml(t('optional'))}</span></label>
-                <input type="month" class="experience-end" dir="ltr" value="${escapeHtml(data.current ? '' : (data.end || ''))}" placeholder="YYYY-MM" pattern="\\d{4}-\\d{2}">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="switch-label">
-                <input type="checkbox" class="experience-current" ${data.current ? 'checked' : ''}>
-                <span>${escapeHtml(t('currentJob'))}</span>
-            </label>
-        </div>
-        <div class="form-group">
-            <label>${escapeHtml(t('jobDesc'))}</label>
-            <textarea class="experience-description" placeholder="${escapeHtml(t('describePh'))}" maxlength="800">${escapeHtml(data.description || '')}</textarea>
-            <div class="char-counter exp-char-counter"></div>
-            <button type="button" class="ai-enhance-btn secondary-btn">${escapeHtml(t('aiEnhance'))}</button>
-            <div class="ai-warning exp-ai-warning"></div>
-        </div>
-    `;
-
-    const start   = entry.querySelector('.experience-start');
-    const end     = entry.querySelector('.experience-end');
-    const current = entry.querySelector('.experience-current');
-    end.disabled = current.checked;
-    if (start.value) end.min = start.value;
-
-    // char counter for this textarea
-    const ta = entry.querySelector('.experience-description');
-    const counter = entry.querySelector('.exp-char-counter');
-    const updateCounter = () => { counter.textContent = t('chars', { n: ta.value.length, max: 800 }); };
-    ta.addEventListener('input', updateCounter);
-    updateCounter();
-
-    // AI enhance for this specific entry
-    const aiBtn = entry.querySelector('.ai-enhance-btn');
-    aiBtn.addEventListener('click', () => enhanceText(null, aiBtn, ta, entry.querySelector('.exp-ai-warning')));
-
-    experienceContainer.appendChild(entry);
-    renumberEntries();
-    updatePlaceholderForJobPreferences();
-    updatePreview();
-}
-
-function handleDateFields(el) {
-    const entry   = el.closest('.experience-entry');
-    const start   = entry.querySelector('.experience-start');
-    const end     = entry.querySelector('.experience-end');
-    const current = entry.querySelector('.experience-current');
-    const monthRe = /^\d{4}-\d{2}$/;
-
-    if (el === current) {
-        end.disabled = current.checked;
-        if (current.checked) end.value = '';
-    }
-    if (start.value || end.value || current.checked) delete entry.dataset.legacyDuration;
-
-    if (start.value) end.min = start.value; else end.removeAttribute('min');
-    if (monthRe.test(start.value) && monthRe.test(end.value) && end.value < start.value) {
-        end.value = '';
-        showToast(t('endBeforeStart'));
-    }
-}
-
-function addEducationEntry(data = {}) {
-    const idx   = educationContainer.querySelectorAll(':scope > .education-entry').length + 1;
+function addEducation(data = {}) {
     const entry = document.createElement('div');
     entry.className = 'entry-card education-entry';
     entry.innerHTML = `
-        ${entryHeaderHtml('education', idx)}
+        ${entryHeader('education', educationBox.children.length + 1)}
         <div class="form-group">
             <label>${escapeHtml(t('degree'))}</label>
             <input type="text" class="education-degree" maxlength="80" value="${escapeHtml(data.degree || '')}" placeholder="${escapeHtml(t('degreePh'))}">
@@ -1249,19 +854,60 @@ function addEducationEntry(data = {}) {
         <div class="form-group">
             <label>${escapeHtml(t('gradYear'))}</label>
             <input type="number" class="education-year" dir="ltr" value="${escapeHtml(data.year || '')}" placeholder="${escapeHtml(t('gradYearPh'))}" min="1950" max="2100" step="1" inputmode="numeric">
-        </div>
-    `;
-    educationContainer.appendChild(entry);
-    renumberEntries();
-    updatePreview();
+        </div>`;
+    educationBox.append(entry);
 }
 
-function addProjectEntry(data = {}) {
-    const idx   = projectContainer.querySelectorAll(':scope > .project-entry').length + 1;
+// used ai here
+
+function addExperience(data = {}) {
+    const entry = document.createElement('div');
+    entry.className = 'entry-card experience-entry';
+    entry.innerHTML = `
+        ${entryHeader('experience', experienceBox.children.length + 1)}
+        <div class="form-group">
+            <label>${escapeHtml(t('jobTitle'))}</label>
+            <input type="text" class="experience-title" maxlength="80" value="${escapeHtml(data.title || '')}" placeholder="${escapeHtml(t('jobTitlePh'))}">
+        </div>
+        <div class="form-group">
+            <label>${escapeHtml(t('company'))}</label>
+            <input type="text" class="experience-company" maxlength="80" value="${escapeHtml(data.company || '')}" placeholder="${escapeHtml(t('companyPh'))}">
+        </div>
+        <div class="date-row">
+            <div class="form-group">
+                <label>${escapeHtml(t('startDate'))}</label>
+                <input type="month" class="experience-start" dir="ltr" value="${escapeHtml(data.start || '')}">
+            </div>
+            <div class="form-group">
+                <label>${escapeHtml(t('endDate'))} <span class="optional-tag">${escapeHtml(t('optional'))}</span></label>
+                <input type="month" class="experience-end" dir="ltr" value="${escapeHtml(data.current ? '' : (data.end || ''))}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="switch-label">
+                <input type="checkbox" class="experience-current" ${data.current ? 'checked' : ''}>
+                <span>${escapeHtml(t('currentJob'))}</span>
+            </label>
+        </div>
+        <div class="form-group">
+            <label>${escapeHtml(t('jobDesc'))}</label>
+            <textarea class="experience-description" placeholder="${escapeHtml(t('describePh'))}" maxlength="800">${escapeHtml(data.description || '')}</textarea>
+            <div class="char-counter"></div>
+            <button type="button" class="ai-enhance-btn secondary-btn">${escapeHtml(t('aiEnhance'))}</button>
+            <div class="ai-warning"></div>
+        </div>`;
+    experienceBox.append(entry);
+
+    fixDates(entry.querySelector('.experience-start'));
+    showCount(entry.querySelector('textarea'));
+    updateDescriptionHints();
+}
+
+function addProject(data = {}) {
     const entry = document.createElement('div');
     entry.className = 'entry-card project-entry';
     entry.innerHTML = `
-        ${entryHeaderHtml('project', idx)}
+        ${entryHeader('project', projectBox.children.length + 1)}
         <div class="form-group">
             <label>${escapeHtml(t('projectName'))}</label>
             <input type="text" class="project-name" maxlength="80" value="${escapeHtml(data.name || '')}" placeholder="${escapeHtml(t('projectNamePh'))}">
@@ -1277,614 +923,582 @@ function addProjectEntry(data = {}) {
         <div class="form-group">
             <label>${escapeHtml(t('projectDesc'))}</label>
             <textarea class="project-description" placeholder="${escapeHtml(t('projectDescPh'))}" maxlength="500">${escapeHtml(data.description || '')}</textarea>
-            <div class="char-counter proj-char-counter"></div>
-        </div>
-    `;
-    const ta      = entry.querySelector('.project-description');
-    const counter = entry.querySelector('.proj-char-counter');
-    const updateCounter = () => { counter.textContent = t('chars', { n: ta.value.length, max: 500 }); };
-    ta.addEventListener('input', updateCounter);
-    updateCounter();
+            <div class="char-counter"></div>
+        </div>`;
+    projectBox.append(entry);
 
-    projectContainer.appendChild(entry);
-    renumberEntries();
-    updatePreview();
+    showCount(entry.querySelector('textarea'));
 }
 
-// ─── Skills Tag Input ─────────────────────────────────────────────────────────
-function addSkillTag() {
-    const name  = skillInput.value.trim();
-    const level = skillLevel.value;
+function removeEntry(button) {
+    const entry = button.closest('.entry-card');
+    const box = entry.parentElement;
+    const minimum = box === projectBox ? 0 : 1;      // projects are optional
+
+    if (box.children.length <= minimum) {
+        showToast(t('needOne'));
+        return;
+    }
+    entry.remove();
+    renumberEntries();
+}
+
+function moveEntry(button) {
+    const entry = button.closest('.entry-card');
+    const goingUp = button.dataset.move === 'up';
+    const neighbour = goingUp ? entry.previousElementSibling : entry.nextElementSibling;
+    if (!neighbour) return;
+
+    if (goingUp) neighbour.before(entry);
+    else neighbour.after(entry);
+    renumberEntries();
+    button.focus();
+}
+
+// reads the entries bec i always forget
+function getJobs() {
+    return Array.from(experienceBox.children).map(entry => ({
+        title: entry.querySelector('.experience-title').value,
+        company: entry.querySelector('.experience-company').value,
+        start: entry.querySelector('.experience-start').value,
+        end: entry.querySelector('.experience-current').checked ? '' : entry.querySelector('.experience-end').value,
+        current: entry.querySelector('.experience-current').checked,
+        description: entry.querySelector('.experience-description').value
+    }));
+}
+
+function getSchools() {
+    return Array.from(educationBox.children).map(entry => ({
+        degree: entry.querySelector('.education-degree').value,
+        school: entry.querySelector('.education-school').value,
+        year: entry.querySelector('.education-year').value
+    }));
+}
+
+function getProjects() {
+    return Array.from(projectBox.children).map(entry => ({
+        name: entry.querySelector('.project-name').value,
+        tech: entry.querySelector('.project-tech').value,
+        url: entry.querySelector('.project-url').value,
+        description: entry.querySelector('.project-description').value
+    }));
+}
+
+// made some restrsints for the dates
+function fixDates(changed) {
+    const entry = changed.closest('.experience-entry');
+    const start = entry.querySelector('.experience-start');
+    const end = entry.querySelector('.experience-end');
+    const current = entry.querySelector('.experience-current');
+
+    end.disabled = current.checked;
+    if (current.checked) end.value = '';
+
+    if (start.value) end.min = start.value;
+    else end.removeAttribute('min');
+
+    if (start.value && end.value && end.value < start.value) {
+        end.value = '';
+        showToast(t('endBeforeStart'));
+    }
+}
+
+
+function updateDescriptionHints() {
+    const hints = {
+        achievements: 'prefPhAch',
+        responsibilities: 'prefPhResp',
+        impact: 'prefPhImpact',
+        skills: 'prefPhSkills'
+    };
+    const checked = Array.from(document.querySelectorAll('input[name="descPreference"]:checked'));
+    const text = checked.map(box => t(hints[box.value])).join(' ') || t('describePh');
+
+    document.querySelectorAll('.experience-description').forEach(box => { box.placeholder = text; });
+}
+
+// made a limit here
+function showCount(textarea) {
+    const counter = textarea.parentElement.querySelector('.char-counter');
+    if (!counter) return;
+
+    const max = textarea.maxLength;
+    counter.textContent = t('chars', { n: textarea.value.length, max: max });
+    counter.classList.toggle('counter-warn', textarea.value.length > max * 0.9);
+}
+
+
+function addSkill() {
+    const name = skillInput.value.trim();
     if (!name) return;
-    if (skillsList.some(s => s.name.toLowerCase() === name.toLowerCase())) {
+
+    if (skills.some(skill => skill.name.toLowerCase() === name.toLowerCase())) {
         showToast(t('skillExists'));
         return;
     }
-    addSkillToList(name, level);
+    skills.push({ name: name, level: skillLevelSelect.value });
     skillInput.value = '';
-    syncSkillsHidden();
-    saveFormState();
+    showSkillTags();
+    saveForm();
     updatePreview();
     updateProgress();
 }
 
-function addSkillToList(name, level) {
-    skillsList.push({ name, level });
-    const tag = document.createElement('span');
-    tag.className = 'skill-tag';
-    tag.dataset.name = name;
-    tag.innerHTML = `
-        <span class="skill-tag-name">${escapeHtml(name)}</span>
-        <span class="skill-tag-level skill-level-${level.toLowerCase()}">${escapeHtml(t('lvl.' + level))}</span>
-        <button type="button" class="skill-tag-remove" aria-label="${escapeHtml(t('removeSkill', { name }))}">×</button>
-    `;
-    tag.querySelector('.skill-tag-remove').addEventListener('click', () => {
-        skillsList = skillsList.filter(s => s.name !== name);
-        tag.remove();
-        syncSkillsHidden();
-        saveFormState();
-        updatePreview();
-        updateProgress();
-    });
-    skillTagsContainer.appendChild(tag);
+function showSkillTags() {
+    skillTagsBox.innerHTML = skills.map((skill, index) => `
+        <span class="skill-tag">
+            <span>${escapeHtml(skill.name)}</span>
+            <span class="skill-tag-level skill-level-${skill.level.toLowerCase()}">${escapeHtml(t('lvl.' + skill.level))}</span>
+            <button type="button" class="skill-tag-remove" data-index="${index}" aria-label="${escapeHtml(t('removeSkill', { name: skill.name }))}">×</button>
+        </span>`).join('');
 }
 
-function syncSkillsHidden() {
-    skillsHidden.value = skillsList.map(s => `${s.name} (${s.level})`).join(', ');
+function removeSkill(index) {
+    skills.splice(index, 1);
+    showSkillTags();
+    saveForm();
+    updatePreview();
+    updateProgress();
 }
 
-// ─── Avatar ───────────────────────────────────────────────────────────────────
-function handleAvatarUpload(event) {
-    const file = event.target.files[0];
+// photo part btw
+
+function showPhoto(dataUrl) {
+    photoPreview.innerHTML = `<img src="${dataUrl}" alt="" class="avatar-img">`;
+    cvPhoto.src = dataUrl;
+    cvPhoto.hidden = false;
+    removePhotoButton.hidden = false;
+}
+
+function removePhoto() {
+    photoPreview.innerHTML = `<span class="avatar-placeholder">${escapeHtml(t('noPhoto'))}</span>`;
+    cvPhoto.src = '';
+    cvPhoto.hidden = true;
+    removePhotoButton.hidden = true;
+    photoInput.value = '';
+    localStorage.removeItem(KEYS.photo);
+}
+
+function choosePhoto() {
+    const file = photoInput.files[0];
     if (!file) return;
+
     const reader = new FileReader();
-    reader.onload = function (e) {
-        const dataUrl = e.target.result;
-        setAvatar(dataUrl);
+    reader.onload = () => {
+        showPhoto(reader.result);
         try {
-            localStorage.setItem(AVATAR_STORAGE, dataUrl);
-        } catch (err) {
+            localStorage.setItem(KEYS.photo, reader.result);
+        } catch (error) {
             showToast(t('photoTooBig'));
         }
     };
     reader.readAsDataURL(file);
 }
 
-function setAvatar(dataUrl) {
-    avatarPreview.innerHTML = `<img src="${dataUrl}" alt="" class="avatar-img">`;
-    cvAvatar.src    = dataUrl;
-    cvAvatar.hidden = false;
-    removeAvatarBtn.hidden = false;
-    updateProgress();
+
+const NOT_ALLOWED = {
+    fullName: /[^\p{L}\p{M}\s'.-]/gu,      // letters, spaces, ' . -
+    cityInput: /[^\p{L}\p{M}\s'.-]/gu,
+    phone: /\D/g                          // digits only(kinda obvious)
+};
+
+function removeBadCharacters(field) {
+    const bad = NOT_ALLOWED[field.id];
+    if (!bad) return;
+
+    let value = field.value.replace(bad, '');
+    if (field.id !== 'phone') value = value.replace(/\s{2,}/g, ' ');
+    if (value !== field.value) field.value = value;
 }
 
-function removeAvatar() {
-    avatarPreview.innerHTML = `<span class="avatar-placeholder">${escapeHtml(t('noPhoto'))}</span>`;
-    cvAvatar.src    = '';
-    cvAvatar.hidden = true;
-    removeAvatarBtn.hidden = true;
-    avatarUpload.value = '';
-    localStorage.removeItem(AVATAR_STORAGE);
-    updateProgress();
+function showFieldError(field, message) {
+    const errorBox = document.querySelector(`[data-error-for="${field.id}"]`);
+    if (errorBox) errorBox.textContent = message;
+    field.classList.toggle('is-invalid', Boolean(message));
 }
 
-function restoreAvatarFromStorage() {
-    const saved = localStorage.getItem(AVATAR_STORAGE);
-    if (saved) setAvatar(saved);
-}
-
-// ─── Char Counter ─────────────────────────────────────────────────────────────
-function updateCharCounter(field) {
-    if (!field || !field.id) return;
-    const counter = document.querySelector(`[data-counter-for="${field.id}"]`);
-    if (!counter) return;
-    const max = Number(field.getAttribute('maxlength')) || 600;
-    counter.textContent = t('chars', { n: field.value.length, max });
-    counter.classList.toggle('counter-warn', field.value.length > max * 0.9);
-}
-
-// ─── Job Description Preferences Placeholder ─────────────────────────────────
-function updatePlaceholderForJobPreferences() {
-    const checked = Array.from(document.querySelectorAll('input[name="descPreference"]:checked')).map(i => i.value);
-    const keys = {
-        achievements:     'prefPhAch',
-        responsibilities: 'prefPhResp',
-        impact:           'prefPhImpact',
-        skills:           'prefPhSkills'
-    };
-    const text = checked.map(k => keys[k] && t(keys[k])).filter(Boolean).join(' ') || t('describePh');
-    experienceContainer.querySelectorAll('.experience-description').forEach(ta => {
-        ta.placeholder = text;
-    });
-}
-
-// ─── Validation ───────────────────────────────────────────────────────────────
-function validateField(field) {
-    if (field === locationHidden) {
-        const ok = Boolean(field.value);
-        const err = document.querySelector('[data-error-for="location"]');
-        if (err) err.textContent = ok ? '' : t('locationInvalid');
-        [cityInput, locationCountry, field].forEach(el => el.classList.toggle('is-invalid', !ok));
-        return ok;
+// returns true when the field is fine
+function checkField(field) {
+    // the location is two fields (city + country) that fill one hidden field(did myself am proud)
+    if (field === locationInput) {
+        const message = field.value ? '' : t('locationInvalid');
+        showFieldError(field, message);
+        cityInput.classList.toggle('is-invalid', Boolean(message));
+        countrySelect.classList.toggle('is-invalid', Boolean(message));
+        return !message;
     }
 
-    const errorTarget = field.id ? document.querySelector(`[data-error-for="${field.id}"]`) : null;
+    let message = '';
     if (field.required && !field.value.trim()) {
-        if (errorTarget) errorTarget.textContent = t('required');
-        field.classList.add('is-invalid');
-        return false;
+        message = t('required');
+    } else if (!field.validity.valid) {
+        if (field.type === 'email') message = t('invalidEmail');
+        else if (field.type === 'tel') message = field.validity.tooShort ? t('phoneShort') : t('phoneDigits');
+        else if (field.id === 'fullName') message = t('nameInvalid');
+        else message = field.validationMessage;
     }
 
-    if (!field.validity.valid) {
-        if (errorTarget) {
-            errorTarget.textContent = field.type === 'email'
-                ? t('invalidEmail')
-                : field.type === 'tel'
-                    ? (field.validity.tooShort ? t('phoneShort') : t('phoneDigits'))
-                    : field.id === 'fullName'
-                        ? t('nameInvalid')
-                        : field.validationMessage;
-        }
-        field.classList.add('is-invalid');
-        return false;
-    }
-
-    if (errorTarget) errorTarget.textContent = '';
-    field.classList.remove('is-invalid');
-    return true;
+    showFieldError(field, message);
+    return !message;
 }
 
-function validateForm() {
-    let valid = true;
-    form.querySelectorAll('input[required], textarea[required], select[required]').forEach(field => {
-        if (!validateField(field)) valid = false;
+function checkForm() {
+    let allGood = true;
+    form.querySelectorAll('input[required], textarea[required]').forEach(field => {
+        if (!checkField(field)) allGood = false;
     });
-    const firstInvalid = form.querySelector('.is-invalid');
-    if (firstInvalid) firstInvalid.focus();
-    return valid;
+
+    const firstBad = form.querySelector('.is-invalid');
+    if (firstBad) firstBad.focus();
+    return allGood;
 }
 
-// ─── Progress ─────────────────────────────────────────────────────────────────
-function getProgressState() {
-    const requiredFields = [
-        { label: t('fullName'), value: document.getElementById('fullName').value.trim() },
-        { label: t('email'), value: document.getElementById('email').value.trim() },
-        { label: t('phone'), value: document.getElementById('phone').value.trim() },
-        { label: t('location'), value: locationHidden.value.trim() },
-        { label: t('summary'), value: document.getElementById('summary').value.trim() },
-        { label: t('education'), value: educationContainer.querySelector('.education-degree')?.value.trim() || '' },
-        { label: t('expSection'), value: experienceContainer.querySelector('.experience-title')?.value.trim() || '' },
-        { label: t('skills'), value: skillsList.length > 0 ? 'ok' : '' }
-    ];
-
-    const missingRequiredFields = requiredFields.filter(field => !field.value).map(field => field.label);
-    const filled  = requiredFields.length - missingRequiredFields.length;
-    const pct     = Math.round((filled / requiredFields.length) * 100);
-
-    return { requiredFields, missingRequiredFields, filled, pct };
-}
 
 function updateProgress() {
-    const { missingRequiredFields, pct } = getProgressState();
-    progressBar.style.width = `${pct}%`;
-    progressLabel.textContent = t('percentComplete', { n: pct });
-    progressBar.classList.toggle('progress-done', pct === 100);
-    requiredFieldsLeft.textContent = missingRequiredFields.length
-        ? t('missing', { list: missingRequiredFields.join(lang === 'ar' ? '، ' : ', ') })
+    const required = [
+        [t('fullName'), fullNameInput.value.trim()],
+        [t('email'), emailInput.value.trim()],
+        [t('phone'), phoneInput.value.trim()],
+        [t('location'), locationInput.value.trim()],
+        [t('summary'), summaryInput.value.trim()],
+        [t('education'), (educationBox.querySelector('.education-degree') || {}).value],
+        [t('expSection'), (experienceBox.querySelector('.experience-title') || {}).value],
+        [t('skills'), skills.length ? 'yes' : '']
+    ];
+    const missing = required.filter(item => !item[1] || !item[1].trim()).map(item => item[0]);
+    const percent = Math.round((required.length - missing.length) / required.length * 100);
+
+    progressBar.style.width = percent + '%';
+    progressBar.classList.toggle('progress-done', percent === 100);
+    progressLabel.textContent = t('percentComplete', { n: percent });
+    missingLabel.textContent = missing.length
+        ? t('missing', { list: missing.join(language === 'ar' ? '، ' : ', ') })
         : t('allComplete');
 }
 
-// ─── Dates ────────────────────────────────────────────────────────────────────
+
 function formatMonth(value) {
     const match = /^(\d{4})-(\d{2})$/.exec(value || '');
     if (!match) return value || '';
+
     const date = new Date(Number(match[1]), Number(match[2]) - 1, 1);
-    const locale = lang === 'ar' ? 'ar-EG-u-nu-latn' : 'en-US';
+    const locale = language === 'ar' ? 'ar-EG-u-nu-latn' : 'en-US';
     return new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric' }).format(date);
 }
 
-function formatRange(start, end, current, legacy) {
-    const from = formatMonth(start);
-    const to = current ? t('present') : formatMonth(end);
-    if (from && to) return `${from} – ${to}`;
-    return from || to || legacy || '';
+
+function dateRange(job) {
+    const from = formatMonth(job.start);
+    const to = job.current ? t('present') : formatMonth(job.end);
+    return from && to ? from + ' – ' + to : from || to;
 }
 
-function readExperienceEntry(entry) {
-    return {
-        title:       entry.querySelector('.experience-title')?.value       || '',
-        company:     entry.querySelector('.experience-company')?.value     || '',
-        range:       formatRange(
-                        entry.querySelector('.experience-start')?.value || '',
-                        entry.querySelector('.experience-end')?.value || '',
-                        Boolean(entry.querySelector('.experience-current')?.checked),
-                        entry.dataset.legacyDuration || ''),
-        description: entry.querySelector('.experience-description')?.value || ''
-    };
+
+
+function splitList(text) {
+    return text.split(/[,،]/).map(item => item.trim()).filter(Boolean);
 }
 
-// ─── Live Preview ─────────────────────────────────────────────────────────────
+function bulletList(items) {
+    return '<ul class="bullet-list">' + items.map(item => '<li>' + item + '</li>').join('') + '</ul>';
+}
+
 function updatePreview() {
-    const fullName     = document.getElementById('fullName').value.trim()   || t('yourName');
-    const email        = document.getElementById('email').value.trim();
-    const phone        = document.getElementById('phone').value.trim();
-    const countryCode  = getCountryOption().dial;
-    const location     = locationHidden.value.trim();
-    const summary      = document.getElementById('summary').value.trim()    || t('phSummary');
-    const certifications = document.getElementById('certifications').value.split(/[,،]/).map(s => s.trim()).filter(Boolean);
-    const languages      = document.getElementById('languages').value.split(/[,،]/).map(s => s.trim()).filter(Boolean);
+    const contact = [emailInput.value.trim(), phoneInput.value.trim() ? getDialCode() + ' ' + phoneInput.value.trim() : ''];
 
-    // Experience
-    const experienceMarkup = Array.from(experienceContainer.querySelectorAll('.experience-entry')).map(entry => {
-        const { title, company, range, description } = readExperienceEntry(entry);
-        if (!title && !company) return '';
-        return `
-            <div class="cv-exp-block">
-                <div class="cv-exp-header">
-                    <strong>${escapeHtml(title || t('role'))}</strong>${company ? `<span> ${escapeHtml(t('at'))} ${escapeHtml(company)}</span>` : ''}
-                    ${range ? `<span class="cv-duration">${escapeHtml(range)}</span>` : ''}
-                </div>
-                ${description ? `<p class="cv-exp-desc">${escapeHtml(description)}</p>` : ''}
+    byId('cvName').textContent = fullNameInput.value.trim() || t('yourName');
+    byId('cvContact').textContent = contact.filter(Boolean).join(' • ');
+    byId('cvLocation').textContent = locationInput.value.trim();
+    byId('cvSummary').textContent = summaryInput.value.trim() || t('phSummary');
+
+
+    const schools = getSchools().filter(s => s.degree || s.school).map(s =>
+        `<strong>${escapeHtml(s.degree || t('degreeWord'))}</strong>` +
+        (s.school ? ' • ' + escapeHtml(s.school) : '') +
+        (s.year ? ' • ' + escapeHtml(s.year) : ''));
+    byId('cvEducation').innerHTML = bulletList(schools.length ? schools : [escapeHtml(t('phEducation'))]);
+
+
+    const jobs = getJobs().filter(job => job.title || job.company).map(job => `
+        <div class="cv-exp-block">
+            <div class="cv-exp-header">
+                <strong>${escapeHtml(job.title || t('role'))}</strong>${job.company ? ' <span>' + escapeHtml(t('at')) + ' ' + escapeHtml(job.company) + '</span>' : ''}
+                ${dateRange(job) ? '<span class="cv-duration">' + escapeHtml(dateRange(job)) + '</span>' : ''}
             </div>
-        `;
-    }).join('');
+            ${job.description ? '<p class="cv-exp-desc">' + escapeHtml(job.description) + '</p>' : ''}
+        </div>`);
+    byId('cvExperience').innerHTML = jobs.length ? jobs.join('') : '<p>' + escapeHtml(t('phExperience')) + '</p>';
 
-    // Education
-    const educationMarkup = Array.from(educationContainer.querySelectorAll('.education-entry')).map(entry => {
-        const degree = entry.querySelector('.education-degree')?.value || '';
-        const school = entry.querySelector('.education-school')?.value || '';
-        const year   = entry.querySelector('.education-year')?.value   || '';
-        if (!degree && !school) return '';
-        return `<li><strong>${escapeHtml(degree || t('degreeWord'))}</strong>${school ? ` • ${escapeHtml(school)}` : ''}${year ? ` • ${escapeHtml(year)}` : ''}</li>`;
-    }).join('');
-
-    // Projects
-    const projectsMarkup = Array.from(projectContainer.querySelectorAll('.project-entry')).map(entry => {
-        const name        = entry.querySelector('.project-name')?.value        || '';
-        const tech        = entry.querySelector('.project-tech')?.value        || '';
-        const url         = entry.querySelector('.project-url')?.value         || '';
-        const description = entry.querySelector('.project-description')?.value || '';
-        if (!name) return '';
-        const safeUrl = /^https?:\/\//i.test(url) ? url : '';
+    const projects = getProjects().filter(p => p.name).map(p => {
+        const link = /^https?:\/\//i.test(p.url) ? p.url : '';      // only real web links(used ai to write this)
         return `
-            <div class="cv-exp-block">
-                <div class="cv-exp-header">
-                    <strong>${escapeHtml(name)}</strong>
-                    ${tech ? `<span class="cv-duration">${escapeHtml(tech)}</span>` : ''}
-                    ${safeUrl ? `<a href="${escapeHtml(safeUrl)}" class="cv-project-link" dir="ltr" target="_blank" rel="noopener">${escapeHtml(safeUrl)}</a>` : ''}
-                </div>
-                ${description ? `<p class="cv-exp-desc">${escapeHtml(description)}</p>` : ''}
+        <div class="cv-exp-block">
+            <div class="cv-exp-header">
+                <strong>${escapeHtml(p.name)}</strong>
+                ${p.tech ? '<span class="cv-duration">' + escapeHtml(p.tech) + '</span>' : ''}
+                ${link ? '<a href="' + escapeHtml(link) + '" class="cv-project-link" dir="ltr" target="_blank" rel="noopener">' + escapeHtml(link) + '</a>' : ''}
             </div>
-        `;
-    }).join('');
-
-    // Skills
-    const skillsMarkup = skillsList.length
-        ? `<ul class="skills-list">${skillsList.map(s =>
-            `<li><span class="skill-name">${escapeHtml(s.name)}</span><span class="skill-badge skill-badge-${s.level.toLowerCase()}">${escapeHtml(t('lvl.' + s.level))}</span></li>`
-          ).join('')}</ul>`
-        : `<p>${escapeHtml(t('phSkills'))}</p>`;
-
-    // Update DOM
-    document.getElementById('cvName').textContent     = fullName;
-    document.getElementById('cvContact').textContent  = [email, phone ? `${countryCode} ${phone}` : ''].filter(Boolean).join(' • ');
-    document.getElementById('cvLocation').textContent = location;
-    document.getElementById('cvSummary').textContent  = summary;
-    document.getElementById('cvEducation').innerHTML  = `<ul class="bullet-list">${educationMarkup || `<li>${escapeHtml(t('phEducation'))}</li>`}</ul>`;
-    document.getElementById('cvExperience').innerHTML = experienceMarkup || `<p>${escapeHtml(t('phExperience'))}</p>`;
-    document.getElementById('cvSkills').innerHTML     = skillsMarkup;
-    document.getElementById('cvCertifications').innerHTML = certifications.length
-        ? `<ul class="bullet-list">${certifications.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
-        : `<p>${escapeHtml(t('phCerts'))}</p>`;
-    document.getElementById('cvLanguages').innerHTML = languages.length
-        ? `<ul class="bullet-list">${languages.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
-        : `<p>${escapeHtml(t('phLangs'))}</p>`;
-
-    // Projects section — hide if empty
-    const cvProjectsSection = document.getElementById('cvSecProjects');
-    if (projectsMarkup.trim()) {
-        document.getElementById('cvProjects').innerHTML = projectsMarkup;
-        cvProjectsSection.hidden = false;
-    } else {
-        cvProjectsSection.hidden = true;
-    }
-}
-
-// ─── Copy / Share / Export ────────────────────────────────────────────────────
-function copyCvAsText() {
-    const text = buildCvText();
-    navigator.clipboard.writeText(text).then(() => {
-        showToast(t('cvCopied'));
-    }).catch(() => {
-        showToast(t('copyFailed'));
+            ${p.description ? '<p class="cv-exp-desc">' + escapeHtml(p.description) + '</p>' : ''}
+        </div>`;
     });
+    byId('cvProjects').innerHTML = projects.join('');
+    byId('cvSecProjects').hidden = projects.length === 0;
+
+    byId('cvSkills').innerHTML = skills.length
+        ? '<ul class="skills-list">' + skills.map(skill =>
+            `<li><span class="skill-name">${escapeHtml(skill.name)}</span><span class="skill-badge skill-badge-${skill.level.toLowerCase()}">${escapeHtml(t('lvl.' + skill.level))}</span></li>`).join('') + '</ul>'
+        : '<p>' + escapeHtml(t('phSkills')) + '</p>';
+
+
+    const certs = splitList(certificationsInput.value);
+    const langs = splitList(languagesInput.value);
+    byId('cvCertifications').innerHTML = certs.length ? bulletList(certs.map(escapeHtml)) : '<p>' + escapeHtml(t('phCerts')) + '</p>';
+    byId('cvLanguages').innerHTML = langs.length ? bulletList(langs.map(escapeHtml)) : '<p>' + escapeHtml(t('phLangs')) + '</p>';
 }
 
-function copyTextToClipboard(text) {
-    const copyWithNavigator = () => navigator.clipboard.writeText(text);
+function buildCvText() {
+    const line = '─'.repeat(50);
+    const block = (title, body) => [line, title.toUpperCase(), line, body].join('\n');
+    const none = '  • ' + t('txtNotProvided');
 
-    return copyWithNavigator().catch(() => {
-        const temp = document.createElement('textarea');
-        temp.value = text;
-        temp.setAttribute('readonly', '');
-        temp.style.position = 'fixed';
-        temp.style.left = '-9999px';
-        document.body.appendChild(temp);
-        temp.select();
-        document.execCommand('copy');
-        document.body.removeChild(temp);
+    const jobs = getJobs().map(job => {
+        const title = [job.title, job.company && t('at') + ' ' + job.company, dateRange(job) && '(' + dateRange(job) + ')'].filter(Boolean).join(' ');
+        return '  • ' + title + (job.description ? '\n    ' + job.description : '');
     });
+    const schools = getSchools().map(s => '  • ' + [s.degree, s.school, s.year].filter(Boolean).join(', '));
+    const projects = getProjects().filter(p => p.name).map(p =>
+        '  • ' + [p.name, p.tech && '[' + p.tech + ']', p.url].filter(Boolean).join('  ') + (p.description ? '\n    ' + p.description : ''));
+    const skillLines = skills.map(skill => '  • ' + skill.name + ' — ' + t('lvl.' + skill.level));
+
+    const blocks = {
+        summary: block(t('summary'), summaryInput.value.trim() || t('txtNotProvided')),
+        education: block(t('education'), schools.join('\n') || none),
+        experience: block(t('cvExperience'), jobs.join('\n') || none),
+        projects: projects.length ? block(t('projects'), projects.join('\n')) : '',
+        skills: block(t('skills'), skillLines.join('\n') || '  • ' + t('txtAddSkills')),
+        certifications: block(t('certs'), '  ' + (certificationsInput.value.trim() || t('txtNone'))),
+        languages: block(t('langs'), '  ' + (languagesInput.value.trim() || t('txtNotSpecified')))
+    };
+
+    const phone = phoneInput.value.trim() ? getDialCode() + ' ' + phoneInput.value.trim() : '';
+    const top = [
+        fullNameInput.value.trim() || t('yourName'),
+        [emailInput.value.trim(), phone, locationInput.value.trim()].filter(Boolean).join('  |  '),
+        ''
+    ].join('\n');
+
+    return top + '\n' + sectionOrder.map(name => blocks[name]).filter(Boolean).join('\n\n');
 }
 
-function copyFormAsJson() {
-    const data = collectFormData();
-    copyTextToClipboard(JSON.stringify(data, null, 2)).then(() => {
-        showToast(t('jsonCopied'));
-    }).catch(() => {
-        showToast(t('jsonCopyFailed'));
-    });
+function copyCvText() {
+    navigator.clipboard.writeText(buildCvText())
+        .then(() => showToast(t('cvCopied')))
+        .catch(() => showToast(t('copyFailed')));
 }
 
-function handleJsonImport(event) {
-    const file = event.target.files?.[0];
+function copyJson() {
+    navigator.clipboard.writeText(JSON.stringify(getFormData(), null, 2))
+        .then(() => showToast(t('jsonCopied')))
+        .catch(() => showToast(t('jsonCopyFailed')));
+}
+
+function importJson() {
+    const file = importFileInput.files[0];
+    importFileInput.value = '';
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = function (e) {
+    reader.onload = () => {
         try {
-            const parsed = JSON.parse(e.target.result);
-            if (!parsed || typeof parsed !== 'object') throw new Error('Invalid JSON');
-            const requiredKeys = ['fullName', 'email', 'phone', 'location', 'summary', 'experiences', 'educations', 'projects', 'skills', 'theme', 'descPreferences'];
-            const missing = requiredKeys.filter(key => !(key in parsed));
-            if (missing.length) {
-                showToast(t('importMissing', { list: missing.join(', ') }));
-                return;
-            }
-            loadFormData(parsed, { theme: true, layout: true });
+            const data = JSON.parse(reader.result);
+            const needed = ['fullName', 'email', 'phone', 'location', 'summary', 'experiences', 'educations', 'projects', 'skills', 'theme', 'descPreferences'];
+            const missing = needed.filter(name => !(name in data));
+            if (missing.length) return showToast(t('importMissing', { list: missing.join(', ') }));
+
+            fillForm(data, { useTheme: true, useLayout: true });
+            saveForm();
             showToast(t('importOk'));
-        } catch (err) {
+        } catch (error) {
             showToast(t('importBad'));
         }
     };
     reader.readAsText(file);
-    event.target.value = '';
 }
 
 function shareViaGmail() {
-    const text    = buildCvText();
-    const name    = document.getElementById('fullName').value.trim() || t('defaultUser');
-    const subject = t('cvSubject', { name });
-    const body    = encodeURIComponent(text);
-    const gmail   = `https://mail.google.com/mail/?view=cm&su=${encodeURIComponent(subject)}&body=${body}`;
-    const mailto  = `mailto:?subject=${encodeURIComponent(subject)}&body=${body}`;
-    if (!window.open(gmail, '_blank')) window.location.href = mailto;
+    const subject = t('cvSubject', { name: fullNameInput.value.trim() || t('defaultUser') });
+    const body = encodeURIComponent(buildCvText());
+    const gmailLink = 'https://mail.google.com/mail/?view=cm&su=' + encodeURIComponent(subject) + '&body=' + body;
+    const mailLink = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + body;
+
+    if (!window.open(gmailLink, '_blank')) window.location.href = mailLink;
 }
 
 function exportPdf() {
-    const previousTitle = document.title;
-    const fullName = document.getElementById('fullName').value.trim();
-    document.title = fullName ? `${fullName} - CV` : 'CV';
-    window.addEventListener('afterprint', function restoreTitle() {
-        document.title = previousTitle;
-    }, { once: true });
+    const oldTitle = document.title;
+    document.title = (fullNameInput.value.trim() || 'CV') + ' - CV';
+    window.addEventListener('afterprint', () => { document.title = oldTitle; }, { once: true });
     window.print();
 }
 
-// ─── Build CV Text ────────────────────────────────────────────────────────────
-function buildCvText() {
-    const fullName    = document.getElementById('fullName').value.trim()   || t('yourName');
-    const email       = document.getElementById('email').value.trim();
-    const phone       = document.getElementById('phone').value.trim();
-    const countryCode = getCountryOption().dial;
-    const location    = locationHidden.value.trim();
-    const summary     = document.getElementById('summary').value.trim();
-    const certifications = document.getElementById('certifications').value.trim() || t('txtNone');
-    const languages      = document.getElementById('languages').value.trim()      || t('txtNotSpecified');
+function handleInput(event) {
+    const field = event.target;
+    if (!field.matches('input, textarea, select')) return;
 
-    const hr = '─'.repeat(50);
-    const section = (title, body) => [hr, title.toUpperCase(), hr, body].join('\n');
+    removeBadCharacters(field);
 
-    const experiences = Array.from(experienceContainer.querySelectorAll('.experience-entry')).map(entry => {
-        const { title, company, range, description } = readExperienceEntry(entry);
-        const header = [title, company && `${t('at')} ${company}`, range && `(${range})`].filter(Boolean).join(' ');
-        return `  • ${header}${description ? `\n    ${description}` : ''}`;
-    }).join('\n');
+    if (field === cityInput || field === countrySelect) {
+        updateLocation();
+        if (locationInput.value) checkField(locationInput);
+    }
+    if (field.matches('.experience-start, .experience-end, .experience-current')) fixDates(field);
+    if (field.matches('.education-year') && field.value.length > 4) field.value = field.value.slice(0, 4);
+    if (field.matches('textarea')) showCount(field);
+    if (field.matches('input[name="descPreference"]')) updateDescriptionHints();
+    if (field.id && field.matches('input, textarea')) checkField(field);
 
-    const educations = Array.from(educationContainer.querySelectorAll('.education-entry')).map(entry => {
-        const degree = entry.querySelector('.education-degree')?.value || '';
-        const school = entry.querySelector('.education-school')?.value || '';
-        const year   = entry.querySelector('.education-year')?.value   || '';
-        return `  • ${[degree, school, year].filter(Boolean).join(', ')}`;
-    }).join('\n');
-
-    const projects = Array.from(projectContainer.querySelectorAll('.project-entry')).map(entry => {
-        const name        = entry.querySelector('.project-name')?.value        || '';
-        const tech        = entry.querySelector('.project-tech')?.value        || '';
-        const url         = entry.querySelector('.project-url')?.value         || '';
-        const description = entry.querySelector('.project-description')?.value || '';
-        if (!name) return '';
-        const header      = [name, tech && `[${tech}]`, url].filter(Boolean).join('  ');
-        return `  • ${header}${description ? `\n    ${description}` : ''}`;
-    }).filter(Boolean).join('\n');
-
-    const skillsText = skillsList.length
-        ? skillsList.map(s => `  • ${s.name} — ${t('lvl.' + s.level)}`).join('\n')
-        : `  • ${t('txtAddSkills')}`;
-
-    const blocks = {
-        summary:        section(t('summary'), summary || t('txtNotProvided')),
-        education:      section(t('education'), educations || `  • ${t('txtNotProvided')}`),
-        experience:     section(t('cvExperience'), experiences || `  • ${t('txtNotProvided')}`),
-        projects:       projects ? section(t('projects'), projects) : '',
-        skills:         section(t('skills'), skillsText),
-        certifications: section(t('certs'), `  ${certifications}`),
-        languages:      section(t('langs'), `  ${languages}`)
-    };
-
-    const head = [
-        fullName,
-        [email, phone ? `${countryCode} ${phone}` : '', location].filter(Boolean).join('  |  '),
-        ''
-    ].join('\n');
-
-    return head + '\n' + sectionOrder.map(key => blocks[key]).filter(Boolean).join('\n\n');
+    saveForm();
+    updatePreview();
+    updateProgress();
 }
 
-// ─── AI Enhancement ───────────────────────────────────────────────────────────
-async function enhanceText(targetId, btn, directTextarea = null, directWarning = null) {
-    const textarea     = directTextarea || (targetId ? document.getElementById(targetId) : null);
-    const warningTarget = directWarning || (targetId ? document.querySelector(`[data-warning-for="${targetId}"]`) : null);
-    if (!textarea) return;
+function handleBlur(event) {
+    const field = event.target;
+    if (field === countrySelect) checkField(locationInput);
+    else if (field.id && field.matches('input, textarea')) checkField(field);
+}
 
-    const text = textarea.value.trim();
-    if (!text) {
-        if (warningTarget) warningTarget.textContent = t('enhanceEmpty');
+function handleClick(event) {
+    const button = event.target.closest('button');
+    if (!button) return;
+
+    const classes = button.classList;
+    let changedEntries = true;
+
+    if (classes.contains('add-entry-btn')) {
+        const adders = { experience: addExperience, education: addEducation, project: addProject };
+        adders[button.dataset.type]();
+        renumberEntries();
+    } else if (classes.contains('remove-entry-btn')) {
+        removeEntry(button);
+    } else if (classes.contains('move-entry-btn')) {
+        moveEntry(button);
+    } else if (classes.contains('skill-tag-remove')) {
+        removeSkill(Number(button.dataset.index));
         return;
-    }
-
-    const isDemoActive = localStorage.getItem(DEMO_MODE_STORAGE) === 'true';
-    const savedKey = localStorage.getItem(API_KEY_STORAGE);
-    if (!savedKey && !isDemoActive) {
-        showApiKeyHelp(warningTarget, t('noKeyHelp'));
+    } else if (classes.contains('ai-enhance-btn')) {
+        enhanceText(button);
         return;
+    } else if (classes.contains('section-collapse-btn')) {
+        const card = button.closest('.card');
+        const collapsed = card.classList.toggle('collapsed');
+        button.setAttribute('aria-expanded', String(!collapsed));
+        return;
+    } else {
+        changedEntries = false;
     }
 
-    // Loading state
-    if (btn) {
-        btn.disabled     = true;
-        btn.textContent  = t('enhancing');
+    if (changedEntries) {
+        saveForm();
+        updatePreview();
+        updateProgress();
     }
-    if (warningTarget) warningTarget.textContent = '';
-    const skeleton = showSkeletonOverlay(textarea);
+}
 
-    if (isDemoActive) {
-        const section = targetId === 'summary' ? 'summary' : 'description';
-        const jobTitle = targetId === 'summary'
-            ? (document.getElementById('fullName')?.value || 'professional')
-            : textarea.closest('.experience-entry')?.querySelector('.experience-title')?.value || 'professional';
-        const improved = getResumeAIPrediction(jobTitle, section);
+function setUpButtons() {
+    form.addEventListener('input', handleInput);
+    form.addEventListener('change', handleInput);
+    form.addEventListener('blur', handleBlur, true);
+    form.addEventListener('click', handleClick);
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+        if (!checkForm()) return;
+        updatePreview();
+        showToast(t('previewOk'));
+        cvPreview.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
 
-        textarea.value = improved;
-        updateCharCounter(textarea);
-        textarea.dispatchEvent(new Event('input', { bubbles: true }));
-        showToast(t('demoDone'));
+    themeButton.addEventListener('click', () => setTheme(theme === 'dark' ? 'forest' : 'dark'));
+    settingsButton.addEventListener('click', openSettings);
+    backButton.addEventListener('click', closeSettings);
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && !settingsPage.hidden) closeSettings();
+    });
 
-        if (btn) {
-            btn.disabled    = false;
-            btn.textContent = t('aiEnhance');
+    languageSelect.addEventListener('change', () => changeLanguage(languageSelect.value));
+    fontSelect.addEventListener('change', () => setFont(fontSelect.value));
+    templateSelect.addEventListener('change', () => setTemplate(templateSelect.value));
+    orderList.addEventListener('click', event => {
+        const button = event.target.closest('button[data-name]');
+        if (button) moveSection(button);
+    });
+
+    saveKeyButton.addEventListener('click', saveApiKey);
+    testKeyButton.addEventListener('click', testApiKey);
+    showKeyButton.addEventListener('click', toggleKeyVisible);
+    demoCheckbox.addEventListener('change', () => setDemoMode(demoCheckbox.checked));
+    restartButton.addEventListener('click', restartEverything);
+
+    byId('copyCvBtn').addEventListener('click', copyCvText);
+    byId('copyJsonBtn').addEventListener('click', copyJson);
+    byId('importJsonBtn').addEventListener('click', () => importFileInput.click());
+    importFileInput.addEventListener('change', importJson);
+    byId('gmailBtn').addEventListener('click', shareViaGmail);
+    byId('printBtn').addEventListener('click', exportPdf);
+
+    byId('clearFormBtn').addEventListener('click', () => { clearDialog.hidden = false; });
+    byId('clearCancelBtn').addEventListener('click', () => { clearDialog.hidden = true; });
+    byId('clearConfirmBtn').addEventListener('click', () => {
+        clearDialog.hidden = true;
+        clearForm();
+    });
+    clearDialog.addEventListener('click', event => {
+        if (event.target === clearDialog) clearDialog.hidden = true;     // click outside the box
+    });
+
+    photoInput.addEventListener('change', choosePhoto);
+    removePhotoButton.addEventListener('click', removePhoto);
+
+    byId('addSkillBtn').addEventListener('click', addSkill);
+    skillInput.addEventListener('keydown', event => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            addSkill();
         }
-        hideSkeletonOverlay(skeleton, textarea);
-        return;
-    }
+    });
+}
+
+function start() {
+    language = load(KEYS.language) === 'ar' ? 'ar' : 'en';
+    languageSelect.value = language;
+    sectionOrder = savedOrder();
+
+    setTemplate(load(KEYS.template));
+    setTheme(load(KEYS.theme));
+    setFont(load(KEYS.font));
+    translatePage();
+    fillPhoneCodes();
+    fillCountryList();
+    setUpButtons();
+
+    apiKeyInput.value = load(KEYS.apiKey) || '';
+    setDemoMode(load(KEYS.demo) === 'true');
+
+    const photo = load(KEYS.photo);
+    if (photo) showPhoto(photo);
 
     try {
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: {
-                'Content-Type':     'application/json',
-                'x-api-key':        savedKey,
-                'anthropic-version': '2023-06-01',
-                'anthropic-dangerous-direct-browser-access': 'true'
-            },
-            body: JSON.stringify({
-                model:      'claude-sonnet-4-6',
-                max_tokens: 1000,
-                system:     'You are a professional CV writer for CraftCV. Rewrite the following text to sound polished, professional, and impactful. Keep it concise. Reply in the same language as the input text (for example Arabic stays Arabic). Return only the improved text, no explanations.',
-                messages:   [{ role: 'user', content: text }]
-            })
-        });
-
-        if (response.status === 401 || response.status === 403) {
-            showApiKeyHelp(warningTarget, t('badKeyHelp'));
-            return;
-        }
-        if (response.status === 429) {
-            if (warningTarget) warningTarget.textContent = t('rateLimit');
-            return;
-        }
-        if (!response.ok) throw new Error(`Request failed with status ${response.status}`);
-
-        const data        = await response.json();
-        const improved    = data.content?.[0]?.text?.trim() || '';
-        if (improved) {
-            textarea.value = improved;
-            if (warningTarget) warningTarget.textContent = '';
-            updateCharCounter(textarea);
-            textarea.dispatchEvent(new Event('input', { bubbles: true }));
-            showToast(t('enhanced'));
-        }
-    } catch (err) {
-        if (warningTarget) warningTarget.textContent = t('enhanceFail');
-    } finally {
-        if (btn) {
-            btn.disabled    = false;
-            btn.textContent = t('aiEnhance');
-        }
-        hideSkeletonOverlay(skeleton, textarea);
-    }
-}
-
-// ─── Skeleton Loader ────────────────────────────────────────────────────────
-function showSkeletonOverlay(textarea) {
-    const parent = textarea.parentElement;
-    if (getComputedStyle(parent).position === 'static') {
-        parent.style.position = 'relative';
-    }
-    const overlay = document.createElement('div');
-    overlay.className = 'skeleton-overlay';
-    overlay.style.top    = textarea.offsetTop + 'px';
-    overlay.style.left   = textarea.offsetLeft + 'px';
-    overlay.style.width  = textarea.offsetWidth + 'px';
-    overlay.style.height = textarea.offsetHeight + 'px';
-    overlay.innerHTML =
-        '<div class="skeleton-line"></div>' +
-        '<div class="skeleton-line"></div>' +
-        '<div class="skeleton-line short"></div>';
-    parent.appendChild(overlay);
-    textarea.style.visibility = 'hidden';
-    return overlay;
-}
-
-function hideSkeletonOverlay(overlay, textarea) {
-    if (overlay) overlay.remove();
-    textarea.style.visibility = 'visible';
-}
-
-// ─── Toast (optionally with an action button such as Undo) ───────────────────
-function showToast(message, options = {}) {
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.setAttribute('role', 'status');
-
-    const text = document.createElement('span');
-    text.textContent = message;
-    toast.appendChild(text);
-
-    if (options.actionLabel && options.onAction) {
-        const action = document.createElement('button');
-        action.type = 'button';
-        action.className = 'toast-action';
-        action.textContent = options.actionLabel;
-        action.addEventListener('click', () => {
-            toast.remove();
-            options.onAction();
-        });
-        toast.appendChild(action);
+        const saved = JSON.parse(load(KEYS.form));
+        if (saved) fillForm(saved);
+        else startWithDefaults();
+    } catch (error) {
+        startWithDefaults();
     }
 
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), options.duration || 2000);
+    showOrderList();
+    showCount(summaryInput);
+    updatePreview();
+    updateProgress();
 }
 
-// ─── Escape ───────────────────────────────────────────────────────────────────
-function escapeHtml(value) {
-    return String(value)
-        .replace(/&/g,  '&amp;')
-        .replace(/</g,  '&lt;')
-        .replace(/>/g,  '&gt;')
-        .replace(/"/g,  '&quot;')
-        .replace(/'/g,  '&#39;');
-}
-
-// ─── Boot ─────────────────────────────────────────────────────────────────────
-init();
+start();

@@ -1,11 +1,15 @@
+/* CraftCV styles. Top to bottom: colors, basics, layout, forms, buttons,
+   settings page, entries, CV preview + templates, small widgets, phones, print. */
+
 @font-face {
     font-family: "Peaberry";
     src: url("assets/Peaberry-Font-v2.0/Peaberry%20Font%20Family/Peaberry%20Base/PeaberryBase.woff2") format("woff2");
     font-display: swap;
 }
 
+/* ---------- colors ---------- */
+/* Light theme (forest) is the default. The dark theme replaces the colors below. */
 :root {
-    color-scheme: light;
     --bg: #f3f7f0;
     --surface: #fff;
     --surface-alt: #eef4e8;
@@ -19,7 +23,6 @@
 }
 
 body[data-theme="dark"] {
-    color-scheme: dark;
     --bg: #0f172a;
     --surface: #111c32;
     --surface-alt: #1e2b44;
@@ -32,9 +35,8 @@ body[data-theme="dark"] {
     --danger: #f87171;
 }
 
-*,
-*::before,
-*::after {
+/* ---------- basics ---------- */
+* {
     box-sizing: border-box;
 }
 
@@ -53,65 +55,19 @@ body[data-font="pixel"] {
     font-family: "Peaberry", "Segoe UI", Roboto, Arial, sans-serif;
 }
 
-body.settings-open {
-    overflow: hidden;
-}
-
-body[data-page="settings"] .page-shell,
-body[data-page="settings"] footer {
-    display: none;
-}
-
-.settings-page {
-    width: min(760px, 100%);
-    margin: 0 auto;
-    padding: 88px 24px 24px;
-}
-
-.settings-page-header {
-    margin-bottom: 20px;
-}
-
-.settings-page-header h1 {
-    margin: 18px 0 0;
-}
-
-.settings-content {
-    display: grid;
-    gap: 20px;
-    padding: 20px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-}
-
-.settings-content > .form-group {
-    margin: 0;
-}
-
-.settings-content > .form-group select {
-    margin-top: 6px;
-}
-
-.settings-content .api-key-container {
-    display: flex;
-}
-
-.settings-content .restore-banner {
-    margin: 0;
-}
-
-.settings-content .restart-demo-btn {
-    width: 100%;
-}
-
-button,
-input,
-textarea,
-select {
+button, input, textarea, select {
     font: inherit;
 }
 
+h1, h2, h3 {
+    margin: 0;
+}
+
+h1:focus {
+    outline: none;
+}
+
+/* ---------- layout ---------- */
 .page-shell {
     width: min(1400px, 100%);
     margin: 0 auto;
@@ -122,17 +78,69 @@ select {
     margin-bottom: 16px;
 }
 
-.intro h1 {
-    margin: 0 0 6px;
-}
-
-.intro p,
-.cv-section p,
-.cv-section li {
+.intro p {
+    margin: 6px 0 0;
     color: var(--muted);
 }
 
-.progress-bar-wrap,
+/* form on one side, CV preview on the other */
+.app-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.card,
+.preview-panel {
+    padding: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.card h2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    font-size: 1.15rem;
+}
+
+.card.collapsed > :not(h2) {
+    display: none;
+}
+
+.card.collapsed .section-collapse-btn {
+    transform: rotate(-90deg);
+}
+
+.preview-panel {
+    position: sticky;
+    top: 16px;
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+}
+
+footer {
+    margin-top: 28px;
+    padding: 20px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    text-align: center;
+}
+
+footer p {
+    margin: 4px 0;
+}
+
+/* rows that hold several things side by side */
 .actions-row,
 .preview-actions,
 .entry-header,
@@ -140,20 +148,267 @@ select {
 .location-inputs,
 .avatar-upload-row,
 .avatar-controls,
-.action-buttons {
+.action-buttons,
+.date-row,
+.progress-bar-wrap,
+.template-row {
     display: flex;
-    align-items: center;
     flex-wrap: wrap;
+    align-items: center;
     gap: 10px;
 }
 
+/* ---------- forms ---------- */
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 9px 10px;
+    background: var(--surface-alt);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+button:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+}
+
+input.is-invalid,
+textarea.is-invalid,
+select.is-invalid {
+    border-color: var(--danger);
+}
+
+textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* checkboxes keep their normal size */
+input[type="checkbox"] {
+    width: auto;
+    accent-color: var(--primary);
+}
+
+.checkbox-list {
+    display: grid;
+    gap: 8px;
+}
+
+.checkbox-list label,
+.switch-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.phone-inputs select {
+    flex: 0 0 180px;
+    width: auto;
+}
+
+.phone-inputs input {
+    flex: 1;
+}
+
+.location-inputs input {
+    flex: 1 1 160px;
+}
+
+.location-inputs select {
+    flex: 0 0 200px;
+    width: auto;
+}
+
+.optional-tag {
+    color: var(--muted);
+    font-size: .75rem;
+    font-weight: 400;
+}
+
+.char-counter {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: .85rem;
+    text-align: end;
+}
+
+.char-counter.counter-warn,
+.field-error,
+.ai-warning,
+.key-feedback.error {
+    color: var(--danger);
+}
+
+.field-error,
+.ai-warning,
+.key-feedback {
+    margin-top: 6px;
+    font-size: .9rem;
+}
+
+.key-feedback.success {
+    color: var(--success);
+}
+
+.key-feedback.info {
+    color: var(--primary);
+}
+
+.section-help {
+    color: var(--muted);
+}
+
+/* ---------- buttons ---------- */
+button {
+    padding: 9px 12px;
+    background: var(--primary-soft);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    border-color: var(--primary);
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: .6;
+}
+
+.primary-btn,
+.add-entry-btn,
+.preview-actions button,
+.toast-action {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+.danger-btn {
+    background: var(--danger);
+    color: #fff;
+    border-color: var(--danger);
+}
+
+.secondary-btn {
+    background: var(--primary-soft);
+    color: var(--text);
+}
+
+/* looks like a link */
+.link-btn {
+    padding: 0;
+    background: none;
+    color: var(--primary);
+    border: 0;
+    text-decoration: underline;
+}
+
+.section-collapse-btn {
+    padding: 4px 8px;
+    background: transparent;
+    color: var(--muted);
+}
+
+.ai-enhance-btn {
+    margin-top: 6px;
+}
+
+.avatar-upload-label {
+    display: inline-block;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* ---------- top corner buttons ---------- */
+.theme-toggle,
+.settings-menu-toggle {
+    position: fixed;
+    z-index: 100;
+    top: 18px;
+}
+
+.settings-menu-toggle {
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background: var(--surface);
+}
+
+.settings-menu-toggle img {
+    display: block;
+    width: 24px;
+    height: 24px;
+    margin: auto;
+}
+
+/* the sun / moon switch (always left-to-right so the thumb moves the right way) */
+.theme-toggle {
+    direction: ltr;
+    right: 20px;
+    width: 76px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 9px;
+    background: var(--surface-alt);
+    border-radius: 999px;
+}
+
+.theme-toggle img {
+    z-index: 1;
+    width: 20px;
+    height: 20px;
+}
+
+.theme-toggle-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 32px;
+    height: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    transition: transform .2s;
+}
+
+body[data-theme="dark"] .theme-toggle-thumb {
+    transform: translateX(36px);
+}
+
+/* ---------- progress bar ---------- */
 .progress-bar-wrap {
     margin-bottom: 16px;
 }
 
 .progress-bar-track {
-    height: 8px;
     flex: 1;
+    height: 8px;
     overflow: hidden;
     background: var(--border);
     border-radius: 4px;
@@ -169,23 +424,39 @@ select {
 }
 
 .progress-label,
-.required-fields-left,
-.char-counter,
-.cv-duration {
+.required-fields-left {
     color: var(--muted);
     font-size: .85rem;
-}
-
-.progress-label,
-.required-fields-left {
     white-space: nowrap;
 }
 
-.card,
-.preview-panel {
+/* ---------- settings page (replaces the builder while open) ---------- */
+body[data-page="settings"] .page-shell,
+body[data-page="settings"] footer {
+    display: none;
+}
+
+.settings-page {
+    width: min(760px, 100%);
+    margin: 0 auto;
+    padding: 88px 24px 24px;
+}
+
+.settings-page-header h1 {
+    margin: 18px 0 20px;
+}
+
+.settings-content {
+    display: grid;
+    gap: 20px;
+    padding: 20px;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 8px;
+}
+
+.settings-content .form-group {
+    margin: 0;
 }
 
 .api-key-container {
@@ -194,141 +465,12 @@ select {
     gap: 8px;
 }
 
-.form-group label {
-    font-weight: 600;
-}
-
-.theme-toggle {
-    direction: ltr;
-    position: fixed;
-    z-index: 1500;
-    top: 18px;
-    right: 20px;
-    width: 76px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 5px 9px;
-    background: var(--surface-alt);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
-}
-
-.theme-toggle img {
-    z-index: 1;
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-}
-
-.theme-toggle-thumb {
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 32px;
-    height: 32px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    transition: transform .2s ease;
-}
-
-body[data-theme="dark"] .theme-toggle-thumb {
-    transform: translateX(36px);
-}
-
-.theme-toggle:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 3px;
-}
-
-.settings-menu-toggle {
-    position: fixed;
-    z-index: 2101;
-    top: 18px;
-    left: 20px;
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    background: var(--surface);
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
-}
-
-.settings-menu-toggle img {
-    display: block;
-    width: 24px;
-    height: 24px;
-    margin: auto;
-    object-fit: contain;
-}
-
-.settings-backdrop {
-    position: fixed;
-    z-index: 1990;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    background: rgb(0 0 0 / 45%);
-    border: 0;
-    border-radius: 0;
-}
-
-.settings-drawer {
-    position: fixed;
-    z-index: 2000;
-    inset: 0 auto 0 0;
-    width: min(360px, calc(100vw - 48px));
-    padding: 20px;
-    overflow-y: auto;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    transform: translateX(-100%);
-    visibility: hidden;
-    transition: transform .2s ease, visibility .2s ease;
-}
-
-.settings-drawer[aria-hidden="false"] {
-    transform: translateX(0);
-    visibility: visible;
-}
-
-.settings-drawer-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-}
-
-.settings-drawer-header h2 {
-    margin: 0;
-}
-
-.settings-drawer-header button {
-    font-size: 1.4rem;
-    line-height: 1;
-}
-
-.settings-nav {
-    margin-bottom: 20px;
-}
-
-.settings-nav-item {
-    width: 100%;
-    padding: 9px 12px;
-    background: var(--primary-soft);
-    color: var(--text);
-    border-radius: 5px;
-    text-align: start;
-}
-
 .api-key-container small {
     color: var(--muted);
+}
+
+.action-buttons button {
+    flex: 1;
 }
 
 .input-wrapper {
@@ -345,176 +487,71 @@ body[data-theme="dark"] .theme-toggle-thumb {
     inset-inline-end: 8px;
     padding: 4px;
     background: transparent;
-    color: var(--text);
     transform: translateY(-50%);
 }
 
-.action-buttons button {
-    flex: 1;
-}
-
-.switch-label {
-    display: flex;
-    align-items: center;
+.order-list {
+    display: grid;
     gap: 8px;
-    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
-.checkbox-list input,
-.switch-label input {
-    width: auto;
-    accent-color: var(--primary);
-}
-
-.key-feedback.success {
-    color: var(--success);
-}
-
-.key-feedback.error,
-.field-error,
-.ai-warning {
-    color: var(--danger);
-}
-
-.restore-banner {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
+.order-item,
+.entry-card {
     padding: 10px;
-    background: var(--primary-soft);
+    background: var(--surface-alt);
     border: 1px solid var(--border);
     border-radius: 6px;
 }
 
-.restore-actions {
+.order-item {
     display: flex;
-    gap: 8px;
-}
-
-.app-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    align-items: start;
-    gap: 20px;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-.card {
-    padding: 18px;
-}
-
-.card h2 {
-    display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 8px;
-    margin: 0 0 16px;
-    font-size: 1.15rem;
-}
-
-.section-title-text {
-    display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
-.section-collapse-btn {
-    padding: 4px 8px;
-    background: transparent;
-    color: var(--muted);
-}
-
-.card.collapsed > *:not(h2) {
-    display: none;
-}
-
-.card.collapsed .section-collapse-btn {
-    transform: rotate(-90deg);
-}
-
-.optional-tag {
-    color: var(--muted);
-    font-size: .75rem;
-    font-weight: 400;
-}
-
-.form-group {
-    margin-bottom: 14px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 6px;
-}
-
-input,
-textarea,
-select {
+.restart-demo-btn {
     width: 100%;
-    padding: 9px 10px;
-    background: var(--surface-alt);
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: 5px;
 }
 
-input:focus,
-textarea:focus,
-select:focus {
-    outline: 2px solid var(--primary);
-    outline-offset: 1px;
+/* ---------- entries (education, experience, projects) ---------- */
+.entry-card {
+    margin-bottom: 12px;
+    padding: 12px;
 }
 
-input.is-invalid,
-textarea.is-invalid,
-select.is-invalid {
-    border-color: var(--danger);
+.entry-header {
+    justify-content: space-between;
+    margin-bottom: 10px;
 }
 
-textarea {
-    min-height: 80px;
-    resize: vertical;
+.entry-header h3 {
+    font-size: 1rem;
 }
 
-.phone-inputs select:first-child {
-    flex: 0 0 180px;
+.entry-actions {
+    display: flex;
+    gap: 6px;
+    margin-inline-start: auto;
 }
 
-.location-inputs input {
-    flex: 1 1 160px;
+.date-row .form-group {
+    flex: 1 1 140px;
 }
 
-.location-inputs select {
-    flex: 0 0 200px;
-}
-
-.phone-inputs input:last-child {
-    flex: 1;
-}
-
-.char-counter {
-    margin-top: 4px;
-    text-align: end;
-}
-
-.char-counter.counter-warn {
-    color: var(--danger);
-}
-
+/* profile photo */
 .avatar-preview,
 .cv-avatar {
     width: 76px;
     height: 76px;
-    flex: 0 0 auto;
+    flex: none;
     overflow: hidden;
     border: 1px solid var(--border);
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .avatar-preview {
@@ -524,8 +561,9 @@ textarea {
     background: var(--surface-alt);
 }
 
-.avatar-preview .avatar-img,
-.cv-avatar {
+.avatar-img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
 }
 
@@ -538,91 +576,7 @@ textarea {
     display: none;
 }
 
-.avatar-upload-label {
-    cursor: pointer;
-}
-
-button {
-    padding: 9px 12px;
-    background: var(--primary-soft);
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    border-color: var(--primary);
-}
-
-.link-btn {
-    padding: 0;
-    background: none;
-    color: var(--primary);
-    border: 0;
-    text-decoration: underline;
-}
-
-button:disabled {
-    cursor: not-allowed;
-    opacity: .6;
-}
-
-.primary-btn,
-#saveKeyBtn,
-.add-entry-btn,
-.preview-actions button {
-    background: var(--primary);
-    color: #fff;
-    border-color: var(--primary);
-}
-
-.secondary-btn,
-.remove-entry-btn {
-    background: var(--primary-soft);
-    color: var(--text);
-}
-
-.danger-btn {
-    background: var(--danger);
-    color: #fff;
-    border-color: var(--danger);
-}
-
-.ai-enhance-btn {
-    margin-top: 6px;
-}
-
-.checkbox-list {
-    display: grid;
-    gap: 8px;
-}
-
-.checkbox-list label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.entry-card {
-    margin-bottom: 12px;
-    padding: 12px;
-    background: var(--surface-alt);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-}
-
-.entry-header {
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.entry-header h3 {
-    margin: 0;
-    font-size: 1rem;
-}
-
-
+/* skills */
 .skill-input-row {
     display: flex;
     flex-wrap: wrap;
@@ -631,11 +585,12 @@ button:disabled {
 
 .skill-input-row input {
     flex: 1 1 160px;
+    width: auto;
 }
 
 .skill-input-row select {
-    width: auto;
     flex: 0 0 140px;
+    width: auto;
 }
 
 .skill-tags,
@@ -643,7 +598,9 @@ button:disabled {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-top: 10px;
+    margin: 10px 0 0;
+    padding: 0;
+    list-style: none;
 }
 
 .skill-tag,
@@ -670,21 +627,23 @@ button:disabled {
     border: 0;
 }
 
-.skill-level-beginner,
-.skill-badge-beginner { color: #92400e; }
-.skill-level-intermediate,
-.skill-badge-intermediate { color: #1e40af; }
-.skill-level-advanced,
-.skill-badge-advanced { color: #166534; }
-.skill-level-expert,
-.skill-badge-expert { color: #5b21b6; }
+.skill-name {
+    font-weight: 600;
+}
 
-.preview-panel {
-    position: sticky;
-    top: 16px;
-    max-height: calc(100vh - 32px);
-    overflow-y: auto;
-    padding: 18px;
+.skill-level-beginner, .skill-badge-beginner { color: #92400e; }
+.skill-level-intermediate, .skill-badge-intermediate { color: #1e40af; }
+.skill-level-advanced, .skill-badge-advanced { color: #166534; }
+.skill-level-expert, .skill-badge-expert { color: #5b21b6; }
+
+/* ---------- the CV preview ---------- */
+.template-row {
+    margin-bottom: 12px;
+}
+
+.template-row select {
+    flex: 1;
+    width: auto;
 }
 
 .preview-actions {
@@ -713,7 +672,7 @@ button:disabled {
 }
 
 .cv-header h2 {
-    margin: 0 0 6px;
+    margin-bottom: 6px;
 }
 
 .cv-header p {
@@ -725,12 +684,14 @@ button:disabled {
 }
 
 .cv-section h3 {
-    margin: 0 0 6px;
+    margin-bottom: 6px;
     font-size: 1rem;
 }
 
-.cv-section p {
+.cv-section p,
+.cv-section li {
     margin: 6px 0;
+    color: var(--muted);
 }
 
 .divider {
@@ -744,13 +705,15 @@ button:disabled {
 
 .cv-exp-header {
     display: flex;
-    align-items: baseline;
     flex-wrap: wrap;
+    align-items: baseline;
     gap: 6px;
 }
 
 .cv-duration {
     margin-inline-start: auto;
+    color: var(--muted);
+    font-size: .85rem;
 }
 
 .cv-exp-desc {
@@ -768,166 +731,7 @@ button:disabled {
     padding-inline-start: 20px;
 }
 
-.skills-list {
-    margin: 8px 0 0;
-    padding: 0;
-    list-style: none;
-}
-
-.skill-name {
-    font-weight: 600;
-}
-
-.skeleton-overlay {
-    position: absolute;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 10px;
-    overflow: hidden;
-    background: var(--surface-alt);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-}
-
-.skeleton-line {
-    height: 10px;
-    background: var(--border);
-    border-radius: 4px;
-}
-
-.skeleton-line.short {
-    width: 55%;
-}
-
-.field-error,
-.ai-warning,
-.key-feedback {
-    margin-top: 6px;
-    font-size: .9rem;
-}
-
-.key-feedback.success {
-    color: var(--success);
-}
-
-.key-feedback.info {
-    color: var(--primary);
-}
-
-.modal-overlay {
-    position: fixed;
-    z-index: 2000;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgb(0 0 0 / 45%);
-}
-
-.modal-box {
-    width: min(420px, 90%);
-    padding: 24px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-}
-
-.modal-box h3 {
-    margin-top: 0;
-}
-
-.modal-box p {
-    color: var(--muted);
-}
-
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.toast {
-    position: fixed;
-    z-index: 1000;
-    inset-inline-end: 16px;
-    bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 16px;
-    background: var(--surface);
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-}
-
-/* entry actions, dates, settings lists */
-.entry-actions {
-    display: flex;
-    gap: 6px;
-    margin-inline-start: auto;
-}
-
-.move-entry-btn {
-    min-width: 36px;
-}
-
-.date-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.date-row .form-group {
-    flex: 1 1 140px;
-}
-
-.section-help {
-    color: var(--muted);
-}
-
-.order-list {
-    display: grid;
-    gap: 8px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.order-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 8px 10px;
-    background: var(--surface-alt);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-}
-
-.template-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-}
-
-.template-row select {
-    width: auto;
-    flex: 1;
-}
-
-.toast-action {
-    padding: 2px 8px;
-    background: var(--primary);
-    color: #fff;
-    border-color: var(--primary);
-}
-
-/* CV templates (Classic is the default look above) */
+/* Classic is the default look. Modern and Minimal change a few things. */
 .tpl-modern .cv-header {
     padding: 16px;
     background: var(--primary);
@@ -944,11 +748,6 @@ button:disabled {
     color: var(--primary);
     text-transform: uppercase;
     letter-spacing: .05em;
-}
-
-.tpl-modern .divider,
-.tpl-minimal .divider {
-    display: none;
 }
 
 .tpl-minimal {
@@ -969,10 +768,6 @@ button:disabled {
     flex: 0 1 auto;
 }
 
-.tpl-minimal .cv-section {
-    margin-bottom: 12px;
-}
-
 .tpl-minimal .cv-section h3 {
     padding-bottom: 2px;
     border-bottom: 1px solid var(--border);
@@ -981,18 +776,64 @@ button:disabled {
     text-transform: uppercase;
 }
 
-footer {
-    margin-top: 28px;
-    padding: 20px;
+.tpl-modern .divider,
+.tpl-minimal .divider {
+    display: none;
+}
+
+/* ---------- message box and toast ---------- */
+.modal-overlay {
+    position: fixed;
+    z-index: 200;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(0 0 0 / 45%);
+}
+
+.modal-box {
+    width: min(420px, 90%);
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.modal-box h3 {
+    margin-bottom: 8px;
+}
+
+.modal-box p {
     color: var(--muted);
-    border-top: 1px solid var(--border);
-    text-align: center;
 }
 
-footer p {
-    margin: 4px 0;
+.modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
 }
 
+.toast {
+    position: fixed;
+    z-index: 300;
+    bottom: 16px;
+    inset-inline-end: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+.toast-action {
+    padding: 2px 8px;
+}
+
+/* ---------- small screens ---------- */
 @media (max-width: 900px) {
     .app-grid {
         grid-template-columns: 1fr;
@@ -1006,7 +847,7 @@ footer p {
 
 @media (max-width: 600px) {
     .page-shell {
-        padding: 12px;
+        padding: 72px 12px 12px;
     }
 
     .phone-inputs,
@@ -1017,22 +858,20 @@ footer p {
         align-items: stretch;
     }
 
-    .phone-inputs select:first-child,
-    .location-inputs select,
-    .skill-input-row select {
+    /* stacked: every box takes its normal height and the full width */
+    .phone-inputs select, .phone-inputs input,
+    .location-inputs select, .location-inputs input,
+    .skill-input-row select, .skill-input-row input {
+        flex: none;
         width: 100%;
-        flex-basis: auto;
     }
 
     .preview-actions button {
         width: 100%;
     }
-
-    .cv-duration {
-        margin-inline-start: 0;
-    }
 }
 
+/* ---------- printing / PDF: only the CV, black on white ---------- */
 @media print {
     body,
     body[data-theme="dark"] {
@@ -1044,24 +883,17 @@ footer p {
         --border: #ccc;
         --primary: #3f7d3a;
         --primary-soft: #e3efdc;
+        font-family: Arial, sans-serif;
     }
 
-    body {
-        background: #fff;
-        color: #000;
-        font-family: Arial, sans-serif !important;
-    }
-
-    .settings-drawer,
-    .settings-backdrop,
-    .settings-menu-toggle,
     .theme-toggle,
+    .settings-menu-toggle,
     .settings-page,
     .intro,
     .progress-bar-wrap,
     form,
-    .preview-actions,
     .template-row,
+    .preview-actions,
     .toast,
     .modal-overlay,
     footer {
@@ -1082,35 +914,16 @@ footer p {
 
     .cv-output {
         border-top: 0;
-        font-family: Arial, sans-serif !important;
-    }
-
-    .cv-output * {
-        font-family: inherit !important;
-    }
-
-    .cv-output.tpl-minimal {
-        font-family: Georgia, "Times New Roman", serif !important;
-    }
-
-    .tpl-modern .cv-header {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
     }
 
     .cv-section {
         break-inside: avoid;
     }
 
-    .skill-level-beginner,
-    .skill-level-intermediate,
-    .skill-level-advanced,
-    .skill-level-expert,
-    .skill-badge-beginner,
-    .skill-badge-intermediate,
-    .skill-badge-advanced,
-    .skill-badge-expert {
-        -webkit-print-color-adjust: exact;
+    /* keep the colored header and skill colors in the PDF */
+    .tpl-modern .cv-header,
+    .skill-badge {
         print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
     }
 }

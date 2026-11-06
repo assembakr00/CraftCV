@@ -10,7 +10,24 @@
 - `window.print()` for PDF export with dedicated print CSS
 
 
-##  Planned Backend (Comsing Soon)
+## How the code is organised
+There are 3 files for the app: `index.html` (the page), `CraftCV.css` (how it looks) and `CraftCV.js` (what it does).
+
+`CraftCV.js` goes from top to bottom:
+1. **translations**: all the text, in English and Arabic. `t('key')` gives the text for the current language
+2. **country list**: used for the phone code and the location dropdown
+3. **small helpers**: `save`/`load` (browser storage), `escapeHtml`, `showToast`
+4. **page elements**: one `const` per element we need, named after what it is (`fullNameInput`, `cvPreview`...)
+5. **the form**: saving and loading it, the entries (education, jobs, projects), skills, photo, checking fields
+6. **the preview**: `updatePreview()` builds the CV on the right, `buildCvText()` builds the copied text
+7. **buttons and events**: `handleInput` runs on every typing, `handleClick` runs for the buttons in the form
+8. **start**: `start()` is the very last thing, it sets up the page
+
+How a typing works: you type, `handleInput` cleans the text, checks the field, saves the form to the browser, then redraws the preview and the progress bar.
+
+The saved data is one object (see `getFormData`). Save, restore, undo, import and the language change all use `getFormData()` and `fillForm()`.
+
+## Planned Backend (Comsing Soon)
 The frontend is fully functional as a standalone tool. A Python backend is planned to add cloud features:
 
 - **Framework:** Python with FastAPI
@@ -25,42 +42,48 @@ The frontend is fully functional as a standalone tool. A Python backend is plann
 
 ## Upgrade Roadmap
 - [ ] LinkedIn profile data import
-- [x] Multiple language support (English + Arabic with RTL; more languages can be added in the `I18N` object)
-- [x] Reordering (up/down buttons for entries and for CV sections; drag-and-drop not implemented)
+- [x] Multiple languages (English and Arabic. More can be added in the `I18N` object in CraftCV.js)
+- [x] Reordering (up/down buttons, no drag and drop yet)
 - [ ] ATS (Applicant Tracking System) keyword score checker
-- [x] More CV layout templates (Classic, Modern, Minimal)
+- [x] More CV templates (Classic, Modern, Minimal)
 - [ ] Python FastAPI backend (see above)
 
-### New in v1.1
-- **Per-entry Job Descriptions** — each experience entry now has its own description field with AI Enhance and a character counter (previously one shared global field)
-- **AI Enhance loading state** — button disables and shows "Enhancing…" while waiting for the LLM, preventing double-clicks and user confusion
-- **Clear Form confirmation modal** — a dialog asks you to confirm before wiping all data, preventing accidental data loss
-- **Projects & Portfolio section** — add multiple projects with name, technologies used, URL, and description; appears in the preview and export only when filled
-- **Skills tag input with proficiency levels** — add skills one at a time with Beginner / Intermediate / Advanced / Expert badges; no more comma-separated textarea
-- **Character counters** — summary and per-entry job description fields show live character count with a warning colour when approaching the limit
-- **Profile photo / avatar upload** — upload a photo that appears in the CV header preview; stored locally in the browser via localStorage
-- **CV completion progress bar** — shows how complete your CV is (0–100%) and turns green at 100%
+### v1.1
+- Each job has its own description box with AI Enhance and a character counter
+- The AI Enhance button is disabled and says "Enhancing..." while it waits
+- Clear Form asks you to confirm first
+- Projects section (name, technologies, link, description), only shown when filled in
+- Skills are added one at a time with a level (Beginner to Expert)
+- Character counters on the summary and descriptions
+- Profile photo upload, saved in the browser
+- Progress bar that turns green at 100%
 
-### New in v1.2
-- Theme toggle — Forest Light and Dark only; the CSS was flattened (no animations/shadow effects)
-- AI Enhance skeleton loader — the field being enhanced shows an animated placeholder instead of just a disabled button while waiting on the LLM response
+### v1.2
+- Theme toggle with only two themes, Forest Light and Dark. The CSS was made flat and simple
+- The AI Enhance button shows "Enhancing..." while waiting for the AI
 
+### v1.3
+- Arabic and English, with right-to-left layout (Settings > Language)
+- Three CV templates: Classic, Modern, Minimal
+- Start and end dates for jobs, with an "I currently work here" box. The end date is optional
+- Up and down buttons to reorder entries, and a section order list in Settings
+- Undo button after clearing the form (8 seconds)
+- Name and city only take letters, and email and phone are checked
+- Location is a city plus a country from a list
+- AI Enhance errors tell you to open Settings if the key is missing or wrong
 
-### New in v1.3
-- **Arabic + RTL** — pick the language in Settings; all labels, errors, the preview and the text export switch language and direction
-- **CV templates** — Classic, Modern and Minimal, chosen above the preview; the choice is saved and used for PDF export
-- **Start / end dates with "I currently work here"** — replaces the free-text dates; the end date is optional. Old saved free-text dates still show
-- **Reordering** — ↑ ↓ buttons on every experience / education / project entry, and a section-order list in Settings that controls the preview, copied text and PDF
-- **Undo for Clear Form** — an Undo button appears for 8 seconds after clearing
-- **Input rules** — name and city accept letters only, email/phone formats are checked, location is City + a country from a list
-- **Clearer API errors** — AI Enhance tells you to open Settings when the key is missing or rejected
+### v1.4 (simplified)
+- Rewrote CraftCV.js and CraftCV.css in a plainer style: shorter names, short comments, fewer helper functions
+- The menu button now opens the Settings page directly (the side drawer is gone)
+- Your last session comes back by itself when you open the page (no restore button anymore). Clear Form + Undo is how you start over
+- Removed: the loading placeholder while enhancing, remembering which cards are collapsed, and support for the old free-text job dates
 
 ## What it has
 - Live CV preview as you type
 - AI-powered text enhancement per section
 - Country code phone selector with flags (190+ countries)
 - Multiple experience and education entries (add/remove)
-- LocalStorage autosave with session restore banner
+- Autosave in the browser, restored when you come back
 - Copy CV as formatted plain text to clipboard
 - Share via Gmail with pre-filled subject and body
 - PDF export via print
@@ -68,18 +91,17 @@ The frontend is fully functional as a standalone tool. A Python backend is plann
 - English / Arabic interface with right-to-left layout
 - Three CV templates and a configurable section order
 - Undo after clearing the form
-- Skeleton loading animation on AI Enhance while waiting for a response
 - Inline form validation with per-field error messages
 - Browser autofill support
 - Personal API key input, stored locally in thes browser only
 
 ## Known Issues
-- **API key is stored client-side and used directly from the browser** — fine for personal/local use, but the key lives in `localStorage` and is sent straight to Anthropic from the page. The planned FastAPI backend would move this server-side.
-- **Large avatars may not persist** — if a photo exceeds the `localStorage` quota it shows for the session only (a toast warns you).
+- The API key is saved in the browser (`localStorage`) and sent straight from the page to Anthropic. Fine for personal use, but a backend would be safer. That is what the planned FastAPI backend is for.
+- A very big photo may not be saved (browser storage limit). You get a message and it only lasts until you reload.
 
 ## 📄 License
 MIT License
 Copyright (c) 2025 Assem Bakr
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software to use, copy, modify, merge, publish, or distribute it, subject to the condition that the above copyright notice appears in all copies.
 
-Note: I used ai help here for formating but not in the readme
+also used ai for foramting pretty obious but this is not the readme so it doesnt count
