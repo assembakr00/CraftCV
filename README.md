@@ -8,7 +8,8 @@ CraftCV is a smal designed to help job seekers or student or ppl who jsut wanna 
 1. Open the app in your browser ofc
 Open Settings from the menu to choose a language (English or Arabic), a font, the CV section order, or add your API key for AI Enhance pls check it ou i worked a lot on it and then ofc 
 Fill in your personal details, experience, education, projects, and skills and u can
-Use AI Enhance on any section to polish your text with your LLM (if u added an api) and
+Use AI Enhance on any section to polish your text 
+with your LLM (if u added an api) and
 Watch the live preview update on the right as you type
 Pick a template above the preview, then export, share, or copy your CV whenever you are ready
 also the check and preview btn just check if smth is missing

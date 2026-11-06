@@ -367,7 +367,7 @@ let skills = [];                                // [{ name, level }], level is a
 
 
 
-function t(key, values) {
+function t(key, values = {}) {
     let text = (translations[language] && translations[language][key]) || translations.en[key] || key;
     for (const name in values) {
         text = text.split('{' + name + '}').join(values[name]);
@@ -1219,14 +1219,17 @@ function updatePreview() {
     byId('cvEducation').innerHTML = bulletList(schools.length ? schools : [escapeHtml(t('phEducation'))]);
 
 
-    const jobs = getJobs().filter(job => job.title || job.company).map(job => `
+    const jobs = getJobs().filter(job => job.title || job.company).map(job => {
+        const duration = dateRange(job);
+        return `
         <div class="cv-exp-block">
             <div class="cv-exp-header">
                 <strong>${escapeHtml(job.title || t('role'))}</strong>${job.company ? ' <span>' + escapeHtml(t('at')) + ' ' + escapeHtml(job.company) + '</span>' : ''}
-                ${dateRange(job) ? '<span class="cv-duration">' + escapeHtml(dateRange(job)) + '</span>' : ''}
+                ${duration ? '<span class="cv-duration">' + escapeHtml(duration) + '</span>' : ''}
             </div>
             ${job.description ? '<p class="cv-exp-desc">' + escapeHtml(job.description) + '</p>' : ''}
-        </div>`);
+        </div>`;
+    });
     byId('cvExperience').innerHTML = jobs.length ? jobs.join('') : '<p>' + escapeHtml(t('phExperience')) + '</p>';
 
     const projects = getProjects().filter(p => p.name).map(p => {
@@ -1377,7 +1380,9 @@ function handleClick(event) {
 
     if (classes.contains('add-entry-btn')) {
         const adders = { experience: addExperience, education: addEducation, project: addProject };
-        adders[button.dataset.type]();
+        const addEntry = adders[button.dataset.type];
+        if (!addEntry) return;
+        addEntry();
         renumberEntries();
     } else if (classes.contains('remove-entry-btn')) {
         removeEntry(button);
