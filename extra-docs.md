@@ -5,7 +5,6 @@
 - `localStorage` for persistence, session restore, and avatar storage
 - `FileReader` API for local avatar image handling
 - `navigator.clipboard` for formatted CV text copy
-- Fetch API + async/await for Claude AI integration with loading states
 - `encodeURIComponent` for Gmail URL building
 - `window.print()` for PDF export with dedicated print CSS
 
@@ -49,8 +48,6 @@ The frontend is fully functional as a standalone tool. A Python backend is plann
 - [ ] Python FastAPI backend (see above)
 
 ### v1.1
-- Each job has its own description box with AI Enhance and a character counter
-- The AI Enhance button is disabled and says "Enhancing..." while it waits
 - Clear Form asks you to confirm first
 - Projects section (name, technologies, link, description), only shown when filled in
 - Skills are added one at a time with a level (Beginner to Expert)
@@ -60,7 +57,6 @@ The frontend is fully functional as a standalone tool. A Python backend is plann
 
 ### v1.2
 - Theme toggle with only two themes, Forest Light and Dark. The CSS was made flat and simple
-- The AI Enhance button shows "Enhancing..." while waiting for the AI
 
 ### v1.3
 - Arabic and English, with right-to-left layout (Settings > Language)
@@ -70,7 +66,6 @@ The frontend is fully functional as a standalone tool. A Python backend is plann
 - Undo button after clearing the form (8 seconds)
 - Name and city only take letters, and email and phone are checked
 - Location is a city plus a country from a list
-- AI Enhance errors tell you to open Settings if the key is missing or wrong
 
 ### v1.4 (simplified)
 - Rewrote CraftCV.js and CraftCV.css in a plainer style: shorter names, short comments, fewer helper functions
@@ -80,7 +75,6 @@ The frontend is fully functional as a standalone tool. A Python backend is plann
 
 ## What it has
 - Live CV preview as you type
-- AI-powered text enhancement per section
 - Country code phone selector with flags (190+ countries)
 - Multiple experience and education entries (add/remove)
 - Autosave in the browser, restored when you come back
@@ -93,10 +87,8 @@ The frontend is fully functional as a standalone tool. A Python backend is plann
 - Undo after clearing the form
 - Inline form validation with per-field error messages
 - Browser autofill support
-- Personal API key input, stored locally in thes browser only
 
 ## Known Issues
-- The API key is saved in the browser (`localStorage`) and sent straight from the page to Anthropic. Fine for personal use, but a backend would be safer. That is what the planned FastAPI backend is for.
 - A very big photo may not be saved (browser storage limit). You get a message and it only lasts until you reload.
 
 ## 📄 License

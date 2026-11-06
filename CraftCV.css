@@ -330,10 +330,6 @@ button:disabled {
     color: var(--muted);
 }
 
-.ai-enhance-btn {
-    margin-top: 6px;
-}
-
 .avatar-upload-label {
     display: inline-block;
     padding: 9px 12px;
@@ -457,16 +453,6 @@ body[data-page="settings"] footer {
 
 .settings-content .form-group {
     margin: 0;
-}
-
-.api-key-container {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.api-key-container small {
-    color: var(--muted);
 }
 
 .action-buttons button {

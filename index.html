@@ -40,32 +40,13 @@
                 <p class="section-help" data-i18n="sectionOrderHelp">Change the order of sections in your CV preview, copy and PDF.</p>
                 <ol id="sectionOrderList" class="order-list"></ol>
             </div>
-            <div class="api-key-container">
-                <label for="anthropicKey" data-i18n="apiKey">AI API Key</label>
-                <div class="input-wrapper">
-                    <input type="password" id="anthropicKey" name="anthropicKey" placeholder="sk-..." autocomplete="off" dir="ltr">
-                    <button type="button" id="toggleVisibilityBtn" class="icon-btn" aria-label="Toggle Key Visibility" data-i18n-aria="toggleKey">👁️</button>
-                </div>
-                <div class="action-buttons">
-                    <button type="button" id="saveKeyBtn" class="primary-btn" data-i18n="saveKey">Save Key</button>
-                    <button type="button" id="testKeyBtn" class="secondary-btn" data-i18n="testConn">Test Connection</button>
-                </div>
-                <div class="demo-mode-wrapper">
-                    <label class="switch-label">
-                        <input type="checkbox" id="demoModeCheckbox">
-                        <span data-i18n="demoMode">Enable Demo Mode (No API key required)</span>
-                    </label>
-                </div>
-                <div id="keyFeedback" class="key-feedback" aria-live="polite"></div>
-                <small data-i18n="keyNote">Using your own key keeps this app free. Your key is saved locally on your device only.</small>
-            </div>
             <button type="button" id="restartDemoBtn" class="danger-btn restart-demo-btn" data-i18n="restartDemo">Restart Demo</button>
         </section>
     </main>
     <div class="page-shell">
         <header class="intro">
             <h1 data-i18n="appTitle">CraftCV Builder</h1>
-            <p data-i18n="tagline">Build a polished CV with live preview, smart enhancements, and export tools, and more</p>
+            <p data-i18n="tagline">Build a polished CV with live preview and export tools.</p>
         </header>
         <div class="progress-bar-wrap" aria-label="CV completion progress" data-i18n-aria="progressAria">
             <div class="progress-bar-track">
@@ -140,8 +121,6 @@
                         <label for="summary"><span data-i18n="summary">Professional Summary</span> <span class="optional-tag" data-i18n="sentences">2–3 sentences</span></label>
                         <textarea id="summary" name="summary" rows="3" required maxlength="600"></textarea>
                         <div class="char-counter" data-counter-for="summary">0 / 600 characters</div>
-                        <button type="button" class="ai-enhance-btn secondary-btn" data-target="summary" data-i18n="aiEnhance">✦ AI Enhance</button>
-                        <div class="ai-warning" data-warning-for="summary"></div>
                         <div class="field-error" data-error-for="summary"></div>
                     </div>
                 </section>

@@ -8,14 +8,11 @@ const translations = {
         switchDark: 'Switch to dark theme', switchLight: 'Switch to light theme', openSettingsAria: 'Open settings',
         settings: 'Settings', back: '← Back to Builder', language: 'Language', font: 'Font',
         fontNormal: 'Normal text', fontPixel: 'Pixel art text (Peaberry)',
-        apiKey: 'AI API Key', toggleKey: 'Toggle Key Visibility', saveKey: 'Save Key', updateKey: 'Update Key',
-        testConn: 'Test Connection', demoMode: 'Enable Demo Mode (No API key required)',
-        keyNote: 'Using your own key keeps this app free. Your key is saved locally on your device only.',
         sectionOrder: 'CV section order', sectionOrderHelp: 'Change the order of sections in your CV preview, copy and PDF.',
         moveUp: 'Move up', moveDown: 'Move down',
         restartDemo: 'Restart Demo',
-        restartConfirm: 'Restart the demo? This clears all saved data, including your API key.',
-        appTitle: 'CraftCV Builder', tagline: 'Build a polished CV with live preview, smart enhancements, and export tools, and more',
+        restartConfirm: 'Restart the demo? This clears all saved data.',
+        appTitle: 'CraftCV Builder', tagline: 'Build a polished CV with live preview and export tools.',
         progressAria: 'CV completion progress', percentComplete: '{n}% complete', missing: 'Missing: {list}',
         allComplete: 'All required fields complete',
         clearTitle: 'Clear the form?', clearBody: 'This will erase everything you entered. You can undo right after.',
@@ -24,7 +21,6 @@ const translations = {
         countryCode: 'Country code', location: 'Location', city: 'City', selectCountry: 'Select country', country: 'Country',
         photo: 'Profile Photo', optional: 'optional', uploadPhoto: 'Upload Photo', remove: 'Remove', noPhoto: 'No photo',
         summary: 'Professional Summary', sentences: '2–3 sentences', chars: '{n} / {max} characters',
-        aiEnhance: '✦ AI Enhance', enhancing: '⏳ Enhancing…',
         education: 'Education', addEducation: '+ Add Another Education',
         expSection: 'Experience', expHelp: 'Add your current or previous jobs. Each entry appears in your CV with the job title, company, dates, and description of your work and impact.',
         descPrefs: 'Job Description Preferences', prefAch: 'Focus on Achievements', prefResp: 'Focus on Responsibilities',
@@ -74,29 +70,18 @@ const translations = {
         skillExists: 'Skill already added.',
         photoTooBig: 'Photo is too large to save. It will be lost on reload.',
         endBeforeStart: 'End date cannot be before the start date.',
-        keySaved: 'Key saved securely!', keyEmpty: 'Please enter an API key first.', keyTestEmpty: 'Enter a key to test.',
-        keyTesting: 'Testing connection...⏳', keyOk: 'Connection Verified Successfully!', keyBad: 'Invalid key — verify your credentials.',
-        demoActive: 'Demo Mode active. No API key required.',
-        enhanceEmpty: 'Add some text before enhancing.',
-        noKeyHelp: 'No API key yet. Open the menu (☰) → Settings → AI API Key to add yours, or turn on Demo Mode.',
-        badKeyHelp: 'Your API key was rejected. Open the menu (☰) → Settings → AI API Key and check it.',
-        rateLimit: 'Rate limit or usage limit reached. Wait a moment and try again.',
-        enhanceFail: 'AI enhancement failed. Check your internet connection and API key (menu ☰ → Settings), then try again.',
-        openSettings: 'Open Settings', demoDone: 'Demo Mode enhancement applied.', enhanced: 'Text enhanced!',
+        openSettings: 'Open Settings',
         // progress labels use fullName/email/phone/location/summary/education/expSection/skills
     },
     ar: {
         switchDark: 'التبديل إلى الوضع الداكن', switchLight: 'التبديل إلى الوضع الفاتح', openSettingsAria: 'فتح الإعدادات',
         settings: 'الإعدادات', back: '→ العودة إلى المنشئ', language: 'اللغة', font: 'الخط',
         fontNormal: 'نص عادي', fontPixel: 'نص بكسل (Peaberry)',
-        apiKey: 'مفتاح API للذكاء الاصطناعي', toggleKey: 'إظهار/إخفاء المفتاح', saveKey: 'حفظ المفتاح', updateKey: 'تحديث المفتاح',
-        testConn: 'اختبار الاتصال', demoMode: 'تفعيل الوضع التجريبي (بدون مفتاح API)',
-        keyNote: 'استخدام مفتاحك الخاص يُبقي التطبيق مجانياً. يُحفظ المفتاح على جهازك فقط.',
         sectionOrder: 'ترتيب أقسام السيرة الذاتية', sectionOrderHelp: 'غيّر ترتيب الأقسام في المعاينة والنسخ وملف PDF.',
         moveUp: 'نقل لأعلى', moveDown: 'نقل لأسفل',
         restartDemo: 'إعادة تشغيل العرض',
-        restartConfirm: 'إعادة تشغيل العرض؟ سيتم مسح كل البيانات المحفوظة بما فيها مفتاح API.',
-        appTitle: 'منشئ CraftCV', tagline: 'أنشئ سيرة ذاتية أنيقة مع معاينة مباشرة وتحسينات ذكية وأدوات تصدير والمزيد',
+        restartConfirm: 'إعادة تشغيل العرض؟ سيتم مسح كل البيانات المحفوظة.',
+        appTitle: 'منشئ CraftCV', tagline: 'أنشئ سيرة ذاتية أنيقة مع معاينة مباشرة وأدوات تصدير.',
         progressAria: 'تقدم اكتمال السيرة الذاتية', percentComplete: 'اكتمل {n}%', missing: 'ناقص: {list}',
         allComplete: 'كل الحقول المطلوبة مكتملة',
         clearTitle: 'مسح النموذج؟', clearBody: 'سيتم حذف كل ما أدخلته. يمكنك التراجع مباشرة بعد ذلك.',
@@ -105,7 +90,6 @@ const translations = {
         countryCode: 'رمز الدولة', location: 'الموقع', city: 'المدينة', selectCountry: 'اختر الدولة', country: 'الدولة',
         photo: 'الصورة الشخصية', optional: 'اختياري', uploadPhoto: 'رفع صورة', remove: 'حذف', noPhoto: 'لا توجد صورة',
         summary: 'الملخص المهني', sentences: '2–3 جمل', chars: '{n} / {max} حرف',
-        aiEnhance: '✦ تحسين بالذكاء الاصطناعي', enhancing: '⏳ جارٍ التحسين…',
         education: 'التعليم', addEducation: '+ إضافة مؤهل آخر',
         expSection: 'الخبرات', expHelp: 'أضف وظائفك الحالية أو السابقة. تظهر كل خبرة في سيرتك مع المسمى الوظيفي والشركة والتواريخ ووصف عملك وأثره.',
         descPrefs: 'تفضيلات وصف الوظيفة', prefAch: 'التركيز على الإنجازات', prefResp: 'التركيز على المسؤوليات',
@@ -149,15 +133,7 @@ const translations = {
         skillExists: 'المهارة مضافة بالفعل.',
         photoTooBig: 'الصورة كبيرة جداً للحفظ. ستُفقد عند إعادة التحميل.',
         endBeforeStart: 'لا يمكن أن يكون تاريخ النهاية قبل البداية.',
-        keySaved: 'تم حفظ المفتاح!', keyEmpty: 'أدخل مفتاح API أولاً.', keyTestEmpty: 'أدخل مفتاحاً لاختباره.',
-        keyTesting: 'جارٍ اختبار الاتصال...⏳', keyOk: 'تم التحقق من الاتصال بنجاح!', keyBad: 'المفتاح غير صالح — تحقق من بياناتك.',
-        demoActive: 'الوضع التجريبي مفعّل. لا حاجة لمفتاح API.',
-        enhanceEmpty: 'اكتب نصاً قبل التحسين.',
-        noKeyHelp: 'لا يوجد مفتاح API بعد. افتح القائمة (☰) ← الإعدادات ← مفتاح API لإضافته، أو فعّل الوضع التجريبي.',
-        badKeyHelp: 'تم رفض مفتاح API. افتح القائمة (☰) ← الإعدادات ← مفتاح API وتحقق منه.',
-        rateLimit: 'تم بلوغ حد الاستخدام. انتظر قليلاً وحاول مرة أخرى.',
-        enhanceFail: 'فشل التحسين بالذكاء الاصطناعي. تحقق من الإنترنت ومن مفتاح API (القائمة ☰ ← الإعدادات) ثم حاول مرة أخرى.',
-        openSettings: 'فتح الإعدادات', demoDone: 'تم تطبيق التحسين في الوضع التجريبي.', enhanced: 'تم تحسين النص!',
+        openSettings: 'فتح الإعدادات',
     }
 };
 
@@ -305,12 +281,6 @@ const languageSelect = byId('langSelect');
 const fontSelect = byId('fontSelect');
 const templateSelect = byId('templateSelect');
 const orderList = byId('sectionOrderList');
-const apiKeyInput = byId('anthropicKey');
-const showKeyButton = byId('toggleVisibilityBtn');
-const saveKeyButton = byId('saveKeyBtn');
-const testKeyButton = byId('testKeyBtn');
-const demoCheckbox = byId('demoModeCheckbox');
-const keyMessage = byId('keyFeedback');
 const restartButton = byId('restartDemoBtn');
 
 const fullNameInput = byId('fullName');
@@ -346,8 +316,6 @@ const importFileInput = byId('importJsonInput');
 
 const KEYS = {
     form: 'craftcv_form_state',
-    apiKey: 'craftcv_api_key',
-    demo: 'craftcv_demo_mode',
     theme: 'craftcv_theme',
     font: 'craftcv_font',
     language: 'craftcv_lang',
@@ -397,7 +365,6 @@ function changeLanguage(newLanguage) {
     fillForm(data);
     showOrderList();
     setTheme(theme);
-    refreshKeyMessage();
     showCount(summaryInput);
     updatePreview();
     updateProgress();
@@ -489,170 +456,6 @@ function moveSection(button) {
     showOrderList();
     updatePreview();
 }
-
-// some ai but not much so i can learn apis bec its kinda the most imp part
-
-function refreshKeyMessage() {
-    const demoOn = load(KEYS.demo) === 'true';
-    saveKeyButton.textContent = t(load(KEYS.apiKey) ? 'updateKey' : 'saveKey');
-    keyMessage.textContent = demoOn ? t('demoActive') : '';
-    keyMessage.className = demoOn ? 'key-feedback info' : 'key-feedback';
-}
-
-function setDemoMode(on) {
-    save(KEYS.demo, on);
-    demoCheckbox.checked = on;
-    apiKeyInput.disabled = on;
-    saveKeyButton.disabled = on;
-    testKeyButton.disabled = on;
-    refreshKeyMessage();
-}
-
-function showKeyResult(message, kind) {
-    keyMessage.textContent = message;
-    keyMessage.className = 'key-feedback ' + kind;
-}
-
-function saveApiKey() {
-    const key = apiKeyInput.value.trim();
-    if (!key) return showKeyResult(t('keyEmpty'), 'error');
-
-    save(KEYS.apiKey, key);
-    saveKeyButton.textContent = t('updateKey');
-    showKeyResult(t('keySaved'), 'success');
-}
-
-function toggleKeyVisible() {
-    const hidden = apiKeyInput.type === 'password';
-    apiKeyInput.type = hidden ? 'text' : 'password';
-    showKeyButton.textContent = hidden ? '🙈' : '👁️';
-}
-
-// sends the key to Anthropic with a tiny request to see if it works
-async function testApiKey() {
-    const key = apiKeyInput.value.trim();
-    if (!key) return showKeyResult(t('keyTestEmpty'), 'error');
-
-    showKeyResult(t('keyTesting'), 'info');
-    testKeyButton.disabled = true;
-
-    try {
-        const response = await callAnthropic(key, 'Ping', 'Reply with one short word.', 1);
-        showKeyResult(response.ok ? t('keyOk') : t('keyBad'), response.ok ? 'success' : 'error');
-    } catch (error) {
-        showKeyResult(t('keyBad'), 'error');
-    }
-    testKeyButton.disabled = false;
-}
-
-function callAnthropic(key, text, instructions, maxTokens) {
-    return fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': key,
-            'anthropic-version': '2023-06-01',
-            // needed for calling the API straight from the browser obvoius
-            'anthropic-dangerous-direct-browser-access': 'true'
-        },
-        body: JSON.stringify({
-            model: 'claude-sonnet-4-6',
-            max_tokens: maxTokens,
-            system: instructions,
-            messages: [{ role: 'user', content: text }]
-        })
-    });
-}
-
-
-// demo mode: no API call, just a fixed example sentence so its useless i guess and the arabic is really hard to write on a keyboard btw
-function demoText(kind) {
-    const examples = {
-        en: {
-            summary: 'Hardworking and careful person with good technical skills who likes working in a team.',
-            description: 'Worked with a team to finish projects on time and helped keep the documentation up to date.'
-        },
-        ar: {
-            summary: 'شخص مجتهد ودقيق يتمتع بمهارات تقنية جيدة ويحب العمل ضمن فريق.',
-            description: 'عملت مع فريق لإنهاء المشاريع في وقتها وساعدت في تحديث التوثيق.'
-        }
-    };
-    return examples[language][kind];
-}
-
-// shows a message plus a link that opens Settings
-function showKeyHelp(box, message) {
-    box.textContent = message + ' ';
-    const link = document.createElement('button');
-    link.type = 'button';
-    link.className = 'link-btn';
-    link.textContent = t('openSettings');
-    link.addEventListener('click', openSettings);
-    box.append(link);
-}
-
-// button = the AI Enhance button that was clicked. The text box and the message
-// box are in the same form-group as the button.
-
-async function enhanceText(button) {
-    const group = button.parentElement;
-    const textarea = group.querySelector('textarea');
-    const warning = group.querySelector('.ai-warning');
-    const text = textarea.value.trim();
-
-    if (!text) {
-        warning.textContent = t('enhanceEmpty');
-        return;
-    }
-
-    const demoOn = load(KEYS.demo) === 'true';
-    const key = load(KEYS.apiKey);
-    if (!key && !demoOn) {
-        showKeyHelp(warning, t('noKeyHelp'));
-        return;
-    }
-
-    warning.textContent = '';
-    button.disabled = true;
-    button.textContent = t('enhancing');
-
-    try {
-        let newText = '';
-
-        if (demoOn) {
-            newText = demoText(textarea.id === 'summary' ? 'summary' : 'description');
-        } else {
-            const instructions = 'You are a professional CV writer. Rewrite the text so it sounds polished and professional. ' +
-                'Keep it short. Answer in the same language as the text. Return only the new text.';
-            const response = await callAnthropic(key, text, instructions, 1000);
-
-            if (response.status === 401 || response.status === 403) {
-                showKeyHelp(warning, t('badKeyHelp'));
-                return;
-            }
-            if (response.status === 429) {
-                warning.textContent = t('rateLimit');
-                return;
-            }
-            if (!response.ok) throw new Error('Request failed: ' + response.status);
-
-            const data = await response.json();
-            newText = (data.content && data.content[0] && data.content[0].text || '').trim();
-        }
-
-        if (newText) {
-            textarea.value = newText;
-            textarea.dispatchEvent(new Event('input', { bubbles: true }));
-            showToast(t(demoOn ? 'demoDone' : 'enhanced'));
-        }
-    } catch (error) {
-        warning.textContent = t('enhanceFail');
-    } finally {
-        button.disabled = false;
-        button.textContent = t('aiEnhance');
-    }
-}
-
 
 // phone code dropdown: "🇪🇬 Egypt (+20)" used ai ofc its super hard
 function fillPhoneCodes() {
@@ -893,8 +696,6 @@ function addExperience(data = {}) {
             <label>${escapeHtml(t('jobDesc'))}</label>
             <textarea class="experience-description" placeholder="${escapeHtml(t('describePh'))}" maxlength="800">${escapeHtml(data.description || '')}</textarea>
             <div class="char-counter"></div>
-            <button type="button" class="ai-enhance-btn secondary-btn">${escapeHtml(t('aiEnhance'))}</button>
-            <div class="ai-warning"></div>
         </div>`;
     experienceBox.append(entry);
 
@@ -1391,9 +1192,6 @@ function handleClick(event) {
     } else if (classes.contains('skill-tag-remove')) {
         removeSkill(Number(button.dataset.index));
         return;
-    } else if (classes.contains('ai-enhance-btn')) {
-        enhanceText(button);
-        return;
     } else if (classes.contains('section-collapse-btn')) {
         const card = button.closest('.card');
         const collapsed = card.classList.toggle('collapsed');
@@ -1438,10 +1236,6 @@ function setUpButtons() {
         if (button) moveSection(button);
     });
 
-    saveKeyButton.addEventListener('click', saveApiKey);
-    testKeyButton.addEventListener('click', testApiKey);
-    showKeyButton.addEventListener('click', toggleKeyVisible);
-    demoCheckbox.addEventListener('change', () => setDemoMode(demoCheckbox.checked));
     restartButton.addEventListener('click', restartEverything);
 
     byId('copyCvBtn').addEventListener('click', copyCvText);
@@ -1485,9 +1279,6 @@ function start() {
     fillPhoneCodes();
     fillCountryList();
     setUpButtons();
-
-    apiKeyInput.value = load(KEYS.apiKey) || '';
-    setDemoMode(load(KEYS.demo) === 'true');
 
     const photo = load(KEYS.photo);
     if (photo) showPhoto(photo);
