@@ -1,14 +1,9 @@
-/* CraftCV styles. Top to bottom: colors, basics, layout, forms, buttons,
-   settings page, entries, CV preview + templates, small widgets, phones, print. */
-
 @font-face {
     font-family: "Peaberry";
     src: url("assets/Peaberry-Font-v2.0/Peaberry%20Font%20Family/Peaberry%20Base/PeaberryBase.woff2") format("woff2");
     font-display: swap;
 }
 
-/* ---------- colors ---------- */
-/* Light theme (forest) is the default. The dark theme replaces the colors below. */
 :root {
     --bg: #f3f7f0;
     --surface: #fff;
@@ -35,7 +30,6 @@ body[data-theme="dark"] {
     --danger: #f87171;
 }
 
-/* ---------- basics ---------- */
 * {
     box-sizing: border-box;
 }
@@ -67,7 +61,6 @@ h1:focus {
     outline: none;
 }
 
-/* ---------- layout ---------- */
 .page-shell {
     width: min(1400px, 100%);
     margin: 0 auto;
@@ -83,7 +76,6 @@ h1:focus {
     color: var(--muted);
 }
 
-/* form on one side, CV preview on the other */
 .app-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -140,7 +132,6 @@ footer p {
     margin: 4px 0;
 }
 
-/* rows that hold several things side by side */
 .actions-row,
 .preview-actions,
 .entry-header,
@@ -158,7 +149,6 @@ footer p {
     gap: 10px;
 }
 
-/* ---------- forms ---------- */
 .form-group {
     margin-bottom: 14px;
 }
@@ -199,7 +189,6 @@ textarea {
     resize: vertical;
 }
 
-/* checkboxes keep their normal size */
 input[type="checkbox"] {
     width: auto;
     accent-color: var(--primary);
@@ -276,7 +265,6 @@ input[type="checkbox"] {
     color: var(--muted);
 }
 
-/* ---------- buttons ---------- */
 button {
     padding: 9px 12px;
     background: var(--primary-soft);
@@ -315,7 +303,6 @@ button:disabled {
     color: var(--text);
 }
 
-/* looks like a link */
 .link-btn {
     padding: 0;
     background: none;
@@ -338,7 +325,6 @@ button:disabled {
     cursor: pointer;
 }
 
-/* ---------- top corner buttons ---------- */
 .theme-toggle,
 .settings-menu-toggle {
     position: fixed;
@@ -361,7 +347,6 @@ button:disabled {
     margin: auto;
 }
 
-/* the sun / moon switch (always left-to-right so the thumb moves the right way) */
 .theme-toggle {
     direction: ltr;
     right: 20px;
@@ -397,7 +382,6 @@ body[data-theme="dark"] .theme-toggle-thumb {
     transform: translateX(36px);
 }
 
-/* ---------- progress bar ---------- */
 .progress-bar-wrap {
     margin-bottom: 16px;
 }
@@ -426,7 +410,6 @@ body[data-theme="dark"] .theme-toggle-thumb {
     white-space: nowrap;
 }
 
-/* ---------- settings page (replaces the builder while open) ---------- */
 body[data-page="settings"] .page-shell,
 body[data-page="settings"] footer {
     display: none;
@@ -503,7 +486,6 @@ body[data-page="settings"] footer {
     width: 100%;
 }
 
-/* ---------- entries (education, experience, projects) ---------- */
 .entry-card {
     margin-bottom: 12px;
     padding: 12px;
@@ -528,7 +510,6 @@ body[data-page="settings"] footer {
     flex: 1 1 140px;
 }
 
-/* profile photo */
 .avatar-preview,
 .cv-avatar {
     width: 76px;
@@ -562,7 +543,6 @@ body[data-page="settings"] footer {
     display: none;
 }
 
-/* skills */
 .skill-input-row {
     display: flex;
     flex-wrap: wrap;
@@ -622,7 +602,6 @@ body[data-page="settings"] footer {
 .skill-level-advanced, .skill-badge-advanced { color: #166534; }
 .skill-level-expert, .skill-badge-expert { color: #5b21b6; }
 
-/* ---------- the CV preview ---------- */
 .template-row {
     margin-bottom: 12px;
 }
@@ -717,7 +696,6 @@ body[data-page="settings"] footer {
     padding-inline-start: 20px;
 }
 
-/* Classic is the default look. Modern and Minimal change a few things. */
 .tpl-modern .cv-header {
     padding: 16px;
     background: var(--primary);
@@ -767,7 +745,6 @@ body[data-page="settings"] footer {
     display: none;
 }
 
-/* ---------- message box and toast ---------- */
 .modal-overlay {
     position: fixed;
     z-index: 200;
@@ -819,7 +796,6 @@ body[data-page="settings"] footer {
     padding: 2px 8px;
 }
 
-/* ---------- small screens ---------- */
 @media (max-width: 900px) {
     .app-grid {
         grid-template-columns: 1fr;
@@ -844,7 +820,6 @@ body[data-page="settings"] footer {
         align-items: stretch;
     }
 
-    /* stacked: every box takes its normal height and the full width */
     .phone-inputs select, .phone-inputs input,
     .location-inputs select, .location-inputs input,
     .skill-input-row select, .skill-input-row input {
@@ -856,8 +831,6 @@ body[data-page="settings"] footer {
         width: 100%;
     }
 }
-
-/* ---------- printing / PDF: only the CV, black on white ---------- */
 @media print {
     body,
     body[data-theme="dark"] {
@@ -871,7 +844,6 @@ body[data-page="settings"] footer {
         --primary-soft: #e3efdc;
         font-family: Arial, sans-serif;
     }
-
     .theme-toggle,
     .settings-menu-toggle,
     .settings-page,
@@ -885,11 +857,9 @@ body[data-page="settings"] footer {
     footer {
         display: none !important;
     }
-
     .app-grid {
         display: block;
     }
-
     .preview-panel {
         position: static;
         max-height: none;
@@ -897,16 +867,12 @@ body[data-page="settings"] footer {
         border: 0;
         overflow: visible;
     }
-
     .cv-output {
         border-top: 0;
     }
-
     .cv-section {
         break-inside: avoid;
     }
-
-    /* keep the colored header and skill colors in the PDF */
     .tpl-modern .cv-header,
     .skill-badge {
         print-color-adjust: exact;
