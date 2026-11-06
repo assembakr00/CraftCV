@@ -1,7 +1,7 @@
 
 // Hey! This is my CraftCV project.
 // I built the main app myself and used a little help for repetitive data like translations
-// and country names. I removed the AI feature so the project stays simple and privaTE and i del the api btw.
+// and country names. I removed the AI feature so the project stays simple and private and i del the api btw.
 // Hope you enjoy checking it out!
 const translations = {
     en: {
